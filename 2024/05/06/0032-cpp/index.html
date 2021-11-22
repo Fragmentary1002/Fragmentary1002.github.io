@@ -1,0 +1,600 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>c++基础理论 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="C++ 多态 虚函数 什么是多态？C++的多态是如何实现的？  所谓多态，就是同一个函数名具有多种状态，或者说一个接口具有不同的行为；C++的多态分为编译时多态和运行时多态，编译时多态也称为为静态联编，通过重载和模板来实现，运行时多态称为动态联编，通过继承和虚函数来实现。   对于非虚函数，三个类中虽然都有一个叫 func2 的函数，但他们彼此互不关联，因此都是各自独立的，不存在重载一说，在调用的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++基础理论">
+<meta property="og:url" content="http://example.com/2024/05/06/0032-cpp/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="C++ 多态 虚函数 什么是多态？C++的多态是如何实现的？  所谓多态，就是同一个函数名具有多种状态，或者说一个接口具有不同的行为；C++的多态分为编译时多态和运行时多态，编译时多态也称为为静态联编，通过重载和模板来实现，运行时多态称为动态联编，通过继承和虚函数来实现。   对于非虚函数，三个类中虽然都有一个叫 func2 的函数，但他们彼此互不关联，因此都是各自独立的，不存在重载一说，在调用的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2024-05-06T10:21:03.000Z">
+<meta property="article:modified_time" content="2024-05-09T06:10:58.023Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/05/06/0032-cpp/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'c++基础理论',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-05-09 14:10:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">c++基础理论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-05-09T06:10:58.023Z" title="更新于 2024-05-09 14:10:58">2024-05-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="c++基础理论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>C++</p>
+<h1 id="多态-虚函数"><a href="#多态-虚函数" class="headerlink" title="多态 虚函数"></a>多态 虚函数</h1><ul>
+<li>什么是多态？C++的多态是如何实现的？</li>
+</ul>
+<p>所谓多态，就是同一个函数名具有多种状态，或者说一个接口具有不同的行为；C++的多态分为编译时多态和运行时多态，编译时多态也称为为静态联编，通过重载和模板来实现，运行时多态称为动态联编，通过继承和虚函数来实现。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-e2f479ca9b1c56ac33dfae896ce56f49_720w.webp" alt="img"></p>
+<ol>
+<li>对于非虚函数，三个类中虽然都有一个叫 <em>func2</em> 的函数，但他们彼此互不关联，因此都是各自独立的，不存在重载一说，在调用的时候也不需要进行查表的操作，直接调用即可。</li>
+<li>由于子类B和子类C都是继承于基类A，因此他们都会存在一个虚指针用于指向虚函数表。<strong>注意</strong>，假如子类B和子类C中不存在虚函数，那么这时他们将共用基类A的一张虚函数表，在B和C中用虚指针指向该虚函数表即可。但是，上面的代码设计时子类B和子类C中都有一个虚函数 <em>vfunc1</em>，因此他们就需要各自产生一张虚函数表，并用各自的虚指针指向该表。由于子类B和子类C都对 <em>vfunc1</em> 作了重载，因此他们有三种不同的实现方式，函数地址也不尽相同，在使用的时候需要从各自类的虚函数表中去查找对应的 <em>vfunc1</em> 地址。</li>
+<li>对于虚函数 <em>vfunc2</em>，两个子类都没有进行重载操作，所以基类A、子类B和子类C将共用一个 <em>vfunc2</em>，该虚函数的地址会分别保存在三个类的虚函数表中，但他们的地址是相同的。</li>
+<li>从上图可以发现，在类对象的头部存放着一个虚指针，该虚指针指向了各自类所维护的虚函数表，再通过查找虚函数表中的地址来找到对应的虚函数。</li>
+<li>对于类中的数据而言，子类中都会包含父类的信息。如上例中的子类C，它自己拥有一个变量 <em>m_data1</em>，似乎是和基类中的 <em>m_data1</em> 重名了，但其实他们并不存在联系，从存放的位置便可知晓。</li>
+</ol>
+<p><strong>动态绑定</strong>有以下三项条件要符合：</p>
+<ol>
+<li>使用指针进行调用</li>
+<li>指针属于up-cast后的</li>
+<li>调用的是虚函数</li>
+</ol>
+<p>与动态绑定相对应的是静态绑定，它属于编译的时候就确定下来的，如上文的非虚函数，他们是类对象直接可调用的，而不需要任何查表操作，因此调用的速度也快于虚函数。</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/98776075">C++中的虚指针与虚函数表 - 知乎 (zhihu.com)</a></p>
+<h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><table>
+<thead>
+<tr>
+<th align="center">内存区域</th>
+<th align="center">描述</th>
+<th align="center">分配和释放方式</th>
+<th align="center">特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">堆</td>
+<td align="center">使用malloc、free动态分配和释放空间，能分配较大的内存</td>
+<td align="center">malloc/free</td>
+<td align="center">1. 需要手动申请和手动释放<br>2. 能分配的内存较大<br>3. 分配和释放内存可能产生内存碎片<br>4. 分配效率较低<br>5. 地址从低向上</td>
+</tr>
+<tr>
+<td align="center">栈</td>
+<td align="center">为函数的局部变量分配内存，能分配较小的内存</td>
+<td align="center">由操作系统自动分配和释放</td>
+<td align="center">1. 自动申请和自动释放<br>2. 能分配的内存较小<br>3. 不会产生内存碎片<br>4. 分配效率高<br>5. 地址由高向下</td>
+</tr>
+<tr>
+<td align="center">全局/静态存储区</td>
+<td align="center">用于存储全局变量和静态变量</td>
+<td align="center">编译器分配和释放</td>
+<td align="center">存储全局和静态变量的生命周期</td>
+</tr>
+<tr>
+<td align="center">常量存储区</td>
+<td align="center">专门用来存放常量</td>
+<td align="center">编译器分配和释放</td>
+<td align="center">存储常量，不可修改</td>
+</tr>
+<tr>
+<td align="center">自由存储区</td>
+<td align="center">通过new和delete分配和释放空间的内存，具体实现可能是堆或者内存池</td>
+<td align="center">new/delete</td>
+<td align="center">1. 是C++的术语，抽象概念<br>2. 可以通过重载操作符使用其他内存实现<br>3. 对于自定义对象，能调用构造函数和析构函数</td>
+</tr>
+</tbody></table>
+<p>关于堆和栈的内存区别：</p>
+<table>
+<thead>
+<tr>
+<th align="center">区别点</th>
+<th align="center">堆</th>
+<th align="center">栈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">内存申请和释放</td>
+<td align="center">手动申请和释放</td>
+<td align="center">自动申请和释放</td>
+</tr>
+<tr>
+<td align="center">内存大小</td>
+<td align="center">较大（4G(32位机器)）</td>
+<td align="center">较小（1M）</td>
+</tr>
+<tr>
+<td align="center">内存碎片</td>
+<td align="center">可能产生</td>
+<td align="center">不产生</td>
+</tr>
+<tr>
+<td align="center">分配效率</td>
+<td align="center">较低</td>
+<td align="center">较高</td>
+</tr>
+<tr>
+<td align="center">地址方向</td>
+<td align="center">从低向上</td>
+<td align="center">由高向下</td>
+</tr>
+</tbody></table>
+<p>C++和C分别使用什么函数来做内存的分配和释放：</p>
+<table>
+<thead>
+<tr>
+<th align="center">语言</th>
+<th align="center">分配和释放函数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">C</td>
+<td align="center">malloc/free</td>
+<td align="center">库函数，只进行内存分配和释放，无法调用构造函数和析构函数</td>
+</tr>
+<tr>
+<td align="center">C++</td>
+<td align="center">new/delete</td>
+<td align="center">运算符，能调用构造函数和析构函数，完成对象的空间分配、初始化、销毁和释放空间</td>
+</tr>
+</tbody></table>
+<p>C++和C的内存管理函数的区别：</p>
+<ol>
+<li>new分配内存空间无需指定分配内存大小，malloc需要。</li>
+<li>new返回类型指针，类型安全，malloc返回void*，再强制转换成所需要的类型。</li>
+<li>new是从自由存储区获得内存，malloc从堆中获取内存。</li>
+<li>对于类对象，new会调用构造函数和析构函数，malloc不会。</li>
+</ol>
+<p>不能混用C和C++的内存管理函数，因为它们的处理方式和内存管理机制不同。</p>
+<h1 id="内存布局"><a href="#内存布局" class="headerlink" title="内存布局"></a>内存布局</h1><p>在C++中类对象的内存布局是如何分布的呢？</p>
+<p>在这里，影响对象大小的有哪些因素呢？</p>
+<p>成员变量的类型与数量、<strong>虚函数表的指针<code>(_vftptr)</code>、虚基类表指针<code>(_vbtptr)</code>–&gt;产生虚函数表、单一继承、多重继承、重复继承、虚拟继承</strong></p>
+<h1 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h1><table>
+<thead>
+<tr>
+<th align="center">类型转换运算符</th>
+<th align="center">描述</th>
+<th align="center">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">const_cast</td>
+<td align="center">转换const属性，可以添加或移除const属性，仅适用于指针或引用，只能改变对象的底层const。</td>
+<td align="center"><code>const int a = 10; int* p = const_cast&lt;int*&gt;(&amp;a);</code></td>
+</tr>
+<tr>
+<td align="center">static_cast</td>
+<td align="center">实现隐式类型转换，支持基本数据类型、枚举、结构体、类之间的转换，以及类层次间的向上和向下转换（向下转换不安全）。</td>
+<td align="center"><code>double d = 3.14; int i = static_cast&lt;int&gt;(d);</code></td>
+</tr>
+<tr>
+<td align="center">dynamic_cast</td>
+<td align="center">动态类型转换，用于将基类安全地转换为派生类（或向上转换），失败时返回NULL或抛出异常。需要基类有虚函数。</td>
+<td align="center"><code>class Base &#123; virtual ~Base() &#123;&#125; &#125;; class Derived : public Base &#123;&#125;; Base* b = new Derived(); Derived* d = dynamic_cast&lt;Derived*&gt;(b);</code></td>
+</tr>
+<tr>
+<td align="center">reinterpret_cast</td>
+<td align="center">重新解释二进制数据，可以转换任何类型到任何类型，不保证类型安全。</td>
+<td align="center"><code>int a = 10; float* f = reinterpret_cast&lt;float*&gt;(&amp;a);</code></td>
+</tr>
+</tbody></table>
+<p>请注意，使用<code>const_cast</code>、<code>reinterpret_cast</code>和<code>dynamic_cast</code>时需要特别小心，因为它们可能会破坏类型安全或引入其他问题。在大多数情况下，使用<code>static_cast</code>进行类型转换是更安全的选择。</p>
+<h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>智能指针主要解决一个内存泄露的问题，它可以自动地释放内存空间。因为它本身是一个类，当函数结束的时候会调用析构函数，并由析构函数释放内存空间。</p>
+<table>
+<thead>
+<tr>
+<th align="center">智能指针类型</th>
+<th>名称</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">shared_ptr</td>
+<td>共享指针</td>
+<td align="center">多个shared_ptr可以指向相同的对象，采用引用计数机制。当最后一个引用销毁时，释放内存空间。</td>
+</tr>
+<tr>
+<td align="center">unique_ptr</td>
+<td>独占指针</td>
+<td align="center">保证同一时间段内只有一个unique_ptr能指向该对象，可通过move操作来传递unique_ptr。</td>
+</tr>
+<tr>
+<td align="center">weak_ptr</td>
+<td>弱指针</td>
+<td align="center">用来解决shared_ptr相互引用时的死锁问题，是对对象的一种弱引用，不会增加对象的引用计数。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>shared_ptr的实现原理是什么？构造函数、拷贝构造函数和赋值运算符怎么写？shared_ptr是不是线程安全的？</li>
+</ul>
+<p>（1）shared_ptr是通过引用计数机制实现的，引用计数存储着有几个shared_ptr指向相同的对象，当引用计数下降至0时就会自动销毁这个对象；</p>
+<p>（2）具体实现：</p>
+<p>1）构造函数：将指针指向该对象，引用计数置为1；</p>
+<p>2）拷贝构造函数：将指针指向该对象，引用计数++；</p>
+<p>3）赋值运算符：=号左边的shared_ptr的引用计数-1，右边的shared_ptr的引用计数+1，如果左边的引用技术降为0，还要销毁shared_ptr指向对象，释放内存空间。</p>
+<p>（3）shared_ptr的引用计数本身是安全且无锁的，但是它指向的对象的读写则不是，因此可以说shared_ptr不是线程安全的。<a href="https://link.zhihu.com/?target=https://cloud.tencent.com/developer/article/1654442">shared_ptr是线程安全的吗？ - 云+社区 - 腾讯云 (tencent.com)</a></p>
+<ul>
+<li>weak_ptr是为了解决shared_ptr的循环引用问题，那为什么不用raw ptr来解决这个问题？</li>
+</ul>
+<p>答：一个weak_ptr绑定到shared_ptr之后不会增加引用计数，一旦最后一个指向对象的shared_ptr被销毁，对象就会被释放，即使weak_ptr指向对象，也还是会释放；raw指针，当对象销毁之后会变成悬浮指针。</p>
+<h1 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h1><ul>
+<li><strong>const的作用</strong>？指针常量和常量指针？const修饰的函数能否重载？</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">描述</th>
+<th align="center">细节</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">const修饰符</td>
+<td align="center">用来定义常量，表示不可变性。</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">常量</td>
+<td align="center">被const修饰的成员函数不能修改类中的数据成员。</td>
+<td>具有不可变性</td>
+</tr>
+<tr>
+<td align="center">指针常量</td>
+<td align="center">指针本身不可修改，但指向的对象可以修改。</td>
+<td>指针本身的常量性</td>
+</tr>
+<tr>
+<td align="center">常量指针</td>
+<td align="center">指针指向的对象不可修改，但指针本身可以修改。</td>
+<td>指针指向对象的常量性。</td>
+</tr>
+<tr>
+<td align="center">const成员函数</td>
+<td align="center">不能改变类内的数据成员，也无法调用非const的成员函数。</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">const类对象函数调用const函数</td>
+<td align="center">只能调用const成员函数。</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">非const类对象函数调用const函数</td>
+<td align="center">可以调用const和非const成员函数，但优先调用非const函数（如果有重载）。</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>static的作用</strong>？static变量什么时候初始化？</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">修饰对象</th>
+<th align="center">作用范围</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">文件作用域的变量</td>
+<td align="center">本文件</td>
+<td align="center">static修饰的变量和函数仅在<strong>本文件</strong>可见，其他文件无法访问和使用，有助于避免重定义问题。</td>
+</tr>
+<tr>
+<td align="center">函数作用域的变量</td>
+<td align="center">函数内部</td>
+<td align="center">作为<strong>局部静态变量</strong>时，该变量在函数调用期间保持其值，只进行一次初始化，不会因函数调用而重置，但仅在该函数内部可见。</td>
+</tr>
+<tr>
+<td align="center">类的静态数据成员</td>
+<td align="center">所有类对象</td>
+<td align="center">static修饰的静态数据成员是所有<strong>类对象共</strong>享的，而非每个类对象独有的。这些静态数据成员在类的声明中不占用内存，必须在.cpp文件中定义以分配内存。</td>
+</tr>
+<tr>
+<td align="center">类的静态成员函数</td>
+<td align="center">所有类对象</td>
+<td align="center">static修饰的静态成员函数-&gt;静态数据成员和函数-&gt;x非静态数据成员和函数。<br>它们属于类本身而非类的某个特定对象。</td>
+</tr>
+<tr>
+<td align="center">初始化过程</td>
+<td align="center"></td>
+<td align="center">文件域的静态变量和类的静态成员变量在main函数执行之前的静态初始化过程中分配内存并初始化；局部静态变量在第一次使用时分配内存并初始化。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>其他关键字</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>extern</td>
+<td>它与”C”一起连用时，如: extern “C” void fun(int a, int b);则告诉编译器在编译fun这个函数名时按着C的规则去翻译相应的函数名而不是C++的；当它作为一个对函数或者全局变量的外部声明，提示编译器遇到此变量或函数时，在其它模块中寻找其定义。</td>
+<td></td>
+</tr>
+<tr>
+<td>explicit</td>
+<td>标明类的构造函数是显式的，不能进行隐式转换。</td>
+<td></td>
+</tr>
+<tr>
+<td>constexpr</td>
+<td>这个关键字明确的告诉编译器应该去验证(函数或变量)在编译期是否就应该是一个常数（这样编译器就可以大胆进行优化）。</td>
+<td></td>
+</tr>
+<tr>
+<td>volatile</td>
+<td>跟编译器优化有关，告诉编译器每次操作该变量时一定要从内存中真正取出，而不是使用已经存在寄存器中的备份。</td>
+<td></td>
+</tr>
+<tr>
+<td>mutable</td>
+<td>可变的意思，使类中被声明为const的函数可以修改类中的非静态成员</td>
+<td></td>
+</tr>
+<tr>
+<td>auto</td>
+<td>用于实现类型自动推导，让编译器来操心变量的类型，auto不能用于函数传参和推导数组类型</td>
+<td></td>
+</tr>
+<tr>
+<td>deltype</td>
+<td>用于实现类型自动推导，让编译器来操心变量的类型，deltype可以解决这个问题</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="左值右值-构造函数"><a href="#左值右值-构造函数" class="headerlink" title="左值右值 构造函数"></a>左值右值 构造函数</h1><p>左值就是具有可寻址的存储单元，并且能由用户改变其值的量，比如常见的变量：一个int，float，class等。左值具有持久的状态，直到离开作用域才销毁；右值表示即将销毁的临时对象，具有短暂的状态，比如字面值常量“hello”，返回非引用类型的表达式int func()等，都会生成右值；</p>
+<p>右值引用就是必须绑定到右值的引用，可以通过&amp;&amp;（两个取地址符）来获得右值引用；右值引用只能绑定到即将销毁的对象，因此可以自由地移动其资源；</p>
+<p>右值引用是为了支持移动操作而引出的一个概念，它只能绑定到一个将要销毁的对象，使用右值引用的移动操作可以避免无谓的拷贝，提高性能。使用std::move()函数可以将一个左值转换为右值引用。（可以通过两个很长的字符串的直接赋值和移动赋值来测试一下性能的差距)。</p>
+<ul>
+<li>为什么要自己定义拷贝构造函数？什么是深拷贝和浅拷贝？</li>
+</ul>
+<p>（1）拷贝构造函数的作用就是定义了当我们用同类型的另外一个对象初始化本对象的时候做了什么，在某些情况下，如果我们不自己定义拷贝构造函数，使用默认的拷贝构造函数，就会出错。比如一个类里面有一个指针，如果使用默认的拷贝构造函数，会将指针拷贝过去，即两个指针指向同个对象，那么其中一个类对象析构之后，这个指针也会被delete掉，那么另一个类里面的指针就会变成野指针（悬浮指针）；</p>
+<p>（2）这也正是深拷贝和浅拷贝的区别，浅拷贝只是简单直接地复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存。 但深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。</p>
+<ul>
+<li>什么是移动构造函数，和拷贝构造函数的区别？</li>
+</ul>
+<p>就是拷贝传递内存后就销毁他</p>
+<p><a href="https://link.zhihu.com/?target=https://blog.csdn.net/weixin_36725931/article/details/85218924">C++11 移动构造函数_项脊轩-CSDN博客_c++ 移动构造</a></p>
+<p>答：移动构造函数需要传递的参数是一个右值引用，移动构造函数不分配新内存，而是接管传递而来对象的内存，并在移动之后把源对象销毁；拷贝构造函数需要传递一个左值引用，可能会造成重新分配内存，性能更低。</p>
+<h1 id="内联函数和宏"><a href="#内联函数和宏" class="headerlink" title="内联函数和宏"></a>内联函数和宏</h1><p>内联函数就是在编译的时候在函数调用点直接展开函数  类似与匿名函数但是可以作为函数变量可以反复使用</p>
+<p>define 是在预处理作为命令进行文本性切换</p>
+<h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><ul>
+<li>C++11的新特性</li>
+</ul>
+<p>（1）auto关键字，可以自动推断出变量的类型；</p>
+<p>（2）nullptr来代替NULL，可以避免重载时出现的问题（一个是int，一个是void*）;</p>
+<p>（3）智能指针，那三个智能指针，对内存进行管理；</p>
+<p>（4）右值引用，基于右值引用可以实现移动语义和完美转发，消除两个对象交互时不必要的对象拷贝，节省运算存储资源，提高效率；</p>
+<p>（5）lambda表达式，可以理解为一个匿名的内联函数。</p>
+<p>不足之处：没有GC（垃圾回收机制）、没有反射机制等。</p>
+<ul>
+<li>指针和引用的区别</li>
+</ul>
+<p>（1）指针本质是一个地址，有自己的内存空间，引用只是一个别名；</p>
+<p>（2）指针可以指向其他的对象，但是引用不能指向其他的对象，初始化之后就不能改变了；</p>
+<p>（3）指针可以初始化为nullptr，而引用必须被初始化为一个已有对象的引用；</p>
+<p>（4）指针可以是多级指针，引用只能是一级。</p>
+<ul>
+<li>重载、重写和隐藏的区别</li>
+</ul>
+<p>（1）重载指的是同一个名字的函数，具有不同的参数列表（参数类型、个数），根据参数列表决定调用哪一个函数；</p>
+<p>（2）重写（覆盖）指的是，派生类中的函数重写了基类中的虚函数，重写的基类的中函数必须被声明为virtual，并且返回值，参数列表和基类中的函数一致；</p>
+<p>（3）隐藏是指，派生类中的同名函数把基类中的同名函数隐藏了，即基类同名函数被屏蔽掉；此时基类函数不能声明为virtual。</p>
+<ul>
+<li>Delete和Delete[]的区别，delete[]如何知道要delete多少次，在类的成员函数中能否Delete This？</li>
+</ul>
+<h1 id="STL"><a href="#STL" class="headerlink" title="STL"></a>STL</h1><p>1）vector，底层是一块具有连续内存的数组，vector的核心在于其长度自动可变。vector的数据结构主要由三个迭代器(指针)来完成：指向首元素的start，指向尾元素的finish和指向内存末端的end_of_storage。vector的扩容机制是：当目前可用的空间不足时，分配目前空间的两倍或者目前空间加上所需的新空间大小（取较大值），容量的扩张必须经过“重新配置、元素移动、释放原空间”等过程。</p>
+<p>（2）list，底层是一个循环双向链表，链表结点和链表分开独立定义的，结点包含pre、next指针和data数据。</p>
+<p>（3）deque，双向队列，由分段连续空间构成，每段连续空间是一个缓冲区，由一个中控器来控制。它必须维护一个map指针（中控器指针），还要维护start和finish两个迭代器，指向第一个缓冲区，和最后一个缓冲区。deque可以在前端或后端进行扩容，这些指针和迭代器用来控制分段缓冲区之间的跳转。</p>
+<p>（4）stack和queue，栈和队列。它们都是由由deque作为底层容器实现的，他们是一种容器配接器，修改了deque的接口，具有自己独特的性质（此二者也可以用list作为底层实现）；stack是deque封住了头端的开口，先进后出，queue是deque封住了尾端的开口，先进先出。</p>
+<p>（5）priority_queue，优先队列。是由以vector作为底层容器，以heap作为处理规则，heap的本质是一个完全二叉树。</p>
+<p>（6）set和map。底层都是由红黑树实现的。红黑树是一种二叉搜索树，但是它多了一个颜色的属性。红黑树的性质如下：1）每个结点非红即黑；2）根节点是黑的；3）如果一个结点是红色的，那么它的子节点就是黑色的；4）任一结点到树尾端（NULL）的路径上含有的黑色结点个数必须相同。通过以上定义的限制，红黑树确保没有一条路径会比其他路径多出两倍以上；因此，红黑树是一种弱平衡二叉树，相对于严格要求平衡的平衡二叉树来说，它的旋转次数少，所以对于插入、删除操作较多的情况下，通常使用红黑树。</p>
+<p>补充：平衡二叉树(AVL)和红黑树的区别：AVL 树是高度平衡的，频繁的插入和删除，会引起频繁的rebalance（旋转操作），导致效率下降；红黑树不是高度平衡的，算是一种折中，插入最多两次旋转，删除最多三次旋转。</p>
+<h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><p><img src="https://www.runoob.com/wp-content/uploads/2019/03/sort.png" alt="img"></p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2019/03/0B319B38-B70E-4118-B897-74EFA7E368F9.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th>排序</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>插入排序</td>
+<td>扑克排序，插入到你何时的牌的位置</td>
+<td></td>
+</tr>
+<tr>
+<td>选择排序</td>
+<td>直觉，不断选择最小的放在前面</td>
+<td></td>
+</tr>
+<tr>
+<td>冒泡排序</td>
+<td>左右俩俩比较，最上面冒泡出来</td>
+<td></td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td>分治法，二分处理每个子块后归并成一个父块</td>
+<td></td>
+</tr>
+<tr>
+<td>希尔排序</td>
+<td>h来分治处理部分排序</td>
+<td></td>
+</tr>
+<tr>
+<td>快速排序</td>
+<td>选择一个piv元素 使得左边小于piv 右边大于piv</td>
+<td></td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>计数排序</td>
+<td>个位为一个桶</td>
+<td></td>
+</tr>
+<tr>
+<td>基数排序</td>
+<td>十位为一个桶</td>
+<td></td>
+</tr>
+<tr>
+<td>桶排序</td>
+<td>不同区间桶</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>快排：</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/05/06/0032-cpp/">http://example.com/2024/05/06/0032-cpp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">unity 优化</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/12/0031-gitCommit/" title="git commit规范"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">git commit规范</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E6%80%81-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">多态 虚函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">内存分配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-number">3.</span> <span class="toc-text">内存布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">类型转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">5.</span> <span class="toc-text">智能指针</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">6.</span> <span class="toc-text">关键字</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">左值右值 构造函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%92%8C%E5%AE%8F"><span class="toc-number">8.</span> <span class="toc-text">内联函数和宏</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%82%E9%A1%B9"><span class="toc-number">9.</span> <span class="toc-text">杂项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STL"><span class="toc-number">10.</span> <span class="toc-text">STL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="toc-number">11.</span> <span class="toc-text">排序算法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity 优化"/></a><div class="content"><a class="title" href="/2024/05/10/AAAunityOptimize/" title="unity 优化">unity 优化</a><time datetime="2024-05-10T10:21:03.000Z" title="发表于 2024-05-10 18:21:03">2024-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/06/0032-cpp/" title="c++基础理论"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++基础理论"/></a><div class="content"><a class="title" href="/2024/05/06/0032-cpp/" title="c++基础理论">c++基础理论</a><time datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/12/0031-gitCommit/" title="git commit规范"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="git commit规范"/></a><div class="content"><a class="title" href="/2024/04/12/0031-gitCommit/" title="git commit规范">git commit规范</a><time datetime="2024-04-12T13:40:02.000Z" title="发表于 2024-04-12 21:40:02">2024-04-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/10/0030-U3dHotrefresh/" title="unity热更新理论"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity热更新理论"/></a><div class="content"><a class="title" href="/2024/04/10/0030-U3dHotrefresh/" title="unity热更新理论">unity热更新理论</a><time datetime="2024-04-10T09:28:17.000Z" title="发表于 2024-04-10 17:28:17">2024-04-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/10/0029-U3dNetWork/" title="unity网络开发理论"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity网络开发理论"/></a><div class="content"><a class="title" href="/2024/04/10/0029-U3dNetWork/" title="unity网络开发理论">unity网络开发理论</a><time datetime="2024-04-10T01:16:49.000Z" title="发表于 2024-04-10 09:16:49">2024-04-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
