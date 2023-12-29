@@ -1,0 +1,1075 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>unity 常见api | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、Event Function函数   事件函数    事件 作用 省流    Reset() 被附加脚本时、在游戏物体的组件上按Reset时会触发该事件函数    Start() 在游戏初始化时会执行一次    Update() 每一帧都会运行这个方法    FixedUpdate() 会在指定帧调用该方法多少次    LateUpdate(） 晚于Update的运行顺序，但是FPS和Upda">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unity 常见api">
+<meta property="og:url" content="http://example.com/2023/12/08/unityApi/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="1、Event Function函数   事件函数    事件 作用 省流    Reset() 被附加脚本时、在游戏物体的组件上按Reset时会触发该事件函数    Start() 在游戏初始化时会执行一次    Update() 每一帧都会运行这个方法    FixedUpdate() 会在指定帧调用该方法多少次    LateUpdate(） 晚于Update的运行顺序，但是FPS和Upda">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2023-12-08T10:21:00.000Z">
+<meta property="article:modified_time" content="2021-11-22T07:27:33.501Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="unity">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/12/08/unityApi/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'unity 常见api',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-22 15:27:33'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">unity 常见api</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-08T10:21:00.000Z" title="发表于 2023-12-08 18:21:00">2023-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-22T07:27:33.501Z" title="更新于 2021-11-22 15:27:33">2021-11-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="unity 常见api"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1、Event-Function函数"><a href="#1、Event-Function函数" class="headerlink" title="1、Event Function函数"></a>1、Event Function函数</h1><p>   事件函数</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>作用</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reset()</td>
+<td>被附加脚本时、在游戏物体的组件上按Reset时会触发该事件函数</td>
+<td></td>
+</tr>
+<tr>
+<td>Start()</td>
+<td>在游戏初始化时会执行一次</td>
+<td></td>
+</tr>
+<tr>
+<td>Update()</td>
+<td>每一帧都会运行这个方法</td>
+<td></td>
+</tr>
+<tr>
+<td>FixedUpdate()</td>
+<td>会在指定帧调用该方法多少次</td>
+<td></td>
+</tr>
+<tr>
+<td>LateUpdate(）</td>
+<td>晚于Update的运行顺序，但是FPS和Update是一样的</td>
+<td></td>
+</tr>
+<tr>
+<td>Awake() Start()</td>
+<td>都是在游戏物体初始化运行一次，但是Awake的运行顺序高于Start的，并且只要脚本中存在Awake方法，则无论是否挂载了该脚本都会执行该方法</td>
+<td></td>
+</tr>
+<tr>
+<td>OnEnable():</td>
+<td>当将物体的SetActive设置为true时就会自动调用调用该方法</td>
+<td></td>
+</tr>
+<tr>
+<td>OnDestory():</td>
+<td>当关闭游戏则会调用该方法</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="2、Time类"><a href="#2、Time类" class="headerlink" title="2、Time类"></a>2、Time类</h1><p>   时间类函数</p>
+<table>
+<thead>
+<tr>
+<th align="center">函数</th>
+<th align="center">函数作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Time.time</td>
+<td align="center">表示从游戏开发到现在的时间，会随着游戏的暂停而停止计算。</td>
+</tr>
+<tr>
+<td align="center">Time.timeSinceLevelLoad</td>
+<td align="center">表示从当前Scene开始到目前为止的时间，也会随着暂停操作而停止。</td>
+</tr>
+<tr>
+<td align="center">Time.deltaTime</td>
+<td align="center">表示从上一帧到当前帧时间，以秒为单位。【一般用来控制角色、动画的运动。】</td>
+</tr>
+<tr>
+<td align="center">Time.fixedTime</td>
+<td align="center">表示以秒计游戏开始的时间，固定时间以定期间隔更新（相当于fixedDeltaTime）直到达到time属性。</td>
+</tr>
+<tr>
+<td align="center">Time.fixedDeltaTime</td>
+<td align="center">表示以秒计间隔，在物理和其他固定帧率进行更新，在Edit-&gt;ProjectSettings-&gt;Time的Fixed Timestep可以自行设置。</td>
+</tr>
+<tr>
+<td align="center">Time.SmoothDeltaTime</td>
+<td align="center">表示一个平稳的deltaTime，根据前 N帧的时间加权平均的值。</td>
+</tr>
+<tr>
+<td align="center">Time.timeScale</td>
+<td align="center">时间缩放，默认值为1，若设置&lt;1，表示时间减慢，若设置&gt;1,表示时间加快，可以用来加速和减速游戏，回放等、非常有用。如果游戏中控制运动的都是使用了Time.deltatime的话，则可以通过设置Time.timeScale=0来暂停其运动等。</td>
+</tr>
+<tr>
+<td align="center">Time.frameCount</td>
+<td align="center">总帧数。</td>
+</tr>
+<tr>
+<td align="center">Time.realtimeSinceStartup</td>
+<td align="center">表示自游戏开始后的总时间，即使暂停也会不断的增加。【一般用作性能测试。】</td>
+</tr>
+<tr>
+<td align="center">Time.captureFramerate</td>
+<td align="center">表示设置每秒的帧率，然后不考虑真实时间。</td>
+</tr>
+<tr>
+<td align="center">Time.unscaledDeltaTime</td>
+<td align="center">以秒计算，完成最后一帧的时间 不考虑timescale时候与deltaTime相同，若timescale被设置，则无效。</td>
+</tr>
+<tr>
+<td align="center">Time.unscaledTime</td>
+<td align="center">从游戏开始到现在所用的时间 不考虑timescale时候与time相同，若timescale被设置，则无效。</td>
+</tr>
+</tbody></table>
+<h1 id="3、GameObject类"><a href="#3、GameObject类" class="headerlink" title="3、GameObject类"></a>3、GameObject类</h1><h2 id="创建游戏物体的三种方法"><a href="#创建游戏物体的三种方法" class="headerlink" title="创建游戏物体的三种方法"></a>创建游戏物体的三种方法</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GameObjectgo=new GameObejct(“游戏物体名”);</td>
+<td align="center">通过其构造器来创建（一般是用来创建空的游戏来存放其他东西的）</td>
+</tr>
+<tr>
+<td align="center">GameObject.Instantiate(prefab)</td>
+<td align="center">根据Prefab或者是另外一个游戏物体来创建（克隆Colon），可以实例粒子、等其他的游戏物体，很是常用的</td>
+</tr>
+<tr>
+<td align="center">GameObject.CreatePrimitive(PrimitiveType.**)</td>
+<td align="center">创建原始的游戏物体，基本的几何体</td>
+</tr>
+</tbody></table>
+<h2 id="为游戏物体添加组件，-其中组件可以是我们自己自定义的脚本"><a href="#为游戏物体添加组件，-其中组件可以是我们自己自定义的脚本" class="headerlink" title="为游戏物体添加组件， 其中组件可以是我们自己自定义的脚本"></a>为游戏物体添加组件， 其中组件可以是我们自己自定义的脚本</h2><p>  GameObject.AddComponent&lt;组件名&gt;</p>
+<h2 id="属性、变量"><a href="#属性、变量" class="headerlink" title="属性、变量"></a>属性、变量</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GameObject.activeInHierarchy</td>
+<td align="center">游戏物体是否处于激活状态，与父类有关，父类被取消激活，则子类也是取消激活的</td>
+</tr>
+<tr>
+<td align="center">GameObject.activeSelf</td>
+<td align="center">自身的激活状态，与父类无关，只与自身有关。控制组件的激活与取消激活则使用.enable=false/true</td>
+</tr>
+<tr>
+<td align="center">GameObject.tag</td>
+<td align="center">游戏物体的tag标签，具体的由程序员自定义设置</td>
+</tr>
+<tr>
+<td align="center">GameObject.SetActive(false/true)</td>
+<td align="center">通过参数的控制来设置其游戏物体的激活状态，true为激活状态，反之为取消激活状态</td>
+</tr>
+</tbody></table>
+<h2 id="UnityEngine-Object中的共有方法与变量"><a href="#UnityEngine-Object中的共有方法与变量" class="headerlink" title="UnityEngine.Object中的共有方法与变量"></a>UnityEngine.Object中的共有方法与变量</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">name</td>
+<td align="center">名字，调用该变量，则无论是通过GameObject还是Component都是返回游戏物体的名字</td>
+</tr>
+<tr>
+<td align="center">Destroy()</td>
+<td align="center">删除游戏物体，但是不会立马在unity中删除，而是会先进行回收，等确定没对象使用的时候，在进行删除</td>
+</tr>
+<tr>
+<td align="center">DontDestroyOnLoad()</td>
+<td align="center">当加载新的场景的时候，不删除这个场景中的某个游戏物体</td>
+</tr>
+<tr>
+<td align="center">FindObjectType&lt;&gt;</td>
+<td align="center">通过类型来进行查找，是进行全局的查找，则就是在整个场景中进行查找</td>
+</tr>
+<tr>
+<td align="center">FindObjectsType&lt;&gt;</td>
+<td align="center">通过类型来进行查找，是进行全局的查找，则就是在整个场景中进行查找</td>
+</tr>
+<tr>
+<td align="center">FindGameObjectWithTag</td>
+<td align="center">如果查到的是多个，则只返回查找到的第一个</td>
+</tr>
+<tr>
+<td align="center">FindGameObejctsWithTag</td>
+<td align="center">返回查找到的游戏物体集合</td>
+</tr>
+</tbody></table>
+<h2 id="消息的发送"><a href="#消息的发送" class="headerlink" title="消息的发送"></a>消息的发送</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">BroadcastMessage()</td>
+<td align="center">广播发送消息，则该物体上对应的方法会被调用，同时这个游戏物体上的子物体上对应的方法也会被调用的</td>
+</tr>
+<tr>
+<td align="center">SendMessage()</td>
+<td align="center">发送消息，只会对这个游戏物体中脚本上的方法发送消息</td>
+</tr>
+<tr>
+<td align="center">SendMessageUpwards()</td>
+<td align="center">广播发送消息，但是和BroadcastMessage()是相反的，在调用自身的方法时也会向上传递，调用其父类的方法</td>
+</tr>
+</tbody></table>
+<h2 id="游戏组件的查找"><a href="#游戏组件的查找" class="headerlink" title="游戏组件的查找"></a>游戏组件的查找</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Cube cube = target.GetComponent<Cube>();</td>
+<td align="center">返回一个对应的组件，如果有多个，则只返回第一个</td>
+</tr>
+<tr>
+<td align="center">Cube[] cc = target.GetComponents<Cube>();</td>
+<td align="center">返回该游戏物体上所有符合条件的组件，返回一个组件数组</td>
+</tr>
+<tr>
+<td align="center">Cube[] xx = target.GetComponentsInChildren<Cube>();</td>
+<td align="center">返回该游戏物体上的对应组件，同时返回该游戏物体的子类上对应的组件</td>
+</tr>
+<tr>
+<td align="center">Cube[] yy = target.GetComponentsInParent<Cube>();</td>
+<td align="center">返回该游戏物体上的对应组件，同时返回该游戏物体的父类上对应的组件</td>
+</tr>
+</tbody></table>
+<h1 id="4、MonoBehaviours类"><a href="#4、MonoBehaviours类" class="headerlink" title="4、MonoBehaviours类"></a>4、MonoBehaviours类</h1><h2 id="继承的变量成员"><a href="#继承的变量成员" class="headerlink" title="继承的变量成员"></a>继承的变量成员</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">enabled</td>
+<td align="center">返回该组件是否被激活或者是被禁用，可以通过该变量来进行设置</td>
+</tr>
+<tr>
+<td align="center">isActiveAndEnabled</td>
+<td align="center">只能返回该组件是否激活的标志位，不能设置该变量，为只读的</td>
+</tr>
+<tr>
+<td align="center">tag</td>
+<td align="center">该组件所对应的游戏物体的标签</td>
+</tr>
+<tr>
+<td align="center">name</td>
+<td align="center">该组件所对应的游戏物体的名字</td>
+</tr>
+</tbody></table>
+<h2 id="Invoke等方法、变量："><a href="#Invoke等方法、变量：" class="headerlink" title="Invoke等方法、变量："></a>Invoke等方法、变量：</h2><p>   将添加要调用的方法添加到等待队列中，然后等待用户设定的时间后，进行队列中的方法调用。</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Invoke(“方法1”，float time)</td>
+<td align="center">在等待time的时间后调用方法1</td>
+</tr>
+<tr>
+<td align="center">bool i= IsInvoking(“方法1”)</td>
+<td align="center">返回bool值，如果方法被添加到队列中，但没有被运行则返回true，如果经过一段时间后该方法被调用了则会返回false</td>
+</tr>
+<tr>
+<td align="center">InvokeRepeating(“方法1”,time,number)</td>
+<td align="center">等待time时间后，会重复开始运行方法1，每秒钟运行number次</td>
+</tr>
+<tr>
+<td align="center">CancelInvoke()</td>
+<td align="center">会暂停通过Involve/InvokeRepeating的运行，但是一般来说CancelInvoke会和InvokeRepeating组合调用。参数由自己设定</td>
+</tr>
+</tbody></table>
+<p>  <strong>扩充： 在脚本的类前添加[ExecuteInEditMode]：则该脚本不用按游戏运行按钮就会开始编译，只限在编辑模式里面</strong> </p>
+<p>   <strong>在脚本的共有变量前添加[HideInInspector]:则该共有变量不会在Inspector面板进行显示</strong> </p>
+<h1 id="5、Coroutines协程"><a href="#5、Coroutines协程" class="headerlink" title="5、Coroutines协程"></a>5、Coroutines协程</h1><h2 id="定义协程："><a href="#定义协程：" class="headerlink" title="定义协程："></a>定义协程：</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IEnumerator 方法名( </span><br><span class="line">&#123; </span><br><span class="line"></span><br><span class="line">  <span class="keyword">yield</span> <span class="keyword">return</span> <span class="number">0</span>/<span class="literal">null</span> ; </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">yield</span> <span class="keyword">return</span> <span class="keyword">new</span> <span class="title">WaitForSeconds</span>(<span class="params"><span class="number">1.0f</span></span>)</span>; <span class="comment">//等待一定时间在运行下面的代码 </span></span><br><span class="line"></span><br><span class="line">  &#125; </span><br></pre></td></tr></table></figure>
+
+<h2 id="开启协程："><a href="#开启协程：" class="headerlink" title="开启协程："></a>开启协程：</h2><p>​    StartCoroutines(方法名());</p>
+<p>  说明：协程开启会继续执行下面代码，不会等协程方法运行完再执行接下来的方法 </p>
+<h2 id="开启与关闭协程时，StartCoriutine-参数-、StopCoroutine-参数-其中的参数要互相对应，如果传递的是方法名，则两个方法中的参数就要是方法名，如果是IEnumerator的返回值，则其中两个方法发的参数就要是IEnumerator的返回值"><a href="#开启与关闭协程时，StartCoriutine-参数-、StopCoroutine-参数-其中的参数要互相对应，如果传递的是方法名，则两个方法中的参数就要是方法名，如果是IEnumerator的返回值，则其中两个方法发的参数就要是IEnumerator的返回值" class="headerlink" title="开启与关闭协程时，StartCoriutine(参数)、StopCoroutine(参数) 其中的参数要互相对应，如果传递的是方法名，则两个方法中的参数就要是方法名，如果是IEnumerator的返回值，则其中两个方法发的参数就要是IEnumerator的返回值"></a>开启与关闭协程时，StartCoriutine(参数)、StopCoroutine(参数) 其中的参数要互相对应，如果传递的是方法名，则两个方法中的参数就要是方法名，如果是IEnumerator的返回值，则其中两个方法发的参数就要是IEnumerator的返回值</h2> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> private IEnumerator coroutine;</span><br><span class="line"></span><br><span class="line">coroutine = WaitAndPrint();</span><br><span class="line"></span><br><span class="line">  StartCoroutine(coroutine);</span><br><span class="line"></span><br><span class="line">  StopCoroutine(coroutine);</span><br></pre></td></tr></table></figure>
+
+<p>​          </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">StartCoroutine(&quot;WaitAndPrint&quot;);</span><br><span class="line"></span><br><span class="line">StopCoroutine(&quot;WaitAndPrint&quot;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="StopAllCoroutines-停止所有的协程，不管你是怎么调用的"><a href="#StopAllCoroutines-停止所有的协程，不管你是怎么调用的" class="headerlink" title="StopAllCoroutines() 停止所有的协程，不管你是怎么调用的"></a>StopAllCoroutines() 停止所有的协程，不管你是怎么调用的</h2><h1 id="6、OnMousexx鼠标触发事件："><a href="#6、OnMousexx鼠标触发事件：" class="headerlink" title="6、OnMousexx鼠标触发事件："></a>6、OnMousexx鼠标触发事件：</h1><p> 如果是通过Collider进行触发检测的话，则要在设置中打开允许进行射线检测。</p>
+<table>
+<thead>
+<tr>
+<th align="center">事件名称</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">OnMouseDown()</td>
+<td align="center">当鼠标按下的时候触发，按一次触发一次</td>
+</tr>
+<tr>
+<td align="center">OnMouseDrag()</td>
+<td align="center">当鼠标按住不放的时候一直触发，是每一帧进行触发</td>
+</tr>
+<tr>
+<td align="center">OnMouseUp()</td>
+<td align="center">当鼠标抬起的时候触发，只执行一次</td>
+</tr>
+<tr>
+<td align="center">OnMouseEnter()</td>
+<td align="center">当鼠标进入的时候触发，进入一次触发一次</td>
+</tr>
+<tr>
+<td align="center">OnMouseOver()</td>
+<td align="center">当鼠标在触发物体的上面时，则一直触发</td>
+</tr>
+<tr>
+<td align="center">OnMouseExit()</td>
+<td align="center">当鼠标移出的时候触发</td>
+</tr>
+<tr>
+<td align="center">OnMouseUpAsButton()</td>
+<td align="center">相当于是按钮的功能，当鼠标在同一个游戏物体上按下抬起的时候才会触发，按下与抬起不在同一个游戏上的话则不会进行触发。</td>
+</tr>
+</tbody></table>
+<h1 id="7、Mathf类：所有的成员均为静态的"><a href="#7、Mathf类：所有的成员均为静态的" class="headerlink" title="7、Mathf类：所有的成员均为静态的"></a>7、Mathf类：所有的成员均为静态的</h1><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Mathf.Abs()</td>
+<td align="center">返回绝对值</td>
+</tr>
+<tr>
+<td align="center">Mathf.Ceil()</td>
+<td align="center">向上取整，例如：10.1 –&gt; 11</td>
+</tr>
+<tr>
+<td align="center">Mathf.Clamp(value,min,max)</td>
+<td align="center">限制value的值在min和max之间。如果value的值小于min,则返回min,如果value的值大于max,则返回max。常用于控制角色血量，确保血量值在0到100之间。</td>
+</tr>
+<tr>
+<td align="center">Mathf.ClosePowerOfTwo(value)</td>
+<td align="center">取得离value的2次方最近的值</td>
+</tr>
+<tr>
+<td align="center">Mathg.DeltaAngke</td>
+<td align="center">取得两个角度之间的最小夹角</td>
+</tr>
+<tr>
+<td align="center">Mathf.Floor</td>
+<td align="center">向下取整</td>
+</tr>
+<tr>
+<td align="center">Mathf.Pow(i,j)</td>
+<td align="center">取得i的j次方</td>
+</tr>
+<tr>
+<td align="center">Mathf.MoveToWards()</td>
+<td align="center">一般用来做移动控制，是匀速的运动，加速度固定的</td>
+</tr>
+<tr>
+<td align="center">Mathf.Lerp()</td>
+<td align="center">差值运算，用于控制动画、运动等，越往后运行得越慢。</td>
+</tr>
+<tr>
+<td align="center">Mathf.PingPong(t,maxValue)</td>
+<td align="center">类似乒乓球的来回运动。起始值是0，通过t变量来控制值由0向maxValue移动，当t大于maxValue的时候又向0进行移动，如此往复。t变量常用Time.deltatime来控制。</td>
+</tr>
+</tbody></table>
+<h1 id="8、Input类"><a href="#8、Input类" class="headerlink" title="8、Input类"></a>8、Input类</h1><p>输入类</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GetKey()</td>
+<td align="center">按键一直按着时触发</td>
+</tr>
+<tr>
+<td align="center">GetKeyDown()</td>
+<td align="center">按键被按下那一刻进行触发</td>
+</tr>
+<tr>
+<td align="center">GetKeyUp()</td>
+<td align="center">按键被按下后抬起时触发</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">GetMouseButton(0/1/2)</td>
+<td align="center">1:左键 2:右键 3:中键 鼠标一直按着时触发</td>
+</tr>
+<tr>
+<td align="center">GetMouseButtonDown()</td>
+<td align="center">鼠标按下那一刻触发</td>
+</tr>
+<tr>
+<td align="center">GetMouseButtonUp()</td>
+<td align="center">鼠标抬起的那一刻时触发</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">GetButtonDown()</td>
+<td align="center">用户自定义的虚拟按键被按下那一刻触发</td>
+</tr>
+<tr>
+<td align="center">GetButton()</td>
+<td align="center">用户自定义的虚拟按键被按着时触发</td>
+</tr>
+<tr>
+<td align="center">GetButtonUp()</td>
+<td align="center">用户自定义的虚拟按键抬起时触发</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">GetAxis(“虚拟轴名”)</td>
+<td align="center">通过按下的虚拟轴来返回-1~1之间的值，开始值是0，然后向-1/1进行渐渐的变化，有一定的加速度。一般用来控制运动的，比如是赛车的加速运动等。</td>
+</tr>
+<tr>
+<td align="center">GetAxisRaw()</td>
+<td align="center">其他的和GetAxis差不多，就是少了渐变效果，返回值只有 0 1 -1三个。</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">anyKeyDown()</td>
+<td align="center">当任何按键被按下（包括鼠标按键）时返回true。</td>
+</tr>
+<tr>
+<td align="center">anyKey()</td>
+<td align="center">当任何按键被按着（包括鼠标）时返回true。</td>
+</tr>
+<tr>
+<td align="center">mousePosition()</td>
+<td align="center">返回鼠标在屏幕上的像素坐标，屏幕坐标z轴衡为0的。</td>
+</tr>
+</tbody></table>
+<h1 id="9、Vector2"><a href="#9、Vector2" class="headerlink" title="9、Vector2"></a>9、Vector2</h1><p>   二维向量</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">magnitude</td>
+<td align="center">返回向量的长度</td>
+</tr>
+<tr>
+<td align="center">normalized</td>
+<td align="center">返回这个向量长度为1的矢量，不管这个向量多长，也是返回1的矢量，只是返回值，不对原向量的值产生影响</td>
+</tr>
+<tr>
+<td align="center">Normalize()</td>
+<td align="center">无参数的，也是向量化，但是调用该方法会改变原向量值，使其的值被向量化 了</td>
+</tr>
+<tr>
+<td align="center">ClampMagnitude()</td>
+<td align="center">将一个向量限制在参数中指定的长度之间</td>
+</tr>
+<tr>
+<td align="center">MoveToWards()</td>
+<td align="center">用来做匀速的运动，由一个位置向另一个位置进行移动</td>
+</tr>
+<tr>
+<td align="center">sqrMagnitude</td>
+<td align="center">对求向量的的长度时不进行开平方根运算了，减少性能的损耗，一般是用来比较两个向量的长度大小的。</td>
+</tr>
+</tbody></table>
+<p>  其他的参考API文档即可，较为简单。 </p>
+<p>  <strong>扩充：向量是结构体，为值类型，修改其中的变量的时候要整体进行修改，不能单独的进行单个变量的赋值修改</strong> </p>
+<h1 id="10、Vector3"><a href="#10、Vector3" class="headerlink" title="10、Vector3"></a>10、Vector3</h1><p>三维变量</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Cross()</td>
+<td align="center">插乘运算【左手法则】，通过两个向量来获得另一个向量的方向，然后进行相关的判断</td>
+</tr>
+<tr>
+<td align="center">Project()</td>
+<td align="center">投影运算</td>
+</tr>
+<tr>
+<td align="center">Reflect()</td>
+<td align="center">反射运算</td>
+</tr>
+<tr>
+<td align="center">Slerp()</td>
+<td align="center">按照角度进行插值，与lerp的按照位置信息进行插值的，一般用在炮台的旋转，使旋转的更加平滑</td>
+</tr>
+</tbody></table>
+<h1 id="11、Random类"><a href="#11、Random类" class="headerlink" title="11、Random类"></a>11、Random类</h1><p>   随机数类</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InitState（）</td>
+<td>通过参数指定的种子，然后再调用Range()产生随机数的时候会依据种子来进行生成，则每一次运行所生成的随机数都是一样的，是伪随机数。一般要生成的随机数不同，可以设置参数为System.DataTime.Now.Ticks：通过时间戳来完成**</td>
+</tr>
+<tr>
+<td>insideUnitFCircle</td>
+<td>在单位为1的园内随机生成一个位置信息，如果要在更大的圆中生成，则可以在后面*圆的半径信息。一般用来控制随机生成敌人的位置信息</td>
+</tr>
+<tr>
+<td>**insideUnitSphere:</td>
+<td>在单位为1的球内随机生成一个位置信息，如果要在更大的球中生成，则可以在后面*圆的半径信息</td>
+</tr>
+</tbody></table>
+<h1 id="12、Quaternion"><a href="#12、Quaternion" class="headerlink" title="12、Quaternion:"></a>12、Quaternion:</h1><p>四元数   </p>
+<p>欧拉角【eylarAngles】与面板中的值对应和四元数【rotation】之间是可以进行转换的，一般欧拉角是用来让用户可以直观的看到的，而四元数是用来控制内部的运算 的。 </p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">.eulerAngles</td>
+<td align="center">将四元数转变为欧拉角</td>
+</tr>
+<tr>
+<td align="center">Euler()</td>
+<td align="center">将欧拉角转变为四元数</td>
+</tr>
+<tr>
+<td align="center">.LookRotation()</td>
+<td align="center">让玩家通过设置四元数来进行望向敌人的旋转，将向量方向转变为四元数</td>
+</tr>
+<tr>
+<td align="center">Vector3 temp = enemy.position - player.position;</td>
+<td align="center">获得两个位置信息之间的变量，是主角望向敌人，所以要设置向量的方向是指向敌人的</td>
+</tr>
+<tr>
+<td align="center">enemp.y = 0;</td>
+<td align="center">如果不想主角在望向他的时候出现低头的情况，也就是y轴的值出现了变化了。</td>
+</tr>
+<tr>
+<td align="center">player.rotation= Quaternion.LookRotation(temp);</td>
+<td align="center">让主角朝向敌人旋转，这里使用了Quaternion.LookRotation函数，将向量temp作为参数传入，返回一个四元数，表示主角朝向敌人的旋转角度。然后将这个四元数赋值给player的rotation属性，使得主角朝向敌人旋转。</td>
+</tr>
+<tr>
+<td align="center">slerp()</td>
+<td align="center">在做朝向的旋转的时候，不建议使用lerp，而是建议使用slerp，使其的旋转朝向更为平滑，更加的自然</td>
+</tr>
+<tr>
+<td align="center">Quaternion target= Quaternion.LookRotation(temp);</td>
+<td align="center">（定义一个目标四元数target，这个四元数表示主角朝向敌人的旋转角度。这里使用了Quaternion.LookRotation函数，将向量temp作为参数传入，返回一个四元数。这个四元数赋值给target变量。）</td>
+</tr>
+<tr>
+<td align="center">player.rotation = Quaternion.Slerp(player.rotation, target, Time.deltaTime); //插值的缓慢旋转</td>
+<td align="center">（使用Quaternion.Slerp函数对主角的当前旋转角度和目标旋转角度进行平滑插值，得到一个平滑的旋转角度。然后将这个插值结果赋值给player的rotation属性，使得主角按照平滑的旋转角度进行旋转。这里使用了Time.deltaTime作为插值的时间参数，使得插值的结果更加平滑。同时，注释说明了这是一个缓慢的旋转过程。）</td>
+</tr>
+</tbody></table>
+<h1 id="13、Rigidbody"><a href="#13、Rigidbody" class="headerlink" title="13、Rigidbody"></a>13、Rigidbody</h1><p>刚体组件，控制角色的移动</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">.position</td>
+<td align="center">可以通过刚体来控制运动，在控制运动方面，使用rigibody.positon比transform.porition计算要快的多，相关的物理计算也是在刚体中计算好了，但是不建议使用这个方法来持续的控制物体的运动，不平滑，控制一两次的时候还可以使用</td>
+</tr>
+<tr>
+<td align="center">MovePosition()</td>
+<td align="center">对position的优化，其中利用了插值运算，一般持续运动的则使用这个方法，不出现卡顿的现象</td>
+</tr>
+<tr>
+<td align="center">rotation、MoveRotation</td>
+<td align="center">不建议使用rotation,比较耗性能，建议使用MoveRotation(),然后配合Quaternion,slerp()进行使用，使其更加的平滑</td>
+</tr>
+<tr>
+<td align="center">AddForce()</td>
+<td align="center">为刚体添加力，一般可以用在赛车游戏中，当进行短时的加速则可以给以限定时间的AddForce方法</td>
+</tr>
+</tbody></table>
+<h1 id="14、Camera"><a href="#14、Camera" class="headerlink" title="14、Camera"></a>14、Camera</h1><p>相机组件</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Camer.main</td>
+<td align="center">用来进行主相机cream组件的查找射线</td>
+</tr>
+<tr>
+<td align="center">Ray ray = cameraMain.ScreenPointToRay(Input.mousePosition)</td>
+<td align="center">获得相机到鼠标之间的射线</td>
+</tr>
+<tr>
+<td align="center">RaycastHit hit;</td>
+<td align="center">用来存放射线检测到的游戏物体的信息</td>
+</tr>
+<tr>
+<td align="center">bool temp = Physics.Raycast(ray, out hit)</td>
+<td align="center">进行射线检测</td>
+</tr>
+</tbody></table>
+<h1 id="15、Application"><a href="#15、Application" class="headerlink" title="15、Application"></a>15、Application</h1><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SreeamingAcsets</td>
+<td align="center">该文件下的资源不会被压缩，导入是什么类型还是什么类型，【主要是音频、视频资源】</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">dataPath</td>
+<td align="center">工程文件路径</td>
+</tr>
+<tr>
+<td align="center">streamingAssetsPath</td>
+<td align="center">可以通过文件流来进行读取的文件路径</td>
+</tr>
+<tr>
+<td align="center">persistenDataPath</td>
+<td align="center">可以实例的文件路径</td>
+</tr>
+<tr>
+<td align="center">tempporaryCachePath</td>
+<td align="center">临时的文件路径</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Application.OpenURL(“”)</td>
+<td align="center">打开指定的网址</td>
+</tr>
+<tr>
+<td align="center">Application.Quit()</td>
+<td align="center">退出游戏的运行</td>
+</tr>
+<tr>
+<td align="center">Application.CapturScreenshot(“游戏截图”)</td>
+<td align="center">用来截图的，字符串为截图fileName</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Application.identifier</td>
+<td align="center">标识名</td>
+</tr>
+<tr>
+<td align="center">.companyName</td>
+<td align="center">公司名</td>
+</tr>
+<tr>
+<td align="center">.productName</td>
+<td align="center">产品名</td>
+</tr>
+<tr>
+<td align="center">.instalMode</td>
+<td align="center">安装包名</td>
+</tr>
+<tr>
+<td align="center">.isEditor</td>
+<td align="center">是否在编辑器模式</td>
+</tr>
+<tr>
+<td align="center">.isFocused</td>
+<td align="center">是否在焦点</td>
+</tr>
+<tr>
+<td align="center">.isMoliePlatform</td>
+<td align="center">是否是移动平台</td>
+</tr>
+<tr>
+<td align="center">.isPlaying</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">.isWebPlayer</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">.platform</td>
+<td align="center">编辑器的平台</td>
+</tr>
+<tr>
+<td align="center">.unityVersion</td>
+<td align="center">unity版本号</td>
+</tr>
+<tr>
+<td align="center">.version</td>
+<td align="center">项目文件版本号</td>
+</tr>
+<tr>
+<td align="center">.runInBackground</td>
+<td align="center">是否可以在后台运行</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">UnityEditor.EditorApplication.isPlaying=false; //在编辑器模式下推出编辑状态</td>
+<td align="center">在编辑器模式下退出编辑状态，将游戏停止运行。这是在Unity编辑器中控制游戏运行的一种方法。通过将<code>isPlaying</code>属性设置为<code>false</code>，可以停止游戏的运行。这在调试和测试过程中非常有用，可以随时暂停游戏以便检查和调整代码。注意，这个方法只能在Unity编辑器中运行，无法在最终的游戏中运行。在最终的游戏中，你需要使用其他方法来控制游戏的运行。例如，你可以使用<code>Application.Quit()</code>方法来退出游戏。在游戏运行时，你可以使用<code>Application.isPlaying</code>属性来检查游戏是否正在运行。如果<code>isPlaying</code>为<code>true</code>，则游戏正在运行；如果为<code>false</code>，则游戏已停止。这是Unity游戏开发中的一个常见做法。此外，你还可以使用<code>Application.LoadLevel()</code>方法来加载不同的游戏场景或关卡。这可以在游戏运行时动态更改游戏内容。例如，你可以根据玩家的选择或游戏状态来加载不同的关卡或场景。这是实现游戏中的不同关卡或任务的一种常见方法。</td>
+</tr>
+</tbody></table>
+<h1 id="16、SceneManager类"><a href="#16、SceneManager类" class="headerlink" title="16、SceneManager类"></a>16、SceneManager类</h1><p>   场景类</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SceneManager.LoadScene()</td>
+<td align="center">加载下一个场景，一般是用在另一个场景不是太大的情况下</td>
+</tr>
+<tr>
+<td align="center">SceneManager.LoadSceneAsync()</td>
+<td align="center">异步加载下一个场景，返回AsyncOperation类型，里面包含了加载的信息，加载的进度条等等。可以让用户缓解等待加载场景的时间</td>
+</tr>
+<tr>
+<td align="center">sceneCount</td>
+<td align="center">获得当前加载的场景个数</td>
+</tr>
+<tr>
+<td align="center">sceneCountInBuildSettings</td>
+<td align="center">在Build面板中加载的场景个数</td>
+</tr>
+<tr>
+<td align="center">GetActiveScene()</td>
+<td align="center">获取已经加载的当前场景的信息</td>
+</tr>
+<tr>
+<td align="center">GetSceneAt(index)</td>
+<td align="center">加载index索引的场景</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">activeSceneChanged</td>
+<td align="center">当有新场景被加载的时候就会调用这个事件</td>
+</tr>
+<tr>
+<td align="center">sceneLoaded</td>
+<td align="center">当有新场景加载完成的时候就会触发这个事件</td>
+</tr>
+</tbody></table>
+<p>  <strong>扩充：事件的注册时通过加方法来进行注册的：</strong> </p>
+<p>  <strong>SceneManger.activeSceneChanged+=OnAcitiveScenenChanged;</strong> </p>
+<h1 id="17、射线检测"><a href="#17、射线检测" class="headerlink" title="17、射线检测"></a>17、射线检测</h1><p>  一般射线检测要在射线检测的范围内，并且被检测物体要有Collider</p>
+   <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Ray ray=<span class="keyword">new</span> Ray(起点，方向);</span><br><span class="line">PaycastHit hit; <span class="comment">//hit中存放的是射线检测的碰撞信息</span></span><br><span class="line"><span class="built_in">bool</span> temp=Physics.Raycast(ray,<span class="keyword">out</span> hit); <span class="comment">//具体的重载方法边用边查</span></span><br><span class="line"></span><br><span class="line">Ray ray = <span class="keyword">new</span> Ray(<span class="keyword">this</span>.transform.position + transform.forward, transform.forward); <span class="comment">//创建射线</span></span><br><span class="line"></span><br><span class="line">RaycastHit hit; <span class="comment">//存储射线检测到的游戏物体信息</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(Physics.Raycast(ray,<span class="keyword">out</span> hit)) <span class="comment">//通过返回值来判断射线是否检测到相关的物体了</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	Debug.Log(hit.collider.gameObject.name);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>扩充：</strong> </p>
+<p>  <strong>Raycast；检测的是射线碰撞到的第一个物体，不具有穿透性</strong> </p>
+<p>  <strong>RaycastAll：返回的是RaycastHit数组，具有穿透性，可以返回检测到的多个游戏物体</strong> </p>
+<h1 id="18、代码监听触发事件"><a href="#18、代码监听触发事件" class="headerlink" title="18、代码监听触发事件"></a>18、代码监听触发事件</h1><table>
+<thead>
+<tr>
+<th align="center">内容</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><Button>().onClick.AddListener(方法名)；</td>
+<td align="center">当触发button组件，则会触发指定的方法名的方法</td>
+</tr>
+<tr>
+<td align="center">使用UnityEgine.EventSystems; 导入命名空间</td>
+<td align="center">通过实现接口来注册监听事件</td>
+</tr>
+<tr>
+<td align="center">IPointerDownHandler</td>
+<td align="center">鼠标按下的事件，具体的接口参考手册</td>
+</tr>
+<tr>
+<td align="center">Raycast Target</td>
+<td align="center">如果取消勾选则不做事件监听了，则无法实现检测了</td>
+</tr>
+</tbody></table>
+<h1 id="19、www类，下载-是用来在网络中下载资源的"><a href="#19、www类，下载-是用来在网络中下载资源的" class="headerlink" title="19、www类，下载 是用来在网络中下载资源的"></a>19、www类，下载 是用来在网络中下载资源的</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">string</span> url = <span class="string">&quot;http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg&quot;</span>;  </span><br><span class="line">  </span><br><span class="line"><span class="function">IEnumerator <span class="title">Start</span>()</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    WWW www = <span class="keyword">new</span> WWW(url);  </span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> www;  </span><br><span class="line">    Renderer renderer = <span class="keyword">this</span>.GetComponent&lt;Renderer&gt;();  </span><br><span class="line">    renderer.material.mainTexture = www.texture;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="20、Touches触摸事件："><a href="#20、Touches触摸事件：" class="headerlink" title="20、Touches触摸事件："></a>20、Touches触摸事件：</h1><p>​    </p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Input.touches</td>
+<td align="center">返回放在屏幕上的手指信息，返回数组</td>
+</tr>
+<tr>
+<td align="center">Touch touch1=Input.touches[0]</td>
+<td align="center">获取第一个手指的信息</td>
+</tr>
+<tr>
+<td align="center">touch1.position</td>
+<td align="center">获取手指的位置</td>
+</tr>
+<tr>
+<td align="center">TouchPhase pahse=touch1.phase</td>
+<td align="center">返回手指的状态，用于判断手指的当前状态，如按下、移动、松开等</td>
+</tr>
+</tbody></table>
+<p>  <strong>Input.touches: 返回放在屏幕上的手指信息，返回数组</strong> </p>
+<p>  <strong>Touch touch1=Input.touches[0];</strong> </p>
+<p>  <strong>touch1.position;</strong> </p>
+<p>  <strong>TouchPhase pahse=touch1.phase phase 是用来返回手指的状态的</strong> </p>
+<h1 id="21、Debug-DrawRay-ray-oridin-ray-direction-绘制射线，第一个参数是原点，第二个是方向"><a href="#21、Debug-DrawRay-ray-oridin-ray-direction-绘制射线，第一个参数是原点，第二个是方向" class="headerlink" title="21、Debug.DrawRay(ray.oridin,ray.direction) 绘制射线，第一个参数是原点，第二个是方向"></a>21、Debug.DrawRay(ray.oridin,ray.direction) 绘制射线，第一个参数是原点，第二个是方向</h1><h1 id="22、CharacterController"><a href="#22、CharacterController" class="headerlink" title="22、CharacterController"></a>22、CharacterController</h1><p>角色控制器</p>
+<p>​    </p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SimpleMove([vector3])</td>
+<td align="center">简单移动</td>
+</tr>
+<tr>
+<td align="center">isGrounded</td>
+<td align="center">判断是否到地面上，bool值</td>
+</tr>
+<tr>
+<td align="center">Move()</td>
+<td align="center">与simpleMove的区别是要*Time.deltatime、而且simpleMove会使用自带的重力</td>
+</tr>
+<tr>
+<td align="center">OnCOntrollerColliderHit(ControllerCollidrHit hit)</td>
+<td align="center">当有碰撞到其他的碰撞器的时候会触发这个事件函数【hit保存碰撞到的物体信息】</td>
+</tr>
+</tbody></table>
+<h1 id="23、Mesh"><a href="#23、Mesh" class="headerlink" title="23、Mesh"></a>23、Mesh</h1><p>设置</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>material mesh</td>
+<td>指定人是什么样子的</td>
+</tr>
+<tr>
+<td>material</td>
+<td>指定人的肤色是什么样子的</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="24、API变更："><a href="#24、API变更：" class="headerlink" title="24、API变更："></a>24、API变更：</h1><p> <strong>弃用：Application.LoadLevel();</strong> </p>
+<p>  <strong>新的：SceneManager.LoadScene(); 加载新的场景</strong> </p>
+<p>  <strong>弃用</strong> </p>
+<p>  <strong>新的：Scene scene=SceneManager.GetActiveScene(); //获得当前活动场景的信息</strong> </p>
+<p>  SceneManger.LoadScene(scene.buildIndex) //重新加载当前场景 </p>
+<p>  OnLevelWasLoaded() 当场景被加载的时候调用，被弃用了 </p>
+<p>  改成事件了：sceenLoaded </p>
+<p>收录<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38112703/article/details/79705874">Unity常用API（感觉挺实用的）_unity 一些实用的功能-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Simon-Lin/p/11904516.html#:~:text=Unity%E5%B8%B8%E7%94%A8API%201%201%E3%80%81Event%20Function%3A%E4%BA%8B%E4%BB%B6%E5%87%BD%E6%95%B0%20Reset%20%28%29%20%3A%E8%A2%AB%E9%99%84%E5%8A%A0%E8%84%9A%E6%9C%AC%E6%97%B6%E3%80%81%E5%9C%A8%E6%B8%B8%E6%88%8F%E7%89%A9%E4%BD%93%E7%9A%84%E7%BB%84%E4%BB%B6%E4%B8%8A%E6%8C%89Reset%E6%97%B6%E4%BC%9A%E8%A7%A6%E5%8F%91%E8%AF%A5%E4%BA%8B%E4%BB%B6%E5%87%BD%E6%95%B0%20...,...%207%207%E3%80%81Mathf%E7%B1%BB%EF%BC%9A%E6%89%80%E6%9C%89%E7%9A%84%E6%88%90%E5%91%98%E5%9D%87%E4%B8%BA%E9%9D%99%E6%80%81%E7%9A%84%20...%208%208%E3%80%81Input%E8%BE%93%E5%85%A5%E7%B1%BB%EF%BC%9A%20...%20%E6%9B%B4%E5%A4%9A%E9%A1%B9%E7%9B%AE">Unity常用API</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/12/08/unityApi/">http://example.com/2023/12/08/unityApi/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity/">unity</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/12/24/untiyList/" title="unity列表"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">unity列表</div></div></a></div><div class="next-post pull-right"><a href="/2023/12/06/unityModelImport/" title="unity 从UE导入3D模型要点"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">unity 从UE导入3D模型要点</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/12/29/unity3DMath/" title="unity图形数学"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-29</div><div class="title">unity图形数学</div></div></a></div><div><a href="/2023/08/28/unityDesignPattern/" title="unityDesignPatter"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">unityDesignPatter</div></div></a></div><div><a href="/2023/12/27/unityFilingSystem/" title="unityFilingSystem"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-27</div><div class="title">unityFilingSystem</div></div></a></div><div><a href="/2023/12/26/unityBagSystem/" title="unityBagSystem"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-26</div><div class="title">unityBagSystem</div></div></a></div><div><a href="/2023/12/28/unityDocument/" title="unityDocument"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">unityDocument</div></div></a></div><div><a href="/2023/08/11/unityKeyboard/" title="unity快捷键"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-11</div><div class="title">unity快捷键</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://www.bilibili.com/" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://stackoverflow.co/" target="_blank" title="stackoverflow"><i class="fa-brands fa-stack-overflow"></i></a><a class="social-icon" href="https://www.pixiv.net" target="_blank" title="pixiv"><i class="fa-solid fa-p"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81Event-Function%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">1、Event Function函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81Time%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">2、Time类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81GameObject%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">3、GameObject类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%B8%B8%E6%88%8F%E7%89%A9%E4%BD%93%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">创建游戏物体的三种方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E6%B8%B8%E6%88%8F%E7%89%A9%E4%BD%93%E6%B7%BB%E5%8A%A0%E7%BB%84%E4%BB%B6%EF%BC%8C-%E5%85%B6%E4%B8%AD%E7%BB%84%E4%BB%B6%E5%8F%AF%E4%BB%A5%E6%98%AF%E6%88%91%E4%BB%AC%E8%87%AA%E5%B7%B1%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E8%84%9A%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text">为游戏物体添加组件， 其中组件可以是我们自己自定义的脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E3%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">3.3.</span> <span class="toc-text">属性、变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UnityEngine-Object%E4%B8%AD%E7%9A%84%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95%E4%B8%8E%E5%8F%98%E9%87%8F"><span class="toc-number">3.4.</span> <span class="toc-text">UnityEngine.Object中的共有方法与变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81"><span class="toc-number">3.5.</span> <span class="toc-text">消息的发送</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E7%BB%84%E4%BB%B6%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">3.6.</span> <span class="toc-text">游戏组件的查找</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81MonoBehaviours%E7%B1%BB"><span class="toc-number">4.</span> <span class="toc-text">4、MonoBehaviours类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E7%9A%84%E5%8F%98%E9%87%8F%E6%88%90%E5%91%98"><span class="toc-number">4.1.</span> <span class="toc-text">继承的变量成员</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Invoke%E7%AD%89%E6%96%B9%E6%B3%95%E3%80%81%E5%8F%98%E9%87%8F%EF%BC%9A"><span class="toc-number">4.2.</span> <span class="toc-text">Invoke等方法、变量：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81Coroutines%E5%8D%8F%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">5、Coroutines协程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8D%8F%E7%A8%8B%EF%BC%9A"><span class="toc-number">5.1.</span> <span class="toc-text">定义协程：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E5%8D%8F%E7%A8%8B%EF%BC%9A"><span class="toc-number">5.2.</span> <span class="toc-text">开启协程：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E4%B8%8E%E5%85%B3%E9%97%AD%E5%8D%8F%E7%A8%8B%E6%97%B6%EF%BC%8CStartCoriutine-%E5%8F%82%E6%95%B0-%E3%80%81StopCoroutine-%E5%8F%82%E6%95%B0-%E5%85%B6%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0%E8%A6%81%E4%BA%92%E7%9B%B8%E5%AF%B9%E5%BA%94%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%BC%A0%E9%80%92%E7%9A%84%E6%98%AF%E6%96%B9%E6%B3%95%E5%90%8D%EF%BC%8C%E5%88%99%E4%B8%A4%E4%B8%AA%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0%E5%B0%B1%E8%A6%81%E6%98%AF%E6%96%B9%E6%B3%95%E5%90%8D%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%98%AFIEnumerator%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC%EF%BC%8C%E5%88%99%E5%85%B6%E4%B8%AD%E4%B8%A4%E4%B8%AA%E6%96%B9%E6%B3%95%E5%8F%91%E7%9A%84%E5%8F%82%E6%95%B0%E5%B0%B1%E8%A6%81%E6%98%AFIEnumerator%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">5.3.</span> <span class="toc-text">开启与关闭协程时，StartCoriutine(参数)、StopCoroutine(参数) 其中的参数要互相对应，如果传递的是方法名，则两个方法中的参数就要是方法名，如果是IEnumerator的返回值，则其中两个方法发的参数就要是IEnumerator的返回值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StopAllCoroutines-%E5%81%9C%E6%AD%A2%E6%89%80%E6%9C%89%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%8C%E4%B8%8D%E7%AE%A1%E4%BD%A0%E6%98%AF%E6%80%8E%E4%B9%88%E8%B0%83%E7%94%A8%E7%9A%84"><span class="toc-number">5.4.</span> <span class="toc-text">StopAllCoroutines() 停止所有的协程，不管你是怎么调用的</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81OnMousexx%E9%BC%A0%E6%A0%87%E8%A7%A6%E5%8F%91%E4%BA%8B%E4%BB%B6%EF%BC%9A"><span class="toc-number">6.</span> <span class="toc-text">6、OnMousexx鼠标触发事件：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81Mathf%E7%B1%BB%EF%BC%9A%E6%89%80%E6%9C%89%E7%9A%84%E6%88%90%E5%91%98%E5%9D%87%E4%B8%BA%E9%9D%99%E6%80%81%E7%9A%84"><span class="toc-number">7.</span> <span class="toc-text">7、Mathf类：所有的成员均为静态的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8%E3%80%81Input%E7%B1%BB"><span class="toc-number">8.</span> <span class="toc-text">8、Input类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9%E3%80%81Vector2"><span class="toc-number">9.</span> <span class="toc-text">9、Vector2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10%E3%80%81Vector3"><span class="toc-number">10.</span> <span class="toc-text">10、Vector3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11%E3%80%81Random%E7%B1%BB"><span class="toc-number">11.</span> <span class="toc-text">11、Random类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12%E3%80%81Quaternion"><span class="toc-number">12.</span> <span class="toc-text">12、Quaternion:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#13%E3%80%81Rigidbody"><span class="toc-number">13.</span> <span class="toc-text">13、Rigidbody</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#14%E3%80%81Camera"><span class="toc-number">14.</span> <span class="toc-text">14、Camera</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15%E3%80%81Application"><span class="toc-number">15.</span> <span class="toc-text">15、Application</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#16%E3%80%81SceneManager%E7%B1%BB"><span class="toc-number">16.</span> <span class="toc-text">16、SceneManager类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17%E3%80%81%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B"><span class="toc-number">17.</span> <span class="toc-text">17、射线检测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#18%E3%80%81%E4%BB%A3%E7%A0%81%E7%9B%91%E5%90%AC%E8%A7%A6%E5%8F%91%E4%BA%8B%E4%BB%B6"><span class="toc-number">18.</span> <span class="toc-text">18、代码监听触发事件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#19%E3%80%81www%E7%B1%BB%EF%BC%8C%E4%B8%8B%E8%BD%BD-%E6%98%AF%E7%94%A8%E6%9D%A5%E5%9C%A8%E7%BD%91%E7%BB%9C%E4%B8%AD%E4%B8%8B%E8%BD%BD%E8%B5%84%E6%BA%90%E7%9A%84"><span class="toc-number">19.</span> <span class="toc-text">19、www类，下载 是用来在网络中下载资源的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#20%E3%80%81Touches%E8%A7%A6%E6%91%B8%E4%BA%8B%E4%BB%B6%EF%BC%9A"><span class="toc-number">20.</span> <span class="toc-text">20、Touches触摸事件：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#21%E3%80%81Debug-DrawRay-ray-oridin-ray-direction-%E7%BB%98%E5%88%B6%E5%B0%84%E7%BA%BF%EF%BC%8C%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E6%98%AF%E5%8E%9F%E7%82%B9%EF%BC%8C%E7%AC%AC%E4%BA%8C%E4%B8%AA%E6%98%AF%E6%96%B9%E5%90%91"><span class="toc-number">21.</span> <span class="toc-text">21、Debug.DrawRay(ray.oridin,ray.direction) 绘制射线，第一个参数是原点，第二个是方向</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#22%E3%80%81CharacterController"><span class="toc-number">22.</span> <span class="toc-text">22、CharacterController</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#23%E3%80%81Mesh"><span class="toc-number">23.</span> <span class="toc-text">23、Mesh</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#24%E3%80%81API%E5%8F%98%E6%9B%B4%EF%BC%9A"><span class="toc-number">24.</span> <span class="toc-text">24、API变更：</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/12/29/unity3DMath/" title="unity图形数学"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity图形数学"/></a><div class="content"><a class="title" href="/2023/12/29/unity3DMath/" title="unity图形数学">unity图形数学</a><time datetime="2023-12-29T04:17:11.000Z" title="发表于 2023-12-29 12:17:11">2023-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/unityDocument/" title="unityDocument"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unityDocument"/></a><div class="content"><a class="title" href="/2023/12/28/unityDocument/" title="unityDocument">unityDocument</a><time datetime="2023-12-28T05:19:16.000Z" title="发表于 2023-12-28 13:19:16">2023-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/28/unityRay/" title="unityRay"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unityRay"/></a><div class="content"><a class="title" href="/2023/12/28/unityRay/" title="unityRay">unityRay</a><time datetime="2023-12-28T04:13:13.000Z" title="发表于 2023-12-28 12:13:13">2023-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/27/unityFilingSystem/" title="unityFilingSystem"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unityFilingSystem"/></a><div class="content"><a class="title" href="/2023/12/27/unityFilingSystem/" title="unityFilingSystem">unityFilingSystem</a><time datetime="2023-12-26T16:38:34.000Z" title="发表于 2023-12-27 00:38:34">2023-12-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/26/unityBagSystem/" title="unityBagSystem"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unityBagSystem"/></a><div class="content"><a class="title" href="/2023/12/26/unityBagSystem/" title="unityBagSystem">unityBagSystem</a><time datetime="2023-12-26T12:40:14.000Z" title="发表于 2023-12-26 20:40:14">2023-12-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
