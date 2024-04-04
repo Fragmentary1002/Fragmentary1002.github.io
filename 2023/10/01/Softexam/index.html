@@ -1,0 +1,1416 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>软考 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第一章 计组1.数据的表示和校验码实现：低电平和高电平来代表0，1，实现电信号传递  1.1进制转换   进制转换关系 转换方法 例子    r-&gt;10 n位数乘以2的n次方，小数点为负数同理 10010010.110&#x3D;12^7+12^4 +12^1 +12^-1+1*2^-2&#x3D;146.75   2-&gt;8 三位一组，每组转化成对应的八进制符号 001 111 000 010 . 011">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软考">
+<meta property="og:url" content="http://example.com/2023/10/01/Softexam/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="第一章 计组1.数据的表示和校验码实现：低电平和高电平来代表0，1，实现电信号传递  1.1进制转换   进制转换关系 转换方法 例子    r-&gt;10 n位数乘以2的n次方，小数点为负数同理 10010010.110&#x3D;12^7+12^4 +12^1 +12^-1+1*2^-2&#x3D;146.75   2-&gt;8 三位一组，每组转化成对应的八进制符号 001 111 000 010 . 011">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2023-09-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-20T11:27:09.492Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="base">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/10/01/Softexam/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '软考',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-20 19:27:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">软考</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-09-30T16:00:00.000Z" title="发表于 2023-10-01 00:00:00">2023-10-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-20T11:27:09.492Z" title="更新于 2024-03-20 19:27:09">2024-03-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="软考"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="第一章-计组"><a href="#第一章-计组" class="headerlink" title="第一章 计组"></a>第一章 计组</h1><h2 id="1-数据的表示和校验码"><a href="#1-数据的表示和校验码" class="headerlink" title="1.数据的表示和校验码"></a>1.数据的表示和校验码</h2><pre><code>实现：低电平和高电平来代表0，1，实现电信号传递
+</code></pre>
+<h3 id="1-1进制转换"><a href="#1-1进制转换" class="headerlink" title="1.1进制转换"></a>1.1进制转换</h3><table>
+<thead>
+<tr>
+<th>进制转换关系</th>
+<th align="center">转换方法</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r-&gt;10</td>
+<td align="center">n位数乘以2的n次方，小数点为负数同理</td>
+<td>10010010.110=1<em>2^7+1</em>2^4 +1<em>2^1 +1</em>2^-1+1*2^-2=146.75</td>
+</tr>
+<tr>
+<td>2-&gt;8</td>
+<td align="center">三位一组，每组转化成对应的八进制符号</td>
+<td>001 111 000 010 . 011 010 -&gt;1702.32</td>
+</tr>
+<tr>
+<td>2-&gt;16</td>
+<td align="center">四位一组，每组转换成对应打十六进制符号</td>
+<td></td>
+</tr>
+<tr>
+<td>10-&gt;r</td>
+<td align="center">短除法，由低位到高位</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="1-2编码"><a href="#1-2编码" class="headerlink" title="1.2编码"></a>1.2编码</h3><table>
+<thead>
+<tr>
+<th align="center">编码xe</th>
+<th align="center">表示例子</th>
+<th align="center">表示解析</th>
+<th align="center">真值0有+0 -0俩种形式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">原码</td>
+<td align="center">+19D-&gt;0,0010011<br> -19D-&gt;1,0010011</td>
+<td align="center">(16+2+1=19)</td>
+<td align="center">[+0]=00000000<br>[-0]=1000000</td>
+</tr>
+<tr>
+<td align="center">反码</td>
+<td align="center">+19D-&gt;0,0010011<br>-19D-&gt;1,1101100</td>
+<td align="center">-数值取反</td>
+<td align="center">[+0]=00000000<br>[-0]=11111111</td>
+</tr>
+<tr>
+<td align="center">补码</td>
+<td align="center">+19D-&gt;0,0010011<br>-19D-&gt;1,1101101</td>
+<td align="center">-反码末位+1</td>
+<td align="center">[+0]=[-0]=00000000</td>
+</tr>
+<tr>
+<td align="center">移码</td>
+<td align="center">+19D-&gt;1,0010011<br>-19D-&gt;0,1101101</td>
+<td align="center">补码基础上符号位取反</td>
+<td align="center">[+0]=[-0]=10000000</td>
+</tr>
+</tbody></table>
+<h3 id="1-3浮点数"><a href="#1-3浮点数" class="headerlink" title="1.3浮点数"></a>1.3浮点数</h3><h3 id="1-4校验码"><a href="#1-4校验码" class="headerlink" title="1.4校验码"></a>1.4校验码</h3><h4 id="1-4-1奇偶校验码"><a href="#1-4-1奇偶校验码" class="headerlink" title="1.4.1奇偶校验码"></a>1.4.1奇偶校验码</h4><ul>
+<li>分类：水平～，垂直～，水平垂直～                       <h4 id="1-4-2海明码"><a href="#1-4-2海明码" class="headerlink" title="1.4.2海明码"></a>1.4.2海明码</h4></li>
+<li>作用:数据之间插入k个校验码，扩大码距来实现检错和纠错 </li>
+<li>数据位是n位，校验位是k位，则n,k满足2^k-1&gt;=n+k</li>
+<li>如16位 最少应该附加5位 2^5-1&gt;=16+5满足条件</li>
+</ul>
+<h2 id="2-计算机体系结构和指令系统"><a href="#2-计算机体系结构和指令系统" class="headerlink" title="2.计算机体系结构和指令系统"></a>2.计算机体系结构和指令系统</h2><h3 id="计算机体系结构五大部分"><a href="#计算机体系结构五大部分" class="headerlink" title="计算机体系结构五大部分"></a>计算机体系结构五大部分</h3><p><img src="media/16947433479503.jpg"></p>
+<h2 id="内存和CPU"><a href="#内存和CPU" class="headerlink" title="内存和CPU"></a>内存和CPU</h2><p><img src="media/16947433479842.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>运算器（ALU）寄存器</th>
+<th>作用</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>累加寄存器（AC）</td>
+<td>专门存放算术或逻辑运算的一个操作数和运算结果的寄存器。能进行加，减，读出，移位，求补等操作。是运算器的主要部分</td>
+<td>+- &gt;&gt;</td>
+</tr>
+<tr>
+<td>程序状态寄存器(PSW)</td>
+<td>该部件用来存放两类信息，一类是体现当前指令执行结果的各种状态信息(条件码)，如有无进位，有无溢出，结果正负，信息是否为零等；另一类是存放控制信息，如允许中断，跟踪标志等。<br /><br /></td>
+<td>中断，条件码，溢出</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>控制器</th>
+<th>描述</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>程序计数器(PC)</td>
+<td>程序计数器中存放的是下一条指令的地址。由于多数情况下程序是顺序执行的，所以程序计数器设计成自动加一的装置。当出现转移指令时，就需重填程序计数器</td>
+<td>地址指针存储</td>
+</tr>
+<tr>
+<td>指令寄存器(IR)</td>
+<td>中央处理器正在执行的操作码表存放在这里，即当前正在执行的所有指令</td>
+<td>操作码放置</td>
+</tr>
+<tr>
+<td>指令译码器</td>
+<td>将操作码解码，告诉中央处理器该做什么。</td>
+<td>解码操作码</td>
+</tr>
+<tr>
+<td>时序部件</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16947433480167.jpg"></p>
+<h3 id="Flynn分类法"><a href="#Flynn分类法" class="headerlink" title="Flynn分类法"></a>Flynn分类法</h3><p><img src="media/16983744227068.jpg"></p>
+<h3 id="CICS和RISC"><a href="#CICS和RISC" class="headerlink" title="CICS和RISC"></a>CICS和RISC</h3><p><img src="media/16983745432470.jpg"></p>
+<h3 id="指令系统—-指令"><a href="#指令系统—-指令" class="headerlink" title="指令系统—-指令"></a>指令系统—-指令</h3><p>指令（又称机器指令）<br>操作码（op）：用户要干什么<br>地址码：要对手谁操作<br>以下寻址方式，从慢到快<br>| 寻址方式           | 内容                                                                                                        |<br>|——————–|————————————————————————————————————-|<br>| 立即寻址           | 操作数作为指令的一部分 直接写在指令中，这种操作数称为立即数。                                                  |<br>| 寄存器寻址         | 指令所要的操作数已存储在某寄存器中，或把目标操作数存入寄存器。                                                |<br>| 直接寻址           | 指令所要的操作数存放在内存中，在指令中直接给出该操作数的有效地址。                                            |<br>| 寄存器间接寻址     | 操作数在存储器中，操作数的有效地址用SI，Dl，BX和BP四个寄存器之一来指定。                                         |<br>| 寄存器相对寻址     | 操作数在存储器中，其有效地址是一个基址寄存器(BX、BP)或变址寄存器(SlDD的内容和指令中的8位/16位偏移量之和。       |<br>| 基址加变址寻址方式 | 操作数在存储器中，其有效地址是-—个基址寄存器(BX，BP)和一个变<br />址寄存器(SI，DI)的 内容之和。                  |<br>| 相对基址加变址寻址 | 操作数在存储器中,其有效地址是一个基址寄存器(BX，BP)的值、一个<br />变址寄存器(Sl，DI的值和指令中的8位/16位偏移量之和。 |</p>
+<h3 id="流水线计算题"><a href="#流水线计算题" class="headerlink" title="流水线计算题"></a>流水线计算题</h3><p>例:若指令流水线把一条指令分为取指,分析和执行三部分,且三部分的时间分别是取指2ns，分析2ns,执行1ns。<br>那么,流水线周期是多少？100条指令全部执行完毕需要的时间是多少？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">流水线周期为执行时间最长的一段</span><br><span class="line">流水线计算公式为：</span><br><span class="line">1条指令执行时间 ＋（指令条数-1)*流水线周线=2+1+1+(100-1)*2=203</span><br><span class="line">不使用流水线:5*100=500</span><br></pre></td></tr></table></figure>
+
+<p><img src="media/16947432964449.jpg"></p>
+<p>流水线的吞吐率(Though Put rate, TP)：是指在单位时间内流水线所完成的任务数量<br>或输出的结果数量。<br>计算流水线吞吐率的最基本的公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TP=指令条数/流水线执行时间</span><br><span class="line">=100/203=0.5</span><br></pre></td></tr></table></figure>
+
+<p>流水线开始工作后，须经过<strong>一定时间</strong>才能达到最大吞吐率，这就是<strong>建立时间</strong>。<br>若m个子过程所用时间一样，，均为Δto，则</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">建立时间To=m* Δto。</span><br></pre></td></tr></table></figure>
+<p>完成同样一批任务，不使用流水线所用的时间与使用流水线所用的时间之比称为<strong>流水线的加速比</strong>。<br>计算流水线加速比的基本公式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s=不使用流水线执行时时间/</span><br><span class="line">使用流水线执行时间=500/203=2.46</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-存储结构，总线系统，输入输出"><a href="#3-存储结构，总线系统，输入输出" class="headerlink" title="3.存储结构，总线系统，输入输出"></a>3.存储结构，总线系统，输入输出</h2><h2 id="存储器分类"><a href="#存储器分类" class="headerlink" title="存储器分类"></a>存储器分类</h2><p><img src="media/16947442450320.jpg"></p>
+<p><img src="media/16973410930965.jpg"></p>
+<p><img src="media/16973410935642.jpg"></p>
+<p><img src="media/16973410936500.jpg"></p>
+<h2 id="cache"><a href="#cache" class="headerlink" title="cache"></a>cache</h2><p><img src="media/16973410937323.jpg"></p>
+<p><img src="media/16973410938129.jpg"></p>
+<p><img src="media/16973410938928.jpg"></p>
+<p><img src="media/16973410939728.jpg"></p>
+<p><img src="media/16973410940502.jpg"></p>
+<p><img src="media/16973410941348.jpg"></p>
+<p><img src="media/16973410942160.jpg"></p>
+<h2 id="总线系统"><a href="#总线系统" class="headerlink" title="总线系统"></a>总线系统</h2><p><img src="media/16973408786126.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>总线系统</th>
+<th>概述</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>片内总线</td>
+<td>片内总线是芯片内部的总线。亡是CPU芯片内部寄存器与寄存器之间、寄存器与<br />ALU之间的公共连接线。</td>
+<td></td>
+</tr>
+<tr>
+<td>系统总线</td>
+<td>系统总线是计算机系统内各功能部件（CPU、主存、1/0接口）之间相互连接的总线。按系统总线传轮信息内容的不同，又可分为子类：数据总线、地址总线和控制总线。</td>
+<td></td>
+</tr>
+<tr>
+<td>通信总线</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16973408787593.jpg"></p>
+<h2 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h2><p><img src="media/16973408785098.jpg"></p>
+<h1 id="第二章-数据结构与算法"><a href="#第二章-数据结构与算法" class="headerlink" title="第二章 数据结构与算法"></a>第二章 数据结构与算法</h1><h2 id="基本概念与算法"><a href="#基本概念与算法" class="headerlink" title="基本概念与算法"></a>基本概念与算法</h2><ul>
+<li>基本概念-什么是数据？</li>
+</ul>
+<p>数据：数据是<code>信息的载体</code>，是捕达客观事物属性的数、字符及所有能输入到计算机中并被计算机程序识别和处理的符号的集合。<code>数据是计算机程序加工的原料。</code></p>
+<ul>
+<li>基本概念一数据元素、数据项</li>
+</ul>
+<p>数据元素是数据的1基本单位，通常作为一个整体进行考虑和处理。一个数据元素可由<code>若干数据项</code>组成，数据项是构成数据元素的不可分割的<code>最小单位</code>。</p>
+<ul>
+<li>算法一五个特性</li>
+</ul>
+<p>1.有穷性：一个算法必须总在执行有穷步之后结束，旦每一步都可在<code>有穷时间</code>内完成。<br>2.确定性：算法中每条指令必须有确切的含义，对于相同的输入只能得出<code>相同的输出</code>。<br>3.可行性：算法中描述的操作都可以通过已经实现的<code>基本运算执行有限次</code>来实现。<br>4.输入：一个算法有<code>零个或多个</code>输入，这些输入取白于某个特定的对象的集合。<br>5.输出：一个算法有<code>一个或多个</code>输出，这些输出是与输入有着某种特定关系的量。</p>
+<ul>
+<li>算法—空间复杂度</li>
+</ul>
+<p>函数递归调用带来的内存开销：<br>S(n)=O(n)<br><code>空间复杂度 =递归调用的深度</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogan) &lt; O(n^2) &lt; O(n^3) &lt; O(2^n) &lt; O(n!) &lt; O(n^n)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ol>
+<li>线性表：顺序存储，链式存储</li>
+<li>栈与队列：循环队列 队空head=tail 队满：(tail+1)%size=head</li>
+<li>串:空串是任意串队子串 </li>
+<li>二维数组  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a[i][j] </span><br><span class="line">按行:a+(i*n+j)*len </span><br><span class="line">按列:a+(i+j*n)*len</span><br></pre></td></tr></table></figure></li>
+<li>广义表（类似桶）<br><img src="media/16952121205886.jpg"></li>
+<li>树<br>哈夫曼树</li>
+</ol>
+<p><img src="media/16953750653818.jpg"></p>
+<p><img src="media/16953750654141.jpg">二分查找<br><img src="media/16953750654797.jpg"><br>哈希表（散列表）哈希函数<br>排序<br>选择排序：选最小放左边<br>分块查找：先用桶分块，后顺序查找(块内无序，块间有序)<br>冒泡排序<br>快速排序<br><img src="media/16953750656403.jpg"><br>堆排序<br><img src="media/16953750656698.jpg"></p>
+<p>基数排序（桶排序）<br>希尔排序（h%3选取间距）</p>
+<h1 id="第三章-操作系统"><a href="#第三章-操作系统" class="headerlink" title="第三章 操作系统"></a>第三章 操作系统</h1><p><img src="media/16953806458875.jpg"></p>
+<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><h3 id="状态转换图"><a href="#状态转换图" class="headerlink" title="状态转换图"></a>状态转换图</h3><p><img src="media/16953806459485.jpg"></p>
+<p><img src="media/16953806459626.jpg"></p>
+<p><img src="media/16974355066697.jpg"></p>
+<p><img src="media/16953806459838.jpg"></p>
+<p><img src="media/16953834153462.jpg"></p>
+<p><img src="media/16953834154084.jpg"></p>
+<p><img src="media/16953834154224.jpg"></p>
+<p><img src="media/16953834154429.jpg"></p>
+<p><img src="media/16953834154756.jpg"></p>
+<h2 id="pv"><a href="#pv" class="headerlink" title="pv"></a>pv</h2><p>PV操作类似拓扑排序</p>
+<p><img src="media/16957861722081.jpg"></p>
+<p><img src="media/16957861722845.jpg"></p>
+<p><img src="media/16957861722991.jpg"><br>前p后v</p>
+<p><img src="media/16957861723142.jpg"></p>
+<p><img src="media/16957867409582.jpg"></p>
+<p>死锁：进程有向图成环<br><img src="media/16957867773711.jpg"></p>
+<p><img src="media/16957869253367.jpg"><br>先给ABC进程分配（最大-1）个R资源，后给A一个R使A释放R资源，后五个分配给BC，这样不会发生死锁</p>
+<p><img src="media/16957872053265.jpg"></p>
+<p><img src="media/16957872053533.jpg"></p>
+<p>由题目已知的最大需求量和已分配资源量，得出还需资源量，与剩下资源量，后根据剩下的来给进程分配资源运行的出可执行序列。</p>
+<h2 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h2><p><img src="media/16957875789467.jpg"></p>
+<p><img src="media/16957875790345.jpg"><br>顺序查找，后找到第一个空闲位置</p>
+<p><img src="media/16957876974051.jpg"><br>顺序查找，找到空闲区与需要分配的进程最相近的最小空间（比如例子9k找到了10K的空间，后产生了1K的碎片空间）</p>
+<p><img src="media/16957878851982.jpg"></p>
+<p>从上次顺序查找到的位置flag标记后下一次起点就是该flag</p>
+<h2 id="三种存储管理方式"><a href="#三种存储管理方式" class="headerlink" title="三种存储管理方式"></a>三种存储管理方式</h2><p><img src="media/16957880916323.jpg"></p>
+<p><img src="media/16957973290587.jpg"></p>
+<p><img src="media/16957973408942.jpg"></p>
+<p><img src="media/16974428575341.jpg"></p>
+<h2 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h2><p><img src="media/16957977835778.jpg"></p>
+<p>OPT：往后看</p>
+<p><img src="media/16957977835507.jpg"></p>
+<p>FIFO</p>
+<p><img src="media/16957995169606.jpg"></p>
+<p>LRU： 往前看</p>
+<p><img src="media/16957995940323.jpg"></p>
+<h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><p><img src="media/16958045300968.jpg"></p>
+<p><img src="media/16958045301253.jpg"></p>
+<p><img src="media/16958045301558.jpg"></p>
+<p><img src="media/16958045301880.jpg"></p>
+<p><img src="media/16958045132932.jpg"></p>
+<p><img src="media/16958045134114.jpg"></p>
+<p><img src="media/16958045134294.jpg"></p>
+<p><img src="media/16958045134465.jpg"></p>
+<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><pre><code>ipconfig （ linux: ifconfig） （显示TCP/IP网络配置值，如：IP地址，MAC地址，网关地址等）。
+ipconfig 显示信息； 
+ipconfig /all 显示详细信息 ，可查看DHCP服务是否已启用； 
+ipconfig /renew 更新所有适配器； 
+ipconfig /release 释放所有匹配的连接。             
+
+tracert（linux: traceroute）：用于确定 IP数据包访问目标所采取的路径，若网络不通，能定位到具体哪个结点不通。
+netstat：用于显示网络连接、路由表和网络接口信息。
+nslookup（查询DNS记录）。
+</code></pre>
+<h1 id="第四章-计算机网络"><a href="#第四章-计算机网络" class="headerlink" title="第四章 计算机网络"></a>第四章 计算机网络</h1><h2 id="1-层次分工"><a href="#1-层次分工" class="headerlink" title="1.层次分工"></a>1.层次分工</h2><p><img src="media/16983071889427.jpg"></p>
+<p><img src="media/16983738628543.jpg"></p>
+<p><img src="media/16983738635268.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>名称</th>
+<th>主要功能</th>
+<th>主要设备及协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7</td>
+<td>应用层</td>
+<td>实现具体的应用功能</td>
+<td>POP3，FTP，HTTP，Telnet，SMTP，DHCP，TFTP，SNMP，DNS</td>
+</tr>
+<tr>
+<td>6</td>
+<td>表示层</td>
+<td>数据的格式与表达、加密压缩</td>
+<td>——-</td>
+</tr>
+<tr>
+<td>5</td>
+<td>会话层</td>
+<td>建立、管理和终止会话</td>
+<td>———</td>
+</tr>
+<tr>
+<td>4</td>
+<td>传输层</td>
+<td>端到端的连接</td>
+<td>TCP，UDP</td>
+</tr>
+<tr>
+<td>3</td>
+<td>网络层</td>
+<td>分组传输和路由选择</td>
+<td>三层交换机，路由器，ARP，RARP，IP，ICMP，IGMP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数据链路层</td>
+<td>传送以帧为单位的信息</td>
+<td>网桥，交换机（多端的网桥），网卡，PPTP，L2TP，SLIP，PPP</td>
+</tr>
+<tr>
+<td>1</td>
+<td>物理层</td>
+<td>二进制传输</td>
+<td>中继器，集线器（多端的中继器）</td>
+</tr>
+</tbody></table>
+<h2 id="2-TCP-IP-协议栈"><a href="#2-TCP-IP-协议栈" class="headerlink" title="2.TCP/IP 协议栈"></a>2.TCP/IP 协议栈</h2><p>TCP/IP作为Internet的核心协议，被广泛应用于局域网和广域网中，目前已成为事实上的国际标准。</p>
+<ul>
+<li>TCP/IP分层模型<br>TCP/P协议是Internet的基础和核心，和OS!参考模型一样，也是采用层次体系结构，从上而下分为<code>应用层、传输层、网际层和网络接口层。</code></li>
+<li>网络接口层协议</li>
+<li>网际层协议一IP<h3 id="ARP和RARP"><a href="#ARP和RARP" class="headerlink" title="ARP和RARP"></a>ARP和RARP</h3>地址解析协议(Address Resolution Protocol, ARP)及反地址解析协议(RARP)。<code>ARP的作用是将IP地址转换为物理地址，RARP的作用是将物理地址转换为IP地址。</code></li>
+<li>网际层协议一ICMP</li>
+<li>传输层协议一TCP<br>TCP(Transmission Control Protocol,传输控制协议)为应用程序提供了一个可靠的、面向连接的数据传输服务。</li>
+<li>传输层协议一UDP<br>用户数据报协议(User Datagram Protocol, UDP)是一种不可靠的、无连接的协议，可以保证应用程序进程问的通信。<code>TCP有助于提供可靠性，而UDP则有助于提高传输的高速率性。</code><h3 id="MIME和PEM含义"><a href="#MIME和PEM含义" class="headerlink" title="MIME和PEM含义"></a>MIME和PEM含义</h3></li>
+</ul>
+<ol>
+<li>MIME 扩充邮件，发送邮件附加多媒体</li>
+<li>PEM 私密邮件</li>
+<li>邮件协议 SMTP发邮件（25），POP3收邮件（110）</li>
+</ol>
+<h2 id="3-TCP与UDP区别"><a href="#3-TCP与UDP区别" class="headerlink" title="3.TCP与UDP区别"></a>3.TCP与UDP区别</h2><p>TCP面向连接;UDP是无连接的。<br>②TCP 提供可靠的服务，通过TCP连接传送的数据，无差错、不丢失、不重复，且按序到达；<br>UDP尺最大努力交付，不保证可靠交付。<br>③TCP面向字节流：UDP是面向报文的，没有拥塞控制，因此网络出现拥寒不会使源主机的发送速率降低。<br>④每一条TCP连接只能是点到点的;UDP支持一对一、一对多、多对一和多对多的交互通信;<br>Tcp首部开销20字节；UDP的首部开销小，只有8个字节;<br>⑥TCP的逻程通信信道是全双工的可靠信道；UDP则是不可靠信道，整体来看UDP开销较小</p>
+<h2 id="4-IP地址和IPv6简介"><a href="#4-IP地址和IPv6简介" class="headerlink" title="4.IP地址和IPv6简介"></a>4.IP地址和IPv6简介</h2><p>IP地址的长度为32位，分为4段，每段8位，可以用十进制数和二进制数表示。每段数字范围为0~255，段与段之问用句点隔开。IP 地址由两部分组成，一部分为网络地址，另一部分为主机地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IP地址分为A、B、CD、E5类。</span><br><span class="line">(A类卫地址。由1个字节的网络地址和了个字节的主机地址组成，网络地址的最高位必须是一0”，地址范围是 1.00.1--126255.255254。可用的A 类网络有126个，每个网络能容纳 22-2 个主机。</span><br><span class="line">(2B类卫地址。由2个字节的网络地址和2个字节的主机地址组成，网络地址的最高位必须是“10”，地址范围是 128.0.0.0~191.255.255.254。可用的B 类网络有16384个，每个网络能容纳 65534 个主机。</span><br><span class="line">(3)C类卫地址。由3个字节的网络地址和1个字节的主机地址组成，网络地址的最高位必须是“110”，地址范围是 192.0.1.1~223.255.255.254。可用的C 类网络有221-2个，每个网络能容纳 254 个主机。</span><br><span class="line">(4)D类IP地址。第一个字节以“1110” 开始，是专门保留的地址。它并不指向特定的网络，目前这一类地址被用在多点广播(Multicast)中。多点广播地址用来一次寻址一组计算机，它标识共享同一协议的一组计算机。D类IP地址的地址范围是 224.0.0.1~239.255.255.254。</span><br><span class="line">(5)E类卫地址。以“1111” 开始，为将来使用保留，仅做实验和开发用。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">IPv6是设计用于替代现行版本IP协议（IPV4）的下一代IP协议。 </span><br><span class="line">（1）IPv6地址长度为128位，地址空间增大了2^96倍；</span><br><span class="line">（2）灵活的IP报文头部格式。使用一系列固定格式的扩展头部取代了IPv4中可变长度的选项字段。IPV6中选项部分的出现方式也有所变化，使路由器可以简单路过选项而不做任何处理，加快了报文处理速度</span><br><span class="line">（3）IPV6简化了报文头部格式，字段只有8个，加快报文转发，提高了吞吐量；</span><br><span class="line">（4）提高安全性。身份认证和隐私权是IPv6的关键特性；</span><br><span class="line">（5）支持更多的服务类型；</span><br><span class="line">（6）允许协议继续演变，增加新的功能，使之适应未来技术的发展；</span><br><span class="line"></span><br><span class="line">单播地址(Unicast)：用于单个接口的标识符。</span><br><span class="line">任播地址(Anycast)：泛播地址。一组接口的标识符，IPv4 广播地址。</span><br><span class="line">组播地址(Multicast)：IPv6中的组播在功能上与IPv4中的组播类似。</span><br></pre></td></tr></table></figure>
+<h2 id="5-Internet服务"><a href="#5-Internet服务" class="headerlink" title="5.Internet服务"></a>5.Internet服务</h2><p>1、DNS域名服务<br>DNS用的是UDP端口，端口号是53。<br>2、远程登录服务<br>Telnet协议用的是TCP端口，端口号一般是23。<br>3、电子邮件服务<br>电子邮件就是利用计算机进行信息交换的电子媒体信件。所用协议有简单邮件传送协议<br>SMTP和用于接收邮件的POP3议，两者均利用TCP端口，SMTP所用的端口号是25，POP3所用的端口号是110。<br>4、www服务<br>Www服务是一种交互式图形界面的Internet 服务，具有强大的信息连接功能。www用的是TCP端口，端口号是80。<br>5.文件传输服务<br>文任传输服务用来在计算机之间传输文件。在客户机与服务器的内部建立两条TCP连接一<br>条是控制连接，主要用于传输命令和参数（端口号是21） ，另一条是数据链接，主要用于传输文件（端口号是20）</p>
+<h2 id="6-常见无效地址"><a href="#6-常见无效地址" class="headerlink" title="6.常见无效地址"></a>6.常见无效地址</h2><ol>
+<li>网络不可用地址127.0.0.0</li>
+<li>windows无效地址169.254.0.0</li>
+<li>linux无效地址0.0.0.0</li>
+</ol>
+<h1 id="第五章-数据库"><a href="#第五章-数据库" class="headerlink" title="第五章 数据库"></a>第五章 数据库</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p><img src="media/16968114813403.jpg"></p>
+<p><img src="media/16968116483266.jpg"></p>
+<h2 id="分布式数据库（DDBS）特点"><a href="#分布式数据库（DDBS）特点" class="headerlink" title="分布式数据库（DDBS）特点"></a>分布式数据库（DDBS）特点</h2><pre><code>分布式数据库是由一组数据组成的，这组数据分布在计算机网络的不同计算机上，网络中的每个节点具有独立处理的能力（称为场地自治），它可以执行局部应用，同时，每个节点也能通过网络通信子系统执行全局应用。分布式数据库系统是在集中式数据库系统技术的基础上发展起来的，具有如下特点：
+（1）数据独立性。在分布式数据库系统中，数据独立性这一特性更加重要，并具有更多的内容。除了数据的逻辑独立性与物理独立性外，还有数据分布独立性（分布透明性）。
+（2）集中与自治共享结合的控制结构。各局部的DBMS可以独立地管理局部数据库，具有自治的功能。同时，系统又设有集中控制机制，协调各局部DBMS的工作，执行全局应用。
+（3）适当增加数据冗余度。在不同的场地存储同一数据的多个副本，这样，可以提高系统的可靠性和可用性，同时也能提高系统性能。
+（4）全局的一致性、可串行性和可恢复性。            
+
+DDBS的基本特点：  
+1.物理分布性：数据不是存储在一个场地上，而是存储在计算机网络的多个场地上。  
+2.逻辑整体性：数据物理分布在各个场地，但逻辑上是一个整体，它们被所有用户（全局用户）共享，并由一个DDBMS统一管理。  
+3.场地自治性：各场地上的数据由本地的DBMS管理，具有自治处理能力，完成本场地的应用（局部应用）。  
+4.场地之间协作性：各场地虽然具有高度的自治性，但是又相互协作构成一个整体。
+
+
+              
+</code></pre>
+<h2 id="数据库三级模式二级映像"><a href="#数据库三级模式二级映像" class="headerlink" title="数据库三级模式二级映像"></a>数据库三级模式二级映像</h2><p><img src="media/16968118504855.jpg"><br>数据库系统采用三级模式结构，这是数据库管理系统内部的系统结构。</p>
+<table>
+<thead>
+<tr>
+<th>模式名称</th>
+<th>描述</th>
+<th>省流</th>
+<th>对应数据库的组件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>外模式</td>
+<td>：也称用户模式或子模式，是用户与数据库系统的接口，是用户用到的那部分数据的描述，由若干个外部记录类型组成。描述外模式的数据定义语言称为外模式DDL</td>
+<td>外模式：我和你看到的淘宝不一样的页面</td>
+<td>视图</td>
+</tr>
+<tr>
+<td>概念模式</td>
+<td>也称模式，是数据库中全体数据的逻辑结构和特征的描达，它由若干个概念记录类型组成，只涉及行的描述，不涉及具体的值。概念模式的一个具体值称为模式的一个实例，同一个模式可以有很多实例。</td>
+<td>概念模式：逻辑模式</td>
+<td>基本表</td>
+</tr>
+<tr>
+<td>内模式</td>
+<td>也称存储模式，是数据物理结构和存储方式的描述，是数据在数据库内部的表示方式，定义所有的内部记录类型、索引和文件的组织方式，以及数据控制方面的细节。描述内模式的数据<br />定义语言称为内模式DDL。</td>
+<td>内模式：写入物理数据库</td>
+<td>存储文件</td>
+</tr>
+<tr>
+<td>映像</td>
+<td>DBMS的两级映像功能保证了数据的独立性。</td>
+<td>映像：每个模式的接口</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="数据库分析和设计过程"><a href="#数据库分析和设计过程" class="headerlink" title="数据库分析和设计过程"></a>数据库分析和设计过程</h2><p><img src="media/16968129261236.jpg"></p>
+<p><img src="media/16968158903002.jpg"></p>
+<p><img src="media/16968158903648.jpg"></p>
+<p><img src="media/16968158904248.jpg"></p>
+<p><img src="media/16968158904872.jpg"></p>
+<h2 id="关系代数"><a href="#关系代数" class="headerlink" title="关系代数"></a>关系代数</h2><p><img src="media/16968263183785.jpg"></p>
+<p>注：6.2 14：33-30：00关系代数待看<br>6.3待看</p>
+<p><img src="media/16983074824528.jpg"></p>
+<p><img src="media/16983074830921.jpg"></p>
+<h2 id="数据库完整性约束"><a href="#数据库完整性约束" class="headerlink" title="数据库完整性约束"></a>数据库完整性约束</h2><p><img src="media/16968263181641.jpg"></p>
+<h2 id="关系型数据库SQL简介"><a href="#关系型数据库SQL简介" class="headerlink" title="关系型数据库SQL简介"></a>关系型数据库SQL简介</h2><p><img src="media/16968269710112.jpg"></p>
+<p><img src="media/16969102438379.jpg"></p>
+<h1 id="第六章-编译原理"><a href="#第六章-编译原理" class="headerlink" title="第六章 编译原理"></a>第六章 编译原理</h1><table>
+<thead>
+<tr>
+<th align="center">编译原理步骤</th>
+<th align="center">内容</th>
+<th align="center">省流</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">词法分析</td>
+<td align="center">将输入的源代码字符串分割成一个个单词符号（Token），如关键字、标识符、字面量、词法分析操作符等。词法分析器（Lexer）根据预定义的词法规则进行分割，并将分割后的单词符号输出。</td>
+<td align="center">关键字，标识符</td>
+<td>a&gt;b?1:0 ;</td>
+</tr>
+<tr>
+<td align="center">语法分析（er？）</td>
+<td align="center">将单词符号序列转换成抽象语法树（AST，Abstract Syntax Tree）。语法分析器（Parser）根据预定义的语法规则，将单词符号序列转换成树状数据结构，这个结构反映了程序的语法结构。</td>
+<td align="center">表达式，语句，程序，对源程序结构进行分析</td>
+<td>if(1){}</td>
+</tr>
+<tr>
+<td align="center">语义分析（wa？）</td>
+<td align="center">对抽象语法树进行语义检查，确保程序的语义是正确的。语义分析器会检查变量的定义和使用、函数调用的参数和返回类型等，以确保它们符合语言的语义规则。</td>
+<td align="center">语义分析们对于类型分析和检查</td>
+<td>int a;</td>
+</tr>
+<tr>
+<td align="center">优化</td>
+<td align="center">对抽象语法树进行优化，以提高生成的目标代码的性能。优化器会对代码进行各种优化操作，如常量折叠、无用代码删除、循环优化等。</td>
+<td align="center"></td>
+<td>优化</td>
+</tr>
+<tr>
+<td align="center">中间代码生成</td>
+<td align="center">将优化后的抽象语法树转换成目标代码。目标代码可以是汇编代码、字节码或其他形式的中间代码。生成的目标代码将被保存到文件中或直接加载到内存中执行。</td>
+<td align="center"></td>
+<td>mov pop</td>
+</tr>
+</tbody></table>
+<pre><code>             记号流，词法分析的输出是记号流，也就是语法分析的输入。
+             字符流，在Java中，根据处理的数据单位不同，分为字节流和字符流。字符流是由字符组成的，例如 FileReader、FileWriter、BufferedReader、BufferedWriter、InputStreamReader、OutputStreamWriter 等。
+             源程序，词法分析的任务是把源程序的字符串转换成单词符号序列。
+             分析树，如果没有语法错误，语法分析后就能正确的构造出其语法树。括号不匹配是典型的语法错误，会在语法分析阶段检测出来。             
+</code></pre>
+<p><img src="media/16969315422711.jpg"></p>
+<p><img src="media/16969112473265.jpg"></p>
+<p><img src="media/16969252897299.jpg"></p>
+<p><img src="media/16969257989907.jpg"></p>
+<p><img src="media/16969257989907.jpg"></p>
+<p><img src="media/16969308799787.jpg"></p>
+<p><img src="media/16969308800123.jpg"></p>
+<p><img src="media/16969308800421.jpg"></p>
+<h1 id="第八章-c语言"><a href="#第八章-c语言" class="headerlink" title="第八章 c语言"></a>第八章 c语言</h1><p><img src="media/16969308800719.jpg"></p>
+<p><img src="media/16969308801059.jpg"></p>
+<p><img src="media/16969308801364.jpg"></p>
+<p><img src="media/16969308801713.jpg"></p>
+<h1 id="第七章软件工程"><a href="#第七章软件工程" class="headerlink" title="第七章软件工程"></a>第七章软件工程</h1><p><img src="media/16969328342913.jpg"></p>
+<p><img src="media/16969328440064.jpg"></p>
+<p><img src="media/16969930477407.jpg"></p>
+<p><img src="media/16969931050237.jpg"></p>
+<h2 id="软件开发模型"><a href="#软件开发模型" class="headerlink" title="软件开发模型"></a>软件开发模型</h2><p><img src="media/16969933966473.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>软件开发模型</th>
+<th>简介</th>
+<th>特点</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>瀑布模型</td>
+<td>迭代模型/迭代方法</td>
+<td>1.优点：容易理解，成本低 <br>2.用户需求明确且全面变更小<br>3.强调早期进行阶段开发方法<br>4.可以拟开发较大规模的系统，且具备类似系统的开发经验</td>
+<td>一种线性的开发模型，阶段间具有不可回溯性</td>
+</tr>
+<tr>
+<td>演化模型</td>
+<td>快速应用开发方法</td>
+<td>可以快投入使用，不断简化用户需求</td>
+<td>主要用于对软件需求缺乏准确认识的情况。</td>
+</tr>
+<tr>
+<td>增量模型</td>
+<td>构建组装模型/基于构建的开发方法</td>
+<td>1.继承了瀑布模型的优点<br>2.可以快速构造可运行的产品，可以先交付</td>
+<td>特点是引进了增量包的概念</td>
+</tr>
+<tr>
+<td>螺旋模型</td>
+<td>统一过程/统一开发方法（演化模型）</td>
+<td>1.适用于复杂且打规模的项目开发<br>2.有风险评估<br>3.成本高</td>
+<td>增加了风险分析</td>
+</tr>
+<tr>
+<td>原型模型</td>
+<td></td>
+<td>1.用户需求不清晰不明确<br>2.规模小<br>3.不可以立即投入使用</td>
+<td></td>
+</tr>
+<tr>
+<td>快速原型模型</td>
+<td>敏捷开发方法</td>
+<td></td>
+<td>通过快速建立一个能反映用户主要需求的原型系统，让用户在计算机上试用它，了解其概貌</td>
+</tr>
+<tr>
+<td>V模型</td>
+<td>基于架构的开发方法</td>
+<td></td>
+<td>瀑布模型的变体</td>
+</tr>
+<tr>
+<td>喷泉模型</td>
+<td>模型驱动的开发方法</td>
+<td>1.面向对象语言的开发2.软件重用和多项目开发（解决瀑布模型和增量模型的问题）3.多迭代和物间隙（不存在边际情况）</td>
+<td>以用户需求为动力，以对象为驱动的模型，主要用于采用对象技术的软件开发过程，具有迭代和无间隙特性</td>
+</tr>
+<tr>
+<td>基于构件的开发模型</td>
+<td>本质上的演化模型，以迭代方式构件软件</td>
+<td></td>
+<td>以用户需求为动力，以对象为驱动的模型，主要用于采用对象技术的软件开发过程，具有迭代和无间隙特性</td>
+</tr>
+</tbody></table>
+<p><img src="media/16983763027522.jpg"></p>
+<h3 id="瀑布模型"><a href="#瀑布模型" class="headerlink" title="瀑布模型"></a>瀑布模型</h3><p><img src="media/16969934123698.jpg"></p>
+<p><img src="media/16969934664256.jpg"></p>
+<p><img src="media/16969935396843.jpg"></p>
+<p><img src="media/16969935771456.jpg"></p>
+<p><img src="media/16969937739838.jpg"></p>
+<p><img src="media/16969937740194.jpg"></p>
+<p><img src="media/16969937834272.jpg"></p>
+<p><img src="media/16969938699904.jpg"></p>
+<h2 id="软件开发方法"><a href="#软件开发方法" class="headerlink" title="软件开发方法"></a>软件开发方法</h2><table>
+<thead>
+<tr>
+<th>软件开发方法</th>
+<th>要点</th>
+<th>补充</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>结构化方法</td>
+<td>是一种面向数据流方法。分解和抽象原则，由数据流图来完成工作</td>
+<td>指导思想自顶向下，逐层分解，其基本原则是功能分解与抽象</td>
+</tr>
+<tr>
+<td>Jackson方法</td>
+<td>是一种面相数据结构的开发方法</td>
+<td>JSP以数据结构为驱动的</td>
+</tr>
+<tr>
+<td>原型化方法</td>
+<td>适合于用户需求不清、业务理论不确定、需求经常变化的情况</td>
+<td></td>
+</tr>
+<tr>
+<td>面向对象开发方法</td>
+<td>UML建模</td>
+<td></td>
+</tr>
+<tr>
+<td>敏捷开发方法</td>
+<td>尽可能早地、持续地对有价值的软件的交付〞使客户满意</td>
+<td>极限编程(XP)是一种轻量级（敏捷）、高效、低风险、柔性、可预测、科学的软件开发方式。它由价值观、原则、实践和行为4个部分组成，它们彼此相互依赖、关联，并通过行为贯穿于整个生存周期。</td>
+</tr>
+</tbody></table>
+<p><img src="media/16969945759115.jpg"></p>
+<p><img src="media/16969945761793.jpg"></p>
+<p><img src="media/16969945762304.jpg"></p>
+<p><img src="media/16969945762684.jpg"></p>
+<h3 id="敏捷开发方法"><a href="#敏捷开发方法" class="headerlink" title="敏捷开发方法"></a>敏捷开发方法</h3><p><img src="media/16983765323799.jpg"></p>
+<p><img src="media/16969945763215.jpg"></p>
+<h3 id="极限编程（XP）"><a href="#极限编程（XP）" class="headerlink" title="极限编程（XP）"></a>极限编程（XP）</h3><p><img src="media/16983767486041.jpg"></p>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><table>
+<thead>
+<tr>
+<th>软件需求</th>
+<th>特点</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>功能需求</td>
+<td>实现项目功能，基础部分磨合系统相关的一些工作</td>
+<td></td>
+</tr>
+<tr>
+<td>性能需求</td>
+<td>高效率实现操作，速度，吞吐率</td>
+<td></td>
+</tr>
+<tr>
+<td>数据需求</td>
+<td>跟数据有关</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16969945888477.jpg"></p>
+<p><img src="media/16969946128764.jpg"></p>
+<p><img src="media/16969950843196.jpg"></p>
+<h2 id="系统测试"><a href="#系统测试" class="headerlink" title="系统测试"></a>系统测试</h2><h3 id="系统测试维护"><a href="#系统测试维护" class="headerlink" title="系统测试维护"></a>系统测试维护</h3><p>系统测试的各个维护阶段具有不同的特点。具体来说：</p>
+<ol>
+<li>改正性维护： 正确性，准确性，是指在软件交付使用后，为了识别和纠正软件错误、改正不满足用户需要的部分而进行的软件修改。</li>
+<li>适应性维护：是指为了使软件适应变化，而去修改软件的过程。</li>
+<li>完善性维护：是为了满足用户对软件提出的新功能与性能要求，需要修改或再开发软件，以扩充软件功能、增强软件性能、改进加工效率、提高软件的可维护性。</li>
+<li>预防性维护：是为了提高软件的可维护性、可靠性等，为未来的进一步改进打下良好基础。</li>
+</ol>
+<p>以下是每个维护类型的例子：</p>
+<ol>
+<li>改正性维护：例如，系统测试中发现了一个计算错误，该错误导致计算结果不准确。为了纠正这个错误，开发人员需要检查和修改相关的代码，以确保计算结果的准确性。</li>
+<li>适应性维护：随着操作系统或硬件环境的变化，系统可能需要进行适应性维护。例如，如果系统最初是在Windows XP上开发的，但现在需要迁移到Windows 10，那么可能需要进行一些修改以确保系统在新环境上的稳定性和兼容性。</li>
+<li>完善性维护：用户对系统的功能和性能提出了新要求。例如，用户希望系统能够增加一个新的功能，如数据导出功能。为了满足这个需求，开发人员需要增加相应的代码和功能模块。</li>
+<li>预防性维护：为了提高系统的可维护性和可靠性，开发人员可能需要进行一些预防性的维护工作。例如，他们可能会重构一些复杂的代码，以提高其可读性和可维护性，或者增加一些错误处理机制，以提高系统的稳定性。</li>
+</ol>
+<p><img src="media/16969958737300.jpg"></p>
+<p><img src="media/16969958737667.jpg"></p>
+<h3 id="黑盒和白盒"><a href="#黑盒和白盒" class="headerlink" title="黑盒和白盒"></a>黑盒和白盒</h3><p>黑盒说函数间的关系，白盒是函数内关系</p>
+<p>int min（白）{}<br>int max（白）{}<br>int main（）{<br>    min（）；<br>    黑<br>    max（）；<br>}<br><img src="media/16970067702851.jpg"></p>
+<h3 id="白盒测试"><a href="#白盒测试" class="headerlink" title="白盒测试"></a>白盒测试</h3><p>覆盖程度：路径 组合 条件 分支判断 语句</p>
+<p>路径覆盖：全部路径都走过<br>对于路径的组合排列</p>
+<p>多重条件覆盖/组合覆盖/判定-条件覆盖：<br>对于x&gt;3 and z&lt;10 ，x==4 and y&gt;5</p>
+<table>
+<thead>
+<tr>
+<th>Ex:</th>
+<th>X&gt;3</th>
+<th>Z&lt;10</th>
+<th>X==4</th>
+<th>Y&gt;5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X=4,Y=6,Z=5</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr>
+<td>X=4,Y=3,Z=10</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr>
+<td>X=3,Y=4,Z=5</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr>
+<td>X=3,Y=6,Z=11</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+</tbody></table>
+<p>条件覆盖：<br>对于x&gt;3 and z&lt;10 ，x==4 and y&gt;5<br>每个字句都取一个T一个F</p>
+<table>
+<thead>
+<tr>
+<th>Ex:</th>
+<th>X&gt;3</th>
+<th>Z&lt;10</th>
+<th>X==4</th>
+<th>Y&gt;5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X=4,Y=10,Z=0</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr>
+<td>X=0,Y=0,Z=10</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+</tbody></table>
+<p>分支覆盖/判断覆盖：<br>对于x&gt;3 and z&lt;10 ，x==4 and y&gt;5<br>每个判断都有一个T，一个F</p>
+<table>
+<thead>
+<tr>
+<th>Ex:</th>
+<th>X&gt;3 and Z&lt;10</th>
+<th>X==4 or y&gt;5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X=4,Y=5,Z=5</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr>
+<td>X=2,Y=5,Z=5</td>
+<td>F</td>
+<td>F</td>
+</tr>
+</tbody></table>
+<p>语句覆盖：覆盖到所有语句，不用T，F</p>
+<h2 id="软件成本预估模型（cocomo）"><a href="#软件成本预估模型（cocomo）" class="headerlink" title="软件成本预估模型（cocomo）"></a>软件成本预估模型（cocomo）</h2><p>软件项目预估模型是用于估计软件开发项目规模、成本、进度等方面的数学模型。其中，COCOMO模型是一种常用的软件项目预估模型，全称为Constructive Cost Model，即构造性成本模型。这个模型基于经验数据，综合考虑了多个影响软件开发项目的因素，包括系统复杂性、项目规模、人员经验等。通过对这些因素的量化分析，COCOMO模型可以提供对软件开发项目成本、进度等方面的估算。</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>简介</th>
+<th>省流</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基本COCOMO模型</td>
+<td>用于在系统开发的初期估算整个系统的工作量和软件开发和维护所需的时间；</td>
+<td>系统工作量，功能点</td>
+<td></td>
+</tr>
+<tr>
+<td>中间COCOMO模型</td>
+<td>用于估算各个子系统的工作量和开发时间；</td>
+<td>子系统工作量，代码行</td>
+<td></td>
+</tr>
+<tr>
+<td>详细COCOMO模型</td>
+<td>则用于估算独立的软件构件，如各个子系统的各个模块的工作量和开发时间。</td>
+<td>构件工作量</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16970070264660.jpg"></p>
+<p>甘特图（不是很重要）<br>可以表示任务开始和结束时间<br>可以表示任务之间的并发<br>不能清晰的反映各个任务之间的依赖关系</p>
+<p><img src="media/16970070349533.jpg"></p>
+<p>皮特图</p>
+<p><img src="media/16970072434235.jpg"><br>关键路径和最早开始时间和最晚开始时间计算</p>
+<p><img src="media/16970075019842.jpg"></p>
+<h2 id="风险管理"><a href="#风险管理" class="headerlink" title="风险管理"></a>风险管理</h2><p><img src="media/16970075216768.jpg"></p>
+<h2 id="CMM（能力成熟型模型）"><a href="#CMM（能力成熟型模型）" class="headerlink" title="CMM（能力成熟型模型）"></a>CMM（能力成熟型模型）</h2><p><img src="media/16983756291442.jpg"></p>
+<h2 id="CMMI（能力成熟度模型集成）"><a href="#CMMI（能力成熟度模型集成）" class="headerlink" title="CMMI（能力成熟度模型集成）"></a>CMMI（能力成熟度模型集成）</h2><p><img src="media/16983756882228.jpg"></p>
+<h2 id="系统设计（在软件设计阶段要做的事情）"><a href="#系统设计（在软件设计阶段要做的事情）" class="headerlink" title="系统设计（在软件设计阶段要做的事情）"></a>系统设计（在软件设计阶段要做的事情）</h2><p><img src="media/16983768822690.jpg"></p>
+<h2 id="软件质量"><a href="#软件质量" class="headerlink" title="软件质量"></a>软件质量</h2><p><img src="media/16970075899913.jpg"></p>
+<p><img src="media/16970076128698.jpg"></p>
+<p><img src="media/16970076205033.jpg"></p>
+<p><img src="media/16970076747208.jpg"></p>
+<p><img src="media/16970076445761.jpg"></p>
+<h2 id="软件度量（McCabe度量法）"><a href="#软件度量（McCabe度量法）" class="headerlink" title="软件度量（McCabe度量法）"></a>软件度量（McCabe度量法）</h2><p>有向图成环算法<br>可以数环的个数（4）+1=V（G）</p>
+<p><img src="media/16970080115065.jpg"></p>
+<h1 id="第八章-结构化开发（数据流图）"><a href="#第八章-结构化开发（数据流图）" class="headerlink" title="第八章 结构化开发（数据流图）"></a>第八章 结构化开发（数据流图）</h1><h2 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h2><p><img src="media/16969956898194.jpg"></p>
+<h3 id="内聚和耦合"><a href="#内聚和耦合" class="headerlink" title="内聚和耦合"></a>内聚和耦合</h3><table>
+<thead>
+<tr>
+<th>内聚类型</th>
+<th>描述</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>功能内聚</td>
+<td>完成一个单一功能，各个部分协同工作，缺一不可</td>
+<td>一个函数一个功能</td>
+</tr>
+<tr>
+<td>顺序内聚</td>
+<td>处理元素相关，而且必须顺序执行、</td>
+<td>顺序执行</td>
+</tr>
+<tr>
+<td>通信内聚</td>
+<td>所有处理元素集中在一个数据结构的区域上</td>
+<td>int和char都在struct上</td>
+</tr>
+<tr>
+<td>过程内聚</td>
+<td>处理元素相关，而且必须按特定的次序执行</td>
+<td>处理i++ 和++i</td>
+</tr>
+<tr>
+<td>顺时内聚（时间内聚）</td>
+<td>所包含的任务必须在同一时间间隔内执行</td>
+<td>时间点并发执行</td>
+</tr>
+<tr>
+<td>逻辑内聚</td>
+<td>完成逻辑上相关的一组任务</td>
+<td>算法</td>
+</tr>
+<tr>
+<td>偶然内聚（巧合内聚）</td>
+<td>完成一组没有关系或松散关系的任务</td>
+<td>乱序</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>耦合类型</th>
+<th>描述</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>非直接耦合</td>
+<td>两个模块之向没有直接关系，它们之向的联系完全是通过主模块的控制和调用来实现的</td>
+<td>main中调用</td>
+</tr>
+<tr>
+<td>数据耦合</td>
+<td>一组模块借助参数表传递简单数据</td>
+<td>return int</td>
+</tr>
+<tr>
+<td>标记耦合</td>
+<td>一组模块通过参数表传递记录信息(数据结构)</td>
+<td>return class</td>
+</tr>
+<tr>
+<td>控制耦合</td>
+<td>模块之间传递的信息中包含用于控制模块内部逻辑的信息</td>
+<td>fun（&amp;a）;</td>
+</tr>
+<tr>
+<td>外部耦合</td>
+<td>一组模块都访向同一全局简单交量，而且不是通过参数表传递该全局变量的信息</td>
+<td>全局变量更改</td>
+</tr>
+<tr>
+<td>公共耦合</td>
+<td>多个模块都访问同一个公共数据环境</td>
+<td>class-public</td>
+</tr>
+<tr>
+<td>内容耦合</td>
+<td>一个模块直接访问另一个模块的内部数据：一个模块不通过正常入口转到另一个模块的内部：两个模块有一部分程序代码重叠；<br />•个模块有多个入古</td>
+<td>class-friend（可访问private）</td>
+</tr>
+</tbody></table>
+<h2 id="系统设计基本原理"><a href="#系统设计基本原理" class="headerlink" title="系统设计基本原理"></a>系统设计基本原理</h2><p><img src="media/16970081524636.jpg"></p>
+<p><img src="media/16970082751107.jpg"></p>
+<h2 id="系统总体结构设计"><a href="#系统总体结构设计" class="headerlink" title="系统总体结构设计"></a>系统总体结构设计</h2><p><img src="media/16970084681893.jpg"></p>
+<p><img src="media/16970084778575.jpg"></p>
+<h2 id="数据流图"><a href="#数据流图" class="headerlink" title="数据流图"></a>数据流图</h2><p><img src="media/16970085136929.jpg"></p>
+<h3 id="数据字典"><a href="#数据字典" class="headerlink" title="数据字典"></a>数据字典</h3><p><img src="media/16970085399121.jpg"></p>
+<h3 id="数据流图元素"><a href="#数据流图元素" class="headerlink" title="数据流图元素"></a>数据流图元素</h3><p><img src="media/16970085918535.jpg"></p>
+<p><img src="media/16970088825891.jpg"></p>
+<p>对于节点的细化和对于节点之间的关系<br>外部实体的关系不能变，只改变内部结构</p>
+<p><img src="media/16970088702006.jpg"></p>
+<p><img src="media/16970092501331.jpg"></p>
+<p><img src="media/16970092908029.jpg"></p>
+<p><img src="media/16970092911586.jpg"></p>
+<p>左边是顶层，右边是0层（少了前端处理后的操作结果和后端的操作结果）<br><img src="media/16970093242153.jpg"></p>
+<p><img src="media/16985712332012.jpg"></p>
+<p><img src="media/16985712333772.jpg"></p>
+<p><img src="media/16985712334520.jpg"></p>
+<h1 id="第九章-UML建模"><a href="#第九章-UML建模" class="headerlink" title="第九章 UML建模"></a>第九章 UML建模</h1><h2 id="事物"><a href="#事物" class="headerlink" title="事物"></a>事物</h2><p><img src="media/16973415004030.jpg"></p>
+<p>UML类图中类与类之间的关系有五种：依赖、关联、聚合、组合与继承。依赖是几种关系中最弱的一种关系，通常，使用类库就是其中的一种关系。聚合与组合都表示了整体和部分的关系。组合的程度比聚合高，当整体对象消失时，部分对象也随之消失，则属于组合关系，当整体对象消失而部分对象依然可以存在并继续被使用时，则属于聚合关系。</p>
+<table>
+<thead>
+<tr>
+<th>关系</th>
+<th>简介</th>
+<th>省流</th>
+<th>符号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖(Dependency)</td>
+<td>依赖是两个事物间的语义关系， 其中一个事物（独立事物)发生变化会影响另一个事物（依赖事物)的语义。</td>
+<td></td>
+<td>A - - - &gt; B</td>
+</tr>
+<tr>
+<td>关联(Association)</td>
+<td>关联是一种结构关系，它描述了一组链，链是对象之问的连接。</td>
+<td>关联分为聚合和组合</td>
+<td>*</td>
+</tr>
+<tr>
+<td>聚合(Aggregation)/聚集</td>
+<td>是一种特殊类型的关联，它描述子整体和部分问的结构关系。</td>
+<td>B消失A不消失</td>
+<td>A——◇ B</td>
+</tr>
+<tr>
+<td>组合(Composition)</td>
+<td>也是一种特殊类型的关联，它同样体现了整体与部分间的关系，但比聚合更强，也称为强聚合。</td>
+<td>AB一方消失，同时消失</td>
+<td>A——◆ B</td>
+</tr>
+<tr>
+<td>泛化(Generalization)</td>
+<td>泛化是一种特殊/一般关系，特殊元素(子元素)的对象可替代一般元素(父元素)的对象。用这种方法，子元素共享了父元素的结构和行为。</td>
+<td>子类A泛化父类B</td>
+<td>A——▷B</td>
+</tr>
+<tr>
+<td>实现(Realization)。</td>
+<td>实现是类元之间的语义关系，其中一个类元制定了由另一个类元保证执行的契约。在两种地方要遇到实现关系：一种是在接口和实现它们的类或构件之间；<br />另一种是在用例和实现它们的协作之间。<br /></td>
+<td>类A实现接口B</td>
+<td>A - - - ▷B</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>UML图</th>
+<th>简介</th>
+<th>图组成</th>
+<th>图</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>静态建模</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>类图</td>
+<td></td>
+<td></td>
+<td><img src="media/16973415006383.jpg"><br /><img src="media/16973415009620.jpg"><br /></td>
+</tr>
+<tr>
+<td>对象图</td>
+<td>某一个时刻对象的关系</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>用例图</td>
+<td></td>
+<td>用例（⭕️），参与者（人），关系（《》）</td>
+<td><img src="media/16973415007965.jpg"></td>
+</tr>
+<tr>
+<td>动态建模</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>交互图</td>
+<td></td>
+<td>对象生命线（  - - -  ），控制焦点（▯），消息——&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>序列图</td>
+<td>以时间顺序组织对象的交互活动</td>
+<td></td>
+<td><img src="media/16973415007159.jpg"> <img src="media/16973415011263.jpg"></td>
+</tr>
+<tr>
+<td>通信图</td>
+<td>展示对象之间的消息及顺序</td>
+<td></td>
+<td><img src="media/16973415012920.jpg"></td>
+</tr>
+<tr>
+<td>状态图</td>
+<td>对反应型对象建模</td>
+<td></td>
+<td><img src="media/16973415013771.jpg"><img src="media/16983730359845.jpg"></td>
+</tr>
+<tr>
+<td>活动图</td>
+<td>特殊的状态图，对复杂用例流程建模</td>
+<td></td>
+<td><img src="media/16973415008766.jpg">   <img src="media/16973415012079.jpg"></td>
+</tr>
+<tr>
+<td>物理建模</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>构建图</td>
+<td></td>
+<td></td>
+<td><img src="media/16983722150966.jpg">  <img src="media/16973415014617.jpg"></td>
+</tr>
+<tr>
+<td>部署图</td>
+<td>展示软件和硬件</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16973415005595.jpg"></p>
+<h1 id="第十章-面向对象技术（oop）"><a href="#第十章-面向对象技术（oop）" class="headerlink" title="第十章 面向对象技术（oop）"></a>第十章 面向对象技术（oop）</h1><h2 id="基本概念-1"><a href="#基本概念-1" class="headerlink" title="基本概念"></a>基本概念</h2><p>方法（函数）<br>消息（传参）</p>
+<p><img src="media/16970165241128.jpg"></p>
+<p><img src="media/16970166809885.jpg"></p>
+<h2 id="java"><a href="#java" class="headerlink" title="java"></a>java</h2><p><img src="media/16970169720068.jpg"></p>
+<p><img src="media/16970170157187.jpg"></p>
+<p><img src="media/16970170157665.jpg"></p>
+<p><img src="media/16970170158119.jpg"></p>
+<p><img src="media/16970170158579.jpg"></p>
+<p><img src="media/16970170159056.jpg"></p>
+<p><img src="media/16970170159606.jpg"></p>
+<h1 id="第十一章-设计模式"><a href="#第十一章-设计模式" class="headerlink" title="第十一章 设计模式"></a>第十一章 设计模式</h1><h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><table>
+<thead>
+<tr>
+<th>设计原则</th>
+<th>作用</th>
+<th>省流</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单一职责原则</td>
+<td>设计目的单一的类。</td>
+<td>目的单纯</td>
+</tr>
+<tr>
+<td>开放-封闭原则</td>
+<td>对扩展开放,对修改封闭。</td>
+<td>私有领地</td>
+</tr>
+<tr>
+<td>里氏(Liskov)替换原则</td>
+<td>子类可以替换父类。</td>
+<td>儿子代替父亲</td>
+</tr>
+<tr>
+<td>依赖倒置原则</td>
+<td>要依赖于抽象，而不是具体实现：针对接口编程，不要针对实现编程</td>
+<td>抽象实现</td>
+</tr>
+<tr>
+<td>接口隔离原则</td>
+<td>使用多个专门的接口比使用单一的总接口要好</td>
+<td>多api</td>
+</tr>
+<tr>
+<td>组合重用原则</td>
+<td>要尽量使用组合,而不是继承关系达到重用的目的。</td>
+<td>尽量组合</td>
+</tr>
+<tr>
+<td>迪米特（Demeter）原则</td>
+<td>一个对象应当对其他对象有尽可能少的了解。</td>
+<td>距离产生美</td>
+</tr>
+</tbody></table>
+<p><img src="media/16970168626722.jpg"></p>
+<p><img src="media/16970168981122.jpg"></p>
+<h1 id="第十一章-信息安全"><a href="#第十一章-信息安全" class="headerlink" title="第十一章 信息安全"></a>第十一章 信息安全</h1><h2 id="基本概念-2"><a href="#基本概念-2" class="headerlink" title="基本概念"></a>基本概念</h2><p><img src="media/16970170723125.jpg"></p>
+<p><img src="media/16970171024271.jpg"></p>
+<h2 id="网络安全威胁"><a href="#网络安全威胁" class="headerlink" title="网络安全威胁"></a>网络安全威胁</h2><table>
+<thead>
+<tr>
+<th>网络安全</th>
+<th>简介</th>
+<th>补充</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SSL</td>
+<td>安全协议，加密算法，443端口</td>
+<td>升级版TLS</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>HTTP通道+SSL加密算法组成</td>
+<td></td>
+</tr>
+<tr>
+<td>MIME</td>
+<td>电子邮箱的扩展</td>
+<td></td>
+</tr>
+<tr>
+<td>PGP</td>
+<td>电子邮箱的安全</td>
+<td></td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>安全连接协议</td>
+<td>连接</td>
+</tr>
+</tbody></table>
+<p><img src="media/16970171024738.jpg"></p>
+<p><img src="media/16970171524643.jpg"></p>
+<p><img src="media/16970172094429.jpg"></p>
+<h2 id="网络攻击"><a href="#网络攻击" class="headerlink" title="网络攻击"></a>网络攻击</h2><table>
+<thead>
+<tr>
+<th>网络攻击</th>
+<th>简介</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL注入攻击</td>
+<td>针对数据库</td>
+<td></td>
+</tr>
+<tr>
+<td>重放攻击（ARP）</td>
+<td>1.方式：发送报文来攻击2.目的：复制身份认真，破坏认证正确性3.措施：在报文中增加时间戳</td>
+<td></td>
+</tr>
+<tr>
+<td>拒绝服务</td>
+<td>手段：通过肤哦次发送请求</td>
+<td></td>
+</tr>
+<tr>
+<td>入侵检测（DOS）</td>
+<td>1.专家系统2.模型检测3.简单匹配</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16970173839150.jpg"></p>
+<p><img src="media/16970173839630.jpg"></p>
+<p><img src="media/16970173840112.jpg"></p>
+<h2 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h2><p>组成： 内部+DMZ（隔离区）+外部</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>简介</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>包过滤</td>
+<td>检测网络层</td>
+<td>对用户完全透明，速度快，安全系统低</td>
+</tr>
+<tr>
+<td>应用代理网关</td>
+<td>1.是内部网和外部网的隔离点 2.检测应用层，传输层</td>
+<td>难配置，速度慢</td>
+</tr>
+<tr>
+<td>状态检测技术防火墙</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="media/16970173840594.jpg"><br>七层模型对应的防火墙<br><img src="media/16970174412586.jpg"></p>
+<h2 id="加密算法与数字签名"><a href="#加密算法与数字签名" class="headerlink" title="加密算法与数字签名"></a>加密算法与数字签名</h2><p><img src="media/16970176515243.jpg"></p>
+<p>加密算法（密码算法）<br><img src="media/16970174724786.jpg"></p>
+<p><img src="media/16970174724786.jpg"></p>
+<p><img src="media/16970175644149.jpg"></p>
+<h2 id="公钥和私钥"><a href="#公钥和私钥" class="headerlink" title="公钥和私钥"></a>公钥和私钥</h2><p><img src="media/16970176234056.jpg"></p>
+<p><img src="media/16970176515243.jpg"></p>
+<h2 id="各个网络层次的安全保障"><a href="#各个网络层次的安全保障" class="headerlink" title="各个网络层次的安全保障"></a>各个网络层次的安全保障</h2><p><img src="media/16970177111807.jpg"></p>
+<h1 id="第十二章-多媒体"><a href="#第十二章-多媒体" class="headerlink" title="第十二章 多媒体"></a>第十二章 多媒体</h1><h2 id="音频"><a href="#音频" class="headerlink" title="音频"></a>音频</h2><p><img src="media/16970177466087.jpg"></p>
+<h2 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h2><p><img src="media/16970177466580.jpg"></p>
+<h2 id="多媒体种类"><a href="#多媒体种类" class="headerlink" title="多媒体种类"></a>多媒体种类</h2><p>（视频不是显示模拟）<br>显示媒体是物理设备<br><img src="media/16970177912869.jpg"></p>
+<h2 id="多媒体计算"><a href="#多媒体计算" class="headerlink" title="多媒体计算"></a>多媒体计算</h2><p><img src="media/16970178556913.jpg"><br><img src="media/16970178869027.jpg"></p>
+<h1 id="第十三章-法律法规与标准化知识"><a href="#第十三章-法律法规与标准化知识" class="headerlink" title="第十三章 法律法规与标准化知识"></a>第十三章 法律法规与标准化知识</h1><table>
+<thead>
+<tr>
+<th>知识产权</th>
+<th>简介</th>
+<th>省流</th>
+<th>例子</th>
+<th>补充</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>工业产权</td>
+<td></td>
+<td>专利，商标</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>著作权</td>
+<td>分为人身权和财产权</td>
+<td>人生权分为发表权，署名权，修改权，保护作品完整权</td>
+<td></td>
+<td>署名权，修改权，保护作品完整权是永久终身的</td>
+</tr>
+<tr>
+<td>专利地域性</td>
+<td>我国专利在其他国家不受保护，如果需要保护，则需在他国申请专利</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>计算机软件著作权</td>
+<td>根据《中国人民共和国著作权法》和《计算机软件保护条例》</td>
+<td></td>
+<td>对于客体（即计算机软件）分为计算机程序（源程序，目标程序），计算机软件文档（程序设计说明书，流程图，用户手册）</td>
+<td>软著保护期：50年，除了身份权都丧失</td>
+</tr>
+<tr>
+<td>委托开发</td>
+<td>无合同：由开发方享著作权</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>商业秘密权</td>
+<td>对技术信息和经营信息进行保护</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>专利权</td>
+<td></td>
+<td>谁先申请就给谁，同时申请就协商</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>署名权，修改权，保护作品完整权没有时间限制<br><img src="media/16970234411840.jpg"></p>
+<p><img src="media/16970235651998.jpg"></p>
+<p><img src="media/16970235968022.jpg"></p>
+<p><img src="media/16970235968485.jpg"></p>
+<p><img src="media/16970235968944.jpg"></p>
+<h1 id="第十四章-计算机英语"><a href="#第十四章-计算机英语" class="headerlink" title="第十四章 计算机英语"></a>第十四章 计算机英语</h1><p><img src="media/16970236511947.jpg"></p>
+<p><img src="media/16970241754095.jpg"></p>
+<p><img src="media/16970241759278.jpg"></p>
+<p><img src="media/16970241759789.jpg"></p>
+<p><img src="media/16970241760285.jpg"></p>
+<p><img src="media/16970241760783.jpg"></p>
+<p><img src="media/16970241761368.jpg"></p>
+<p><img src="media/16970241761904.jpg"></p>
+<p><img src="media/16970241762460.jpg"></p>
+<p><img src="media/16970241762981.jpg"></p>
+<p><img src="media/16970241763482.jpg"></p>
+<p><img src="media/16970241764003.jpg"></p>
+<p><img src="media/16970241764538.jpg"></p>
+<p><img src="media/16970241765335.jpg"></p>
+<p><img src="media/16970241767089.jpg"></p>
+<p><img src="media/16970241769241.jpg"></p>
+<p><img src="media/16970241770856.jpg"></p>
+<p><img src="media/16970241772050.jpg"></p>
+<p><img src="media/16970241773272.jpg"></p>
+<p><img src="media/16970241774958.jpg"></p>
+<p><img src="media/16970241776195.jpg"> </p>
+<p><img src="media/16970241777579.jpg"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/10/01/Softexam/">http://example.com/2023/10/01/Softexam/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/base/">base</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/29/typora/" title="typora"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">typora</div></div></a></div><div class="next-post pull-right"><a href="/2023/09/15/MySql/" title="Mysql"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Mysql</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://www.bilibili.com/" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://stackoverflow.co/" target="_blank" title="stackoverflow"><i class="fa-brands fa-stack-overflow"></i></a><a class="social-icon" href="https://www.pixiv.net" target="_blank" title="pixiv"><i class="fa-solid fa-p"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E8%AE%A1%E7%BB%84"><span class="toc-number">1.</span> <span class="toc-text">第一章 计组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%92%8C%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">1.数据的表示和校验码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1进制转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E7%BC%96%E7%A0%81"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3浮点数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="toc-number">1.1.4.</span> <span class="toc-text">1.4校验码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">1.4.1奇偶校验码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2%E6%B5%B7%E6%98%8E%E7%A0%81"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">1.4.2海明码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%92%8C%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2.计算机体系结构和指令系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%BA%94%E5%A4%A7%E9%83%A8%E5%88%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">计算机体系结构五大部分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%92%8CCPU"><span class="toc-number">1.3.</span> <span class="toc-text">内存和CPU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flynn%E5%88%86%E7%B1%BB%E6%B3%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">Flynn分类法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CICS%E5%92%8CRISC"><span class="toc-number">1.3.2.</span> <span class="toc-text">CICS和RISC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F%E2%80%94-%E6%8C%87%E4%BB%A4"><span class="toc-number">1.3.3.</span> <span class="toc-text">指令系统—-指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E8%AE%A1%E7%AE%97%E9%A2%98"><span class="toc-number">1.3.4.</span> <span class="toc-text">流水线计算题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84%EF%BC%8C%E6%80%BB%E7%BA%BF%E7%B3%BB%E7%BB%9F%EF%BC%8C%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-number">1.4.</span> <span class="toc-text">3.存储结构，总线系统，输入输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%88%86%E7%B1%BB"><span class="toc-number">1.5.</span> <span class="toc-text">存储器分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cache"><span class="toc-number">1.6.</span> <span class="toc-text">cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.7.</span> <span class="toc-text">总线系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.8.</span> <span class="toc-text">可靠性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">第二章 数据结构与算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">基本概念与算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.</span> <span class="toc-text">数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.</span> <span class="toc-text">第三章 操作系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">进程管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE"><span class="toc-number">3.1.1.</span> <span class="toc-text">状态转换图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pv"><span class="toc-number">3.2.</span> <span class="toc-text">pv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">3.3.</span> <span class="toc-text">存储管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-number">3.4.</span> <span class="toc-text">三种存储管理方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">3.5.</span> <span class="toc-text">页面置换算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">3.6.</span> <span class="toc-text">文件管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">3.7.</span> <span class="toc-text">指令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text">第四章 计算机网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B1%82%E6%AC%A1%E5%88%86%E5%B7%A5"><span class="toc-number">4.1.</span> <span class="toc-text">1.层次分工</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP-IP-%E5%8D%8F%E8%AE%AE%E6%A0%88"><span class="toc-number">4.2.</span> <span class="toc-text">2.TCP&#x2F;IP 协议栈</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP%E5%92%8CRARP"><span class="toc-number">4.2.1.</span> <span class="toc-text">ARP和RARP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MIME%E5%92%8CPEM%E5%90%AB%E4%B9%89"><span class="toc-number">4.2.2.</span> <span class="toc-text">MIME和PEM含义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-TCP%E4%B8%8EUDP%E5%8C%BA%E5%88%AB"><span class="toc-number">4.3.</span> <span class="toc-text">3.TCP与UDP区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-IP%E5%9C%B0%E5%9D%80%E5%92%8CIPv6%E7%AE%80%E4%BB%8B"><span class="toc-number">4.4.</span> <span class="toc-text">4.IP地址和IPv6简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Internet%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.5.</span> <span class="toc-text">5.Internet服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%B8%B8%E8%A7%81%E6%97%A0%E6%95%88%E5%9C%B0%E5%9D%80"><span class="toc-number">4.6.</span> <span class="toc-text">6.常见无效地址</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">第五章 数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">5.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88DDBS%EF%BC%89%E7%89%B9%E7%82%B9"><span class="toc-number">5.2.</span> <span class="toc-text">分布式数据库（DDBS）特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%89%E7%BA%A7%E6%A8%A1%E5%BC%8F%E4%BA%8C%E7%BA%A7%E6%98%A0%E5%83%8F"><span class="toc-number">5.3.</span> <span class="toc-text">数据库三级模式二级映像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E6%9E%90%E5%92%8C%E8%AE%BE%E8%AE%A1%E8%BF%87%E7%A8%8B"><span class="toc-number">5.4.</span> <span class="toc-text">数据库分析和设计过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E4%BB%A3%E6%95%B0"><span class="toc-number">5.5.</span> <span class="toc-text">关系代数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%8C%E6%95%B4%E6%80%A7%E7%BA%A6%E6%9D%9F"><span class="toc-number">5.6.</span> <span class="toc-text">数据库完整性约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93SQL%E7%AE%80%E4%BB%8B"><span class="toc-number">5.7.</span> <span class="toc-text">关系型数据库SQL简介</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">第六章 编译原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-c%E8%AF%AD%E8%A8%80"><span class="toc-number">7.</span> <span class="toc-text">第八章 c语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B"><span class="toc-number">8.</span> <span class="toc-text">第七章软件工程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">8.1.</span> <span class="toc-text">软件开发模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%80%91%E5%B8%83%E6%A8%A1%E5%9E%8B"><span class="toc-number">8.1.1.</span> <span class="toc-text">瀑布模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95"><span class="toc-number">8.2.</span> <span class="toc-text">软件开发方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95"><span class="toc-number">8.2.1.</span> <span class="toc-text">敏捷开发方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B%EF%BC%88XP%EF%BC%89"><span class="toc-number">8.2.2.</span> <span class="toc-text">极限编程（XP）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">8.3.</span> <span class="toc-text">需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95"><span class="toc-number">8.4.</span> <span class="toc-text">系统测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95%E7%BB%B4%E6%8A%A4"><span class="toc-number">8.4.1.</span> <span class="toc-text">系统测试维护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%91%E7%9B%92%E5%92%8C%E7%99%BD%E7%9B%92"><span class="toc-number">8.4.2.</span> <span class="toc-text">黑盒和白盒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="toc-number">8.4.3.</span> <span class="toc-text">白盒测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%88%90%E6%9C%AC%E9%A2%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%EF%BC%88cocomo%EF%BC%89"><span class="toc-number">8.5.</span> <span class="toc-text">软件成本预估模型（cocomo）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86"><span class="toc-number">8.6.</span> <span class="toc-text">风险管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMM%EF%BC%88%E8%83%BD%E5%8A%9B%E6%88%90%E7%86%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="toc-number">8.7.</span> <span class="toc-text">CMM（能力成熟型模型）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMMI%EF%BC%88%E8%83%BD%E5%8A%9B%E6%88%90%E7%86%9F%E5%BA%A6%E6%A8%A1%E5%9E%8B%E9%9B%86%E6%88%90%EF%BC%89"><span class="toc-number">8.8.</span> <span class="toc-text">CMMI（能力成熟度模型集成）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%EF%BC%88%E5%9C%A8%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B%E6%83%85%EF%BC%89"><span class="toc-number">8.9.</span> <span class="toc-text">系统设计（在软件设计阶段要做的事情）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E8%B4%A8%E9%87%8F"><span class="toc-number">8.10.</span> <span class="toc-text">软件质量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%BA%A6%E9%87%8F%EF%BC%88McCabe%E5%BA%A6%E9%87%8F%E6%B3%95%EF%BC%89"><span class="toc-number">8.11.</span> <span class="toc-text">软件度量（McCabe度量法）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%BB%93%E6%9E%84%E5%8C%96%E5%BC%80%E5%8F%91%EF%BC%88%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">第八章 结构化开发（数据流图）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="toc-number">9.1.</span> <span class="toc-text">系统设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%9A%E5%92%8C%E8%80%A6%E5%90%88"><span class="toc-number">9.1.1.</span> <span class="toc-text">内聚和耦合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">9.2.</span> <span class="toc-text">系统设计基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">9.3.</span> <span class="toc-text">系统总体结构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE"><span class="toc-number">9.4.</span> <span class="toc-text">数据流图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8"><span class="toc-number">9.4.1.</span> <span class="toc-text">数据字典</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE%E5%85%83%E7%B4%A0"><span class="toc-number">9.4.2.</span> <span class="toc-text">数据流图元素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E7%AB%A0-UML%E5%BB%BA%E6%A8%A1"><span class="toc-number">10.</span> <span class="toc-text">第九章 UML建模</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E7%89%A9"><span class="toc-number">10.1.</span> <span class="toc-text">事物</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%8A%80%E6%9C%AF%EF%BC%88oop%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">第十章 面向对象技术（oop）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="toc-number">11.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java"><span class="toc-number">11.2.</span> <span class="toc-text">java</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="toc-number">12.</span> <span class="toc-text">第十一章 设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">12.1.</span> <span class="toc-text">设计原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8"><span class="toc-number">13.</span> <span class="toc-text">第十一章 信息安全</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-2"><span class="toc-number">13.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="toc-number">13.2.</span> <span class="toc-text">网络安全威胁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB"><span class="toc-number">13.3.</span> <span class="toc-text">网络攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">13.4.</span> <span class="toc-text">防火墙</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D"><span class="toc-number">13.5.</span> <span class="toc-text">加密算法与数字签名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E9%92%A5%E5%92%8C%E7%A7%81%E9%92%A5"><span class="toc-number">13.6.</span> <span class="toc-text">公钥和私钥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%B1%82%E6%AC%A1%E7%9A%84%E5%AE%89%E5%85%A8%E4%BF%9D%E9%9A%9C"><span class="toc-number">13.7.</span> <span class="toc-text">各个网络层次的安全保障</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E5%A4%9A%E5%AA%92%E4%BD%93"><span class="toc-number">14.</span> <span class="toc-text">第十二章 多媒体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91"><span class="toc-number">14.1.</span> <span class="toc-text">音频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F"><span class="toc-number">14.2.</span> <span class="toc-text">图像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%AA%92%E4%BD%93%E7%A7%8D%E7%B1%BB"><span class="toc-number">14.3.</span> <span class="toc-text">多媒体种类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%AA%92%E4%BD%93%E8%AE%A1%E7%AE%97"><span class="toc-number">14.4.</span> <span class="toc-text">多媒体计算</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E6%B3%95%E5%BE%8B%E6%B3%95%E8%A7%84%E4%B8%8E%E6%A0%87%E5%87%86%E5%8C%96%E7%9F%A5%E8%AF%86"><span class="toc-number">15.</span> <span class="toc-text">第十三章 法律法规与标准化知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%8B%B1%E8%AF%AD"><span class="toc-number">16.</span> <span class="toc-text">第十四章 计算机英语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/04/04/DrawCall/" title="UGUI 优化- DrawCall"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UGUI 优化- DrawCall"/></a><div class="content"><a class="title" href="/2024/04/04/DrawCall/" title="UGUI 优化- DrawCall">UGUI 优化- DrawCall</a><time datetime="2024-04-04T14:26:45.000Z" title="发表于 2024-04-04 22:26:45">2024-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/20/CsharpCLR/" title="c# CLR"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c# CLR"/></a><div class="content"><a class="title" href="/2024/03/20/CsharpCLR/" title="c# CLR">c# CLR</a><time datetime="2024-03-20T11:20:05.000Z" title="发表于 2024-03-20 19:20:05">2024-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/10/CsharpAdvanced/" title="C#进阶"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C#进阶"/></a><div class="content"><a class="title" href="/2024/03/10/CsharpAdvanced/" title="C#进阶">C#进阶</a><time datetime="2024-03-10T11:20:05.000Z" title="发表于 2024-03-10 19:20:05">2024-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/07/unityShader/" title="unityShader（逐步更新）"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unityShader（逐步更新）"/></a><div class="content"><a class="title" href="/2024/03/07/unityShader/" title="unityShader（逐步更新）">unityShader（逐步更新）</a><time datetime="2024-03-07T01:09:05.000Z" title="发表于 2024-03-07 09:09:05">2024-03-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/06/unityUiOptimize/" title="unity UI优化"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity UI优化"/></a><div class="content"><a class="title" href="/2024/03/06/unityUiOptimize/" title="unity UI优化">unity UI优化</a><time datetime="2024-03-06T07:07:00.000Z" title="发表于 2024-03-06 15:07:00">2024-03-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
