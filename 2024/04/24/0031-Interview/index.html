@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>面筋 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第一家 广州 寄  首先问一下学习unity 多久了 C++ 在学校是怎么学习的 – oop 没有C11 那就问一个C#问题 List底层是什么 无序数组怎么增加增删的效率  –增：在最后增加 删：swap最后然后在最后删 （堆排序？） 聊天：lua现在好像淘汰 C# 技术栈就够 huatuo 场景题： 水果忍者  怎么随机生成水果和角度 场景题 ： 水果忍者 怎么切割  第二家 杭州 oc  首">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面筋">
+<meta property="og:url" content="http://example.com/2024/04/24/0031-Interview/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="第一家 广州 寄  首先问一下学习unity 多久了 C++ 在学校是怎么学习的 – oop 没有C11 那就问一个C#问题 List底层是什么 无序数组怎么增加增删的效率  –增：在最后增加 删：swap最后然后在最后删 （堆排序？） 聊天：lua现在好像淘汰 C# 技术栈就够 huatuo 场景题： 水果忍者  怎么随机生成水果和角度 场景题 ： 水果忍者 怎么切割  第二家 杭州 oc  首">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2024-04-24T13:40:02.000Z">
+<meta property="article:modified_time" content="2024-07-15T01:18:00.406Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="面经">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/04/24/0031-Interview/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '面筋',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-07-15 09:18:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">37</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">面筋</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-24T13:40:02.000Z" title="发表于 2024-04-24 21:40:02">2024-04-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-15T01:18:00.406Z" title="更新于 2024-07-15 09:18:00">2024-07-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="面筋"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>第一家 广州 寄</p>
+<ol>
+<li>首先问一下学习unity 多久了</li>
+<li>C++ 在学校是怎么学习的 – oop 没有C11</li>
+<li>那就问一个C#问题 List底层是什么</li>
+<li>无序数组怎么增加增删的效率  –增：在最后增加 删：swap最后然后在最后删 （堆排序？）</li>
+<li>聊天：lua现在好像淘汰 C# 技术栈就够 huatuo</li>
+<li>场景题： 水果忍者  怎么随机生成水果和角度</li>
+<li>场景题 ： 水果忍者 怎么切割</li>
+</ol>
+<p>第二家 杭州 oc</p>
+<ol>
+<li>首先问一下学习unity 多久了</li>
+</ol>
+<p>回答：大一下暑假断断续续，也是一年多</p>
+<ol start="2">
+<li><p>介绍一下杀戮尖塔项目</p>
+</li>
+<li><p>热更做了吗（没有）那做了什么</p>
+</li>
+</ol>
+<p>回答： 做了一个lua xlua的背包系统 写了个ABmanager 然后写Panel 后面补充了BasePanel的框架</p>
+<ol start="4">
+<li>有使用过unity的性能工具吗？有遇到性能问题吗</li>
+</ol>
+<p>没有，但是大概知道理论</p>
+<ol start="5">
+<li>在CPU 和 GPU 方面的优化 大概了解吗</li>
+</ol>
+<p>CPU ： 代码层面：框架，缓存池 批处理：静态批处理 空间换时间</p>
+<p>GPU ： 太卡没回答</p>
+<ol start="6">
+<li>说一下你关于状态机的使用（后面有说公司项目有多用状态机来实现框架）</li>
+<li>unity 的进程有多少个</li>
+<li>unity 生命周期</li>
+<li>改变timeline（没有听清楚什么单词我也不会）不会改变生命周期的哪个函数</li>
+</ol>
+<p>回答：update，就说每一帧更新就不会更改（我也不会）</p>
+<p>第三家 北京 oc</p>
+<ol>
+<li>自我介绍 </li>
+<li>IOC容器的理解</li>
+<li>IOC和其他方式的区别以及项目中好处</li>
+<li>洗牌算法</li>
+<li>说一下单例模式</li>
+<li>介绍一下我的项目wordJump</li>
+<li>为什么用射线检测来实现爬墙跳，为什么不使用其他的</li>
+<li>请介绍一下反射</li>
+<li>为什么使用lua热更不使用C#</li>
+<li>排序算法有哪些</li>
+<li>请介绍一下快排</li>
+<li>如果使用unity和py通信应该怎么使用通信协议</li>
+<li>学过shader吗 介绍一下</li>
+<li>学过计算机图形学吗，三维坐标怎么转为屏幕坐标</li>
+</ol>
+<p>说是无人机的虚拟仿真，unity做一个页面端</p>
+<p>第四家 深圳 迷你玩 oc</p>
+<ol>
+<li><p>自我介绍</p>
+</li>
+<li><p>C# 类与接口的区别</p>
+</li>
+<li><p>数组与链表的区别</p>
+</li>
+<li><p>数组和链表的使用场景（增删）</p>
+</li>
+<li><p>GC 产生的原因（就说了俩个www）</p>
+</li>
+<li><p>ArrayList和List区别（我就说了List是接口 ArrayList会封箱拆箱）</p>
+</li>
+<li><p>介绍一下委托</p>
+</li>
+<li><p>相机三种的渲染形式（没有回答出来）</p>
+</li>
+<li><p>物理更新在哪里（fixUpdate）</p>
+</li>
+<li><p>为什么用fixUpdate</p>
+</li>
+<li><p>Lua 类的实现</p>
+</li>
+<li><p>Lua ipair 和pair区别 </p>
+</li>
+<li><p>卡牌组怎么实现的</p>
+</li>
+<li><p>洗牌算法</p>
+</li>
+<li><p>缓存池怎么实现的</p>
+</li>
+<li><p>自研引擎的看法</p>
+<p>反问：</p>
+</li>
+</ol>
+<p>15.进去做什么 ：做业务之类的，自研引擎用纯Lua</p>
+<ol start="16">
+<li>后续流程 </li>
+<li>表现 （lua要提高，基础还行，但是扩展要仔细看）</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/04/24/0031-Interview/">http://example.com/2024/04/24/0031-Interview/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E7%BB%8F/">面经</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/06/0033-cpp/" title="c++基础理论"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">c++基础理论</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/12/0032-gitCommit/" title="git commit规范"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">git commit规范</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">37</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/07/15/0034-SVN/" title="SVN食用说明"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SVN食用说明"/></a><div class="content"><a class="title" href="/2024/07/15/0034-SVN/" title="SVN食用说明">SVN食用说明</a><time datetime="2024-07-14T16:00:00.000Z" title="发表于 2024-07-15 00:00:00">2024-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity 优化"/></a><div class="content"><a class="title" href="/2024/05/10/AAAunityOptimize/" title="unity 优化">unity 优化</a><time datetime="2024-05-10T10:21:03.000Z" title="发表于 2024-05-10 18:21:03">2024-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/06/0033-cpp/" title="c++基础理论"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++基础理论"/></a><div class="content"><a class="title" href="/2024/05/06/0033-cpp/" title="c++基础理论">c++基础理论</a><time datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/24/0031-Interview/" title="面筋"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="面筋"/></a><div class="content"><a class="title" href="/2024/04/24/0031-Interview/" title="面筋">面筋</a><time datetime="2024-04-24T13:40:02.000Z" title="发表于 2024-04-24 21:40:02">2024-04-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/12/0032-gitCommit/" title="git commit规范"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="git commit规范"/></a><div class="content"><a class="title" href="/2024/04/12/0032-gitCommit/" title="git commit规范">git commit规范</a><time datetime="2024-04-12T13:40:02.000Z" title="发表于 2024-04-12 21:40:02">2024-04-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
