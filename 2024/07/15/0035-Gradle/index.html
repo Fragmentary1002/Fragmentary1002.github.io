@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>AndroidStudio-导入Gradle | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="关于AndroidStudio导入项目的正确方式，修改Gradle配置 前言在安卓的引擎AndroidStudio导入过程中，github存在许多老项目，他们的安卓版本号以及Gradle各不相同，固有此篇文章解决 安装AndroidStudio以及下载SDK相关链接:https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_38436214&#x2F;article&#x2F;details&#x2F;105073213 对比有关文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AndroidStudio-导入Gradle">
+<meta property="og:url" content="http://example.com/2024/07/15/0035-Gradle/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="关于AndroidStudio导入项目的正确方式，修改Gradle配置 前言在安卓的引擎AndroidStudio导入过程中，github存在许多老项目，他们的安卓版本号以及Gradle各不相同，固有此篇文章解决 安装AndroidStudio以及下载SDK相关链接:https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_38436214&#x2F;article&#x2F;details&#x2F;105073213 对比有关文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2024-07-14T16:38:34.000Z">
+<meta property="article:modified_time" content="2024-07-19T07:01:58.191Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/07/15/0035-Gradle/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AndroidStudio-导入Gradle',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-07-19 15:01:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">AndroidStudio-导入Gradle</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-14T16:38:34.000Z" title="发表于 2024-07-15 00:38:34">2024-07-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-19T07:01:58.191Z" title="更新于 2024-07-19 15:01:58">2024-07-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="AndroidStudio-导入Gradle"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>关于AndroidStudio导入项目的正确方式，修改Gradle配置</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在安卓的引擎AndroidStudio导入过程中，github存在许多老项目，他们的安卓版本号以及Gradle各不相同，固有此篇文章解决</p>
+<h1 id="安装AndroidStudio以及下载SDK"><a href="#安装AndroidStudio以及下载SDK" class="headerlink" title="安装AndroidStudio以及下载SDK"></a>安装AndroidStudio以及下载SDK</h1><p>相关链接:<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38436214/article/details/105073213">https://blog.csdn.net/qq_38436214/article/details/105073213</a></p>
+<h1 id="对比有关文件"><a href="#对比有关文件" class="headerlink" title="对比有关文件"></a>对比有关文件</h1><p>以下project为项目目录节点</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/riemann_/article/details/88807974">build.gradle文件详解</a></p>
+<h2 id="根目录下的gradle文件"><a href="#根目录下的gradle文件" class="headerlink" title="根目录下的gradle文件"></a>根目录下的gradle文件</h2><ul>
+<li>project/build.gradle:</li>
+</ul>
+<p>这个是gradle 插件配置有关于插件版本下面讲解</p>
+<p>1、repositories闭包，声明了jcenter()的配置<br>2、dependencies闭包，声明了一个Gradle插件</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">buildscript <span class="punctuation">&#123;</span></span><br><span class="line">    </span><br><span class="line">    repositories <span class="punctuation">&#123;</span>  <span class="comment">//repositories闭包</span></span><br><span class="line">        google()</span><br><span class="line">        jcenter() <span class="comment">//代码托管库：设置之后可以在项目中轻松引用jcenter上的开源项目</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    dependencies <span class="punctuation">&#123;</span>  <span class="comment">//dependencies闭包</span></span><br><span class="line">        classpath &#x27;com.android.tools.build<span class="punctuation">:</span>gradle<span class="punctuation">:</span><span class="number">3.0</span><span class="number">.0</span>&#x27; 	声明gradle插件，插件版本号为<span class="number">3.0</span><span class="number">.0</span></span><br><span class="line">        <span class="comment">//gradle是一个强大的项目构建工具，不仅可以构建Android，还可以构建java，C++等</span></span><br><span class="line">        <span class="comment">//此处引用android的插件</span></span><br><span class="line">        <span class="comment">// <span class="doctag">NOTE:</span> Do not place your application dependencies here; they belong</span></span><br><span class="line">        <span class="comment">// in the individual module build.gradle files</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">allprojects <span class="punctuation">&#123;</span></span><br><span class="line">    repositories <span class="punctuation">&#123;</span></span><br><span class="line">        google()</span><br><span class="line">        jcenter() <span class="comment">//代码托管库：设置之后可以在项目中轻松引用jcenter上的开源项目</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">task clean(type<span class="punctuation">:</span> Delete) <span class="punctuation">&#123;</span></span><br><span class="line">    delete rootProject.buildDir</span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="warpper文件"><a href="#warpper文件" class="headerlink" title="warpper文件"></a>warpper文件</h2><ul>
+<li>project/gradle/warpper/gradle-wrapper.properties</li>
+</ul>
+<p>这个是有关于gradle版本文件  <code>distributionurl</code>  是studio下载gradle的path</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#Sun Oct <span class="number">02</span> <span class="number">21</span><span class="punctuation">:</span><span class="number">29</span><span class="punctuation">:</span><span class="number">47</span> CST <span class="number">2016</span> </span><br><span class="line">distributionBase GRADLE USER_HOME </span><br><span class="line">distributionPath-wrapper/dists </span><br><span class="line">zipStoreBase-GRADLE USER HOME zipStorePath=wrapper/dists</span><br><span class="line">distributionurl=https\<span class="punctuation">:</span><span class="comment">//services.gradle.org/distributions/gradle-2.14.1-all.zip</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="app目录下的gradle文件"><a href="#app目录下的gradle文件" class="headerlink" title="app目录下的gradle文件"></a>app目录下的gradle文件</h2><ul>
+<li>project/app/bulid.gradle</li>
+</ul>
+<h3 id="简单版本"><a href="#简单版本" class="headerlink" title="简单版本"></a>简单版本</h3><p>简单的例子：</p>
+<p>如果只关注gradle安装的话，只要看compileSdkVersion  targetSdkVersion buildToolsVersion</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明是Android程序，</span></span><br><span class="line"><span class="comment">//com.android.application 表示这是一个应用程序模块,可直接运行</span></span><br><span class="line"><span class="comment">//com.android.library 标识这是一个库模块，是依附别的应用程序运行</span></span><br><span class="line">apply plugin<span class="punctuation">:</span> &#x27;com.android.application&#x27;</span><br><span class="line"> </span><br><span class="line">android <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">//编译sdk的版本，也就是API Level，例如API-19、API-20、API-21等等。</span></span><br><span class="line">    compileSdkVersion <span class="number">26</span></span><br><span class="line">    <span class="comment">//build tools的版本，其中包括了打包工具aapt、dx等等。</span></span><br><span class="line">    <span class="comment">//这个工具的目录位于你的sdk目录/build-tools/下</span></span><br><span class="line">    buildToolsVersion &#x27;<span class="number">26.0</span><span class="number">.2</span>&#x27;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//关闭Android Studio的PNG合法性检查</span></span><br><span class="line">    aaptOptions.cruncherEnabled = <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    aaptOptions.useNewCruncher = <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"> </span><br><span class="line">    defaultConfig <span class="punctuation">&#123;</span>  <span class="comment">//默认配置</span></span><br><span class="line">        applicationId <span class="string">&quot;com.hebbe.espressotest&quot;</span> <span class="comment">//应用程序的包名</span></span><br><span class="line">        minSdkVersion <span class="number">22</span>  <span class="comment">//最小sdk版本，如果设备小于这个版本或者大于maxSdkVersion将无法安装这个应用</span></span><br><span class="line">        targetSdkVersion <span class="number">26</span> <span class="comment">//目标sdk版本，充分测试过的版本（建议版本）</span></span><br><span class="line">        versionCode <span class="number">1</span>  <span class="comment">//版本号，第一版是1，之后每更新一次加1</span></span><br><span class="line">        versionName <span class="string">&quot;1.0&quot;</span> <span class="comment">//版本名，显示给用户看到的版本号</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">//Instrumentation单元测试</span></span><br><span class="line">        testInstrumentationRunner <span class="string">&quot;android.support.test.runner.AndroidJUnitRunner&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    buildTypes <span class="punctuation">&#123;</span> <span class="comment">//build配置</span></span><br><span class="line">        release <span class="punctuation">&#123;</span></span><br><span class="line">            minifyEnabled <span class="literal"><span class="keyword">false</span></span> <span class="comment">//是否对代码进行混淆</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(&#x27;proguard-android.txt&#x27;)<span class="punctuation">,</span> &#x27;proguard-rules.pro&#x27;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"><span class="comment">//指定当前项目的所有依赖关系：本地依赖、库依赖、远程依赖</span></span><br><span class="line">dependencies <span class="punctuation">&#123;</span></span><br><span class="line">    implementation fileTree(dir<span class="punctuation">:</span> &#x27;libs&#x27;<span class="punctuation">,</span> include<span class="punctuation">:</span> <span class="punctuation">[</span>&#x27;*.jar&#x27;<span class="punctuation">]</span>) <span class="comment">//本地依赖</span></span><br><span class="line">    <span class="comment">//远程依赖，com.android.support是域名部分，appcompat-v7是组名称，26.1.0是版本号</span></span><br><span class="line">    implementation &#x27;com.android.support<span class="punctuation">:</span>appcompat-v7<span class="punctuation">:</span><span class="number">26.1</span><span class="number">.0</span>&#x27;</span><br><span class="line">    implementation &#x27;com.android.support.constraint<span class="punctuation">:</span>constraint-layout<span class="punctuation">:</span><span class="number">1.0</span><span class="number">.2</span>&#x27;</span><br><span class="line">    testImplementation &#x27;junit<span class="punctuation">:</span>junit<span class="punctuation">:</span><span class="number">4.12</span>&#x27; <span class="comment">//声明测试用列库</span></span><br><span class="line">    androidTestImplementation &#x27;com.android.support.test<span class="punctuation">:</span>runner<span class="punctuation">:</span><span class="number">1.0</span><span class="number">.1</span>&#x27;</span><br><span class="line">    androidTestImplementation &#x27;com.android.support.test.espresso<span class="punctuation">:</span>espresso-core<span class="punctuation">:</span><span class="number">3.0</span><span class="number">.1</span>&#x27;</span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="完整版本"><a href="#完整版本" class="headerlink" title="完整版本"></a>完整版本</h3><p>这个是补充的完整版本</p>
+<p>1、apply plugin，声明是Android应用程序还是库模块<br>2、android 闭包，配置项目构建的各种属性，compileSdkVersion用于指定项目的编译SDK版本，buildToolsVersion用于指定项目构建工具的版本。</p>
+<p>-defaultConfig闭包：默认配置，应用程序包名，最小 sdk 版本，目标 sdk 版本，版本号，版本名<br>buildTypes闭包：指定生成安装文件的配置，是否对代码进行混淆<br>signingConfigs 闭包：签名信息配置<br>sourceSets 闭包：源文件路径配置<br>lintOptions 闭包：lint 配置</p>
+<p>3、dependencies 闭包，指定当前项目的所有依赖关系，本地依赖，库依赖以及远程依赖<br>4、repositories闭包，仓库配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明是Android程序，</span></span><br><span class="line"><span class="comment">//com.android.application 表示这是一个应用程序模块,可直接运行</span></span><br><span class="line"><span class="comment">//com.android.library 标识这是一个库模块，是依附别的应用程序运行</span></span><br><span class="line">apply plugin<span class="punctuation">:</span> &#x27;com.android.application&#x27;</span><br><span class="line"> </span><br><span class="line">android <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">//程序在编译的时候会检查lint，有任何错误提示会停止build，我们可以关闭这个开关</span></span><br><span class="line">    lintOptions <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">//即使报错也不会停止打包</span></span><br><span class="line">        abortOnError <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="comment">//打包release版本的时候是否进行检测</span></span><br><span class="line">        checkReleaseBuilds <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//编译sdk的版本，也就是API Level，例如API-19、API-20、API-21等等。</span></span><br><span class="line">    compileSdkVersion <span class="number">26</span></span><br><span class="line">    <span class="comment">//build tools的版本，其中包括了打包工具aapt、dx等等。</span></span><br><span class="line">    <span class="comment">//这个工具的目录位于你的sdk目录/build-tools/下</span></span><br><span class="line">    buildToolsVersion &#x27;<span class="number">26.0</span><span class="number">.2</span>&#x27;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//关闭Android Studio的PNG合法性检查</span></span><br><span class="line">    aaptOptions.cruncherEnabled = <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">    aaptOptions.useNewCruncher = <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"> </span><br><span class="line">    defaultConfig <span class="punctuation">&#123;</span>  <span class="comment">//默认配置</span></span><br><span class="line">        applicationId <span class="string">&quot;com.hebbe.espressotest&quot;</span> <span class="comment">//应用程序的包名</span></span><br><span class="line">        minSdkVersion <span class="number">22</span>  <span class="comment">//最小sdk版本，如果设备小于这个版本或者大于maxSdkVersion将无法安装这个应用</span></span><br><span class="line">        targetSdkVersion <span class="number">26</span> <span class="comment">//目标sdk版本，充分测试过的版本（建议版本）</span></span><br><span class="line">        versionCode <span class="number">1</span>  <span class="comment">//版本号，第一版是1，之后每更新一次加1</span></span><br><span class="line">        versionName <span class="string">&quot;1.0&quot;</span> <span class="comment">//版本名，显示给用户看到的版本号</span></span><br><span class="line"> </span><br><span class="line">        archivesBaseName = <span class="string">&quot;weshare-$versionName&quot;</span> <span class="comment">//指定打包成Jar文件时候的文件名称</span></span><br><span class="line">        ndk <span class="punctuation">&#123;</span></span><br><span class="line">            moduleName <span class="string">&quot;hebbewifisafe&quot;</span>                   <span class="comment">//设置库(so)文件名称</span></span><br><span class="line">            ldLibs <span class="string">&quot;log&quot;</span><span class="punctuation">,</span> <span class="string">&quot;z&quot;</span><span class="punctuation">,</span> <span class="string">&quot;m&quot;</span><span class="punctuation">,</span> <span class="string">&quot;jnigraphics&quot;</span><span class="punctuation">,</span> <span class="string">&quot;android&quot;</span></span><br><span class="line">            <span class="comment">//引入库，比如要用到的__android_log_print</span></span><br><span class="line">            abiFilters <span class="string">&quot;armeabi&quot;</span><span class="punctuation">,</span> <span class="string">&quot;x86&quot;</span><span class="punctuation">,</span> <span class="string">&quot;armeabi-v7a&quot;</span>      <span class="comment">//, &quot;x86&quot;  显示指定支持的ABIs</span></span><br><span class="line">            cFlags <span class="string">&quot;-std=c++11 -fexceptions&quot;</span>                <span class="comment">// C++11</span></span><br><span class="line">            stl <span class="string">&quot;gnustl_static&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">//当方法数超过65535(方法的索引使用的是一个short值，</span></span><br><span class="line">        <span class="comment">//而short最大值是65535)的时候允许打包成多个dex文件，动态加载dex。这里面坑很深啊</span></span><br><span class="line">        multiDexEnabled <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">//Instrumentation单元测试</span></span><br><span class="line">        testInstrumentationRunner <span class="string">&quot;android.support.test.runner.AndroidJUnitRunner&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//默认的一些文件路径的配置</span></span><br><span class="line">    sourceSets <span class="punctuation">&#123;</span></span><br><span class="line">        main <span class="punctuation">&#123;</span></span><br><span class="line">            manifest.srcFile &#x27;AndroidManifest.xml&#x27;<span class="comment">//指定清单文件</span></span><br><span class="line">            res.srcDirs = <span class="punctuation">[</span>&#x27;res&#x27;<span class="punctuation">]</span><span class="comment">//指定res资源目录</span></span><br><span class="line">            assets.srcDirs = <span class="punctuation">[</span>&#x27;assets&#x27;<span class="punctuation">]</span>    <span class="comment">//asset资源目录</span></span><br><span class="line">            jni.srcDirs &#x27;src/main/jni&#x27;     <span class="comment">//jni代码目录</span></span><br><span class="line">            jniLibs.srcDir &#x27;src/main/jniLibs&#x27; <span class="comment">//jni库目录</span></span><br><span class="line">            java.srcDirs = <span class="punctuation">[</span>&#x27;src&#x27;<span class="punctuation">]</span><span class="comment">//指定java源代码目录</span></span><br><span class="line">            resources.srcDirs = <span class="punctuation">[</span>&#x27;src&#x27;<span class="punctuation">]</span><span class="comment">//指定resource目录</span></span><br><span class="line">            aidl.srcDirs = <span class="punctuation">[</span>&#x27;src&#x27;<span class="punctuation">]</span><span class="comment">//指定aidl目录</span></span><br><span class="line">            renderscript.srcDirs = <span class="punctuation">[</span>&#x27;src&#x27;<span class="punctuation">]</span><span class="comment">//指定source目录</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        debug.setRoot(&#x27;build-types/debug&#x27;)<span class="comment">//指定debug模式的路径</span></span><br><span class="line">        release.setRoot(&#x27;build-types/release&#x27;)<span class="comment">//指定release模式的路径</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//multiDex的一些相关配置，这样配置可以让你的编译速度更快</span></span><br><span class="line">    dexOptions <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">//让它不要对Lib做preDexing</span></span><br><span class="line">        preDexLibraries = <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">        <span class="comment">//开启incremental dexing,优化编译效率，这个功能android studio默认是关闭的。</span></span><br><span class="line">        incremental <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        javaMaxHeapSize <span class="string">&quot;4g&quot;</span>     <span class="comment">//增加java堆内存大小</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    signingConfigs <span class="punctuation">&#123;</span><span class="comment">//签名配置</span></span><br><span class="line">        release <span class="punctuation">&#123;</span><span class="comment">//发布版签名配置</span></span><br><span class="line">            storeFile file(<span class="string">&quot;fk.keystore&quot;</span>)<span class="comment">//密钥文件路径</span></span><br><span class="line">            storePassword <span class="string">&quot;123456&quot;</span><span class="comment">//密钥文件密码</span></span><br><span class="line">            keyAlias <span class="string">&quot;fk&quot;</span><span class="comment">//key别名</span></span><br><span class="line">            keyPassword <span class="string">&quot;123456&quot;</span><span class="comment">//key密码</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        debug <span class="punctuation">&#123;</span><span class="comment">//debug版签名配置</span></span><br><span class="line">            storeFile file(<span class="string">&quot;fk.keystore&quot;</span>)</span><br><span class="line">            storePassword <span class="string">&quot;123456&quot;</span></span><br><span class="line">            keyAlias <span class="string">&quot;fk&quot;</span></span><br><span class="line">            keyPassword <span class="string">&quot;123456&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="comment">//指定生成安装文件的配置，常有两个子包:release,debug，注：直接运行的都是debug安装文件</span></span><br><span class="line">    buildTypes <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">//release版本的配置，即生成正式版安装文件的配置</span></span><br><span class="line">        release <span class="punctuation">&#123;</span></span><br><span class="line">            zipAlignEnabled <span class="literal"><span class="keyword">true</span></span>  <span class="comment">//是否支持zip</span></span><br><span class="line">            shrinkResources <span class="literal"><span class="keyword">true</span></span>  <span class="comment">// 移除无用的resource文件</span></span><br><span class="line">            minifyEnabled <span class="literal"><span class="keyword">false</span></span> <span class="comment">//是否对代码进行混淆，true表示混淆</span></span><br><span class="line">            <span class="comment">//指定混淆时使用的规则文件；</span></span><br><span class="line">            <span class="comment">// proguard-android.txt指所有项目通用的混淆规则，proguard-rules.pro当前项目特有的混淆规则</span></span><br><span class="line">            <span class="comment">//release的Proguard默认为Module下的proguard-rules.pro文件</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(&#x27;proguard-android.txt&#x27;)<span class="punctuation">,</span> &#x27;proguard-rules.pro&#x27;</span><br><span class="line">            debuggable <span class="literal"><span class="keyword">false</span></span>  <span class="comment">//是否支持调试</span></span><br><span class="line">            <span class="comment">//ndk的一些配置</span></span><br><span class="line">            ndk <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="comment">// cFlags &quot;-std=c++11 -fexceptions -O3 -D__RELEASE__&quot; // C++11</span></span><br><span class="line">                <span class="comment">// platformVersion  = &quot;19&quot;</span></span><br><span class="line">                moduleName <span class="string">&quot;hebbewifisafe&quot;</span> <span class="comment">//设置库(so)文件名称</span></span><br><span class="line">                ldLibs <span class="string">&quot;log&quot;</span><span class="punctuation">,</span> <span class="string">&quot;z&quot;</span><span class="punctuation">,</span> <span class="string">&quot;m&quot;</span><span class="punctuation">,</span> <span class="string">&quot;jnigraphics&quot;</span><span class="punctuation">,</span> <span class="string">&quot;android&quot;</span></span><br><span class="line">                <span class="comment">//引入库，比如要用到的__android_log_print</span></span><br><span class="line">                abiFilters <span class="string">&quot;armeabi&quot;</span><span class="punctuation">,</span> <span class="string">&quot;x86&quot;</span><span class="punctuation">,</span> <span class="string">&quot;armeabi-v7a&quot;</span><span class="comment">//, &quot;x86&quot;</span></span><br><span class="line">                cFlags <span class="string">&quot;-std=c++11 -fexceptions&quot;</span> <span class="comment">// C++11</span></span><br><span class="line">                stl <span class="string">&quot;gnustl_static&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="comment">//采用动态替换字符串的方式生成不同的release.apk</span></span><br><span class="line">            applicationVariants.all <span class="punctuation">&#123;</span> variant -&gt;</span><br><span class="line">                variant.outputs.each <span class="punctuation">&#123;</span> output -&gt;</span><br><span class="line">                    def outputFile = output.outputFile</span><br><span class="line">                    if (outputFile != <span class="literal"><span class="keyword">null</span></span> &amp;&amp; outputFile.name.endsWith(&#x27;release.apk&#x27;)) <span class="punctuation">&#123;</span></span><br><span class="line">                        def timeStamp = new Date().format(&#x27;yyyyMMddHH&#x27;);</span><br><span class="line">                        def fileName = <span class="string">&quot;WeShare-$&#123;defaultConfig.versionName&#125;&quot;</span> + <span class="string">&quot;-&quot;</span> + timeStamp + <span class="string">&quot;-lj-&quot;</span> + <span class="string">&quot;.apk&quot;</span>;</span><br><span class="line">                        output.outputFile = file(<span class="string">&quot;$&#123;outputFile.parent&#125;/$&#123;fileName&#125;&quot;</span>)</span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">            jniDebuggable <span class="literal"><span class="keyword">false</span></span>  <span class="comment">//关闭jni调试</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        debug <span class="punctuation">&#123;</span><span class="comment">//debug版本的配置</span></span><br><span class="line">            minifyEnabled <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">            zipAlignEnabled <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">            shrinkResources <span class="literal"><span class="keyword">true</span></span> <span class="comment">// 移除无用的resource文件</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(&#x27;proguard-android.txt&#x27;)<span class="punctuation">,</span> &#x27;proguard-rules.pro&#x27;</span><br><span class="line">            debuggable <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="comment">//          jniDebuggable true</span></span><br><span class="line">            ndk <span class="punctuation">&#123;</span></span><br><span class="line">                cFlags <span class="string">&quot;-std=c++11 -fexceptions -g -D __DEBUG__&quot;</span> <span class="comment">// C++11</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">            jniDebuggable <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line">    packagingOptions</span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            exclude &#x27;META-INF/ASL2<span class="number">.0</span>&#x27;</span><br><span class="line">            exclude &#x27;META-INF/LICENSE&#x27;</span><br><span class="line">            exclude &#x27;META-INF/NOTICE&#x27;</span><br><span class="line">            exclude &#x27;META-INF/MANIFEST.MF&#x27;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    </span><br><span class="line">    compileOptions <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">//在这里你可以进行 Java 的版本配置，</span></span><br><span class="line">        <span class="comment">//以便使用对应版本的一些新特性</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    productFlavors <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">//在这里你可以设置你的产品发布的一些东西，</span></span><br><span class="line">        <span class="comment">//比如你现在一共软件需要发布到不同渠道，</span></span><br><span class="line">        <span class="comment">//且不同渠道中的包名不同，那么可以在此进行配置；</span></span><br><span class="line">        <span class="comment">//甚至可以设置不同的 AndroidManifest.xml 文件。</span></span><br><span class="line">        hebbe <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        googlePlay <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        solo <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    productFlavors.all <span class="punctuation">&#123;</span></span><br><span class="line">        flavor -&gt; flavor.manifestPlaceholders = <span class="punctuation">[</span>UMENG_CHANNEL_VALUE<span class="punctuation">:</span> name<span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="comment">//所谓ProductFlavors其实就是可定义的产品特性，</span></span><br><span class="line">    <span class="comment">//配合 manifest merger 使用的时候就可以达成在一次编译</span></span><br><span class="line">    <span class="comment">//过程中产生多个具有自己特性配置的版本。</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//上面这个配置的作用就是，为每个渠道包产生不同的 UMENG_CHANNEL_VALUE 的值。</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//指定当前项目的所有依赖关系：本地依赖、库依赖、远程依赖</span></span><br><span class="line"><span class="comment">//本地依赖：可以对本地Jar包或目录添加依赖关系</span></span><br><span class="line"><span class="comment">//库依赖：可以对项目中的库模块添加依赖关系</span></span><br><span class="line"><span class="comment">//远程依赖：可以对jcenter库上的开源项目添加依赖</span></span><br><span class="line"><span class="comment">//标准的远程依赖格式是 域名:组织名:版本号</span></span><br><span class="line">dependencies <span class="punctuation">&#123;</span></span><br><span class="line">    implementation fileTree(dir<span class="punctuation">:</span> &#x27;libs&#x27;<span class="punctuation">,</span> include<span class="punctuation">:</span> <span class="punctuation">[</span>&#x27;*.jar&#x27;<span class="punctuation">]</span>) <span class="comment">//本地依赖</span></span><br><span class="line">    <span class="comment">//远程依赖，com.android.support是域名部分，appcompat-v7是组名称，26.1.0是版本号</span></span><br><span class="line">    implementation &#x27;com.android.support<span class="punctuation">:</span>appcompat-v7<span class="punctuation">:</span><span class="number">26.1</span><span class="number">.0</span>&#x27;</span><br><span class="line">    implementation &#x27;com.android.support.constraint<span class="punctuation">:</span>constraint-layout<span class="punctuation">:</span><span class="number">1.0</span><span class="number">.2</span>&#x27;</span><br><span class="line">    implementation project(&#x27;<span class="punctuation">:</span>hello&#x27;)<span class="comment">//库依赖</span></span><br><span class="line">    testImplementation &#x27;junit<span class="punctuation">:</span>junit<span class="punctuation">:</span><span class="number">4.12</span>&#x27; <span class="comment">//声明测试用列库</span></span><br><span class="line">    androidTestImplementation &#x27;com.android.support.test<span class="punctuation">:</span>runner<span class="punctuation">:</span><span class="number">1.0</span><span class="number">.1</span>&#x27;</span><br><span class="line">    androidTestImplementation &#x27;com.android.support.test.espresso<span class="punctuation">:</span>espresso-core<span class="punctuation">:</span><span class="number">3.0</span><span class="number">.1</span>&#x27;</span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"><span class="comment">//声明是要使用谷歌服务框架</span></span><br><span class="line">apply plugin<span class="punctuation">:</span> &#x27;com.google.gms.google-services&#x27;</span><br><span class="line"><span class="comment">//第三方依赖库的本地缓存路径</span></span><br><span class="line">task showMeCache &lt;&lt; <span class="punctuation">&#123;</span></span><br><span class="line">    configurations.compile.each <span class="punctuation">&#123;</span> println it <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"><span class="comment">//使用maven仓库。android有两个标准的library文件服务器，一个jcenter一个maven。两者毫无关系。</span></span><br><span class="line"><span class="comment">//jcenter有的maven可能没有，反之亦然。</span></span><br><span class="line"><span class="comment">//如果要使用jcenter的话就把mavenCentral()替换成jcenter()</span></span><br><span class="line">repositories <span class="punctuation">&#123;</span></span><br><span class="line">    mavenCentral()</span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="版本问题"><a href="#版本问题" class="headerlink" title="版本问题"></a>版本问题</h1><p>在安装gradle的时候有多个工具的版本会冲突 : </p>
+<p>Java(JDK)，gradle，gradle插件(插件和gradle不是一个东西)</p>
+<h2 id="Java和Gradle"><a href="#Java和Gradle" class="headerlink" title="Java和Gradle"></a>Java和Gradle</h2><table>
+<thead>
+<tr>
+<th>Java version</th>
+<th>First Gradle version to support it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>4.3</td>
+</tr>
+<tr>
+<td>10</td>
+<td>4.7</td>
+</tr>
+<tr>
+<td>11</td>
+<td>5.0</td>
+</tr>
+<tr>
+<td>12</td>
+<td>5.4</td>
+</tr>
+<tr>
+<td>13</td>
+<td>6.0</td>
+</tr>
+<tr>
+<td>14</td>
+<td>6.3</td>
+</tr>
+<tr>
+<td>15</td>
+<td>6.7</td>
+</tr>
+<tr>
+<td>16</td>
+<td>7.0</td>
+</tr>
+<tr>
+<td>17</td>
+<td>7.3</td>
+</tr>
+<tr>
+<td>18</td>
+<td>7.5</td>
+</tr>
+<tr>
+<td>19</td>
+<td>7.6</td>
+</tr>
+<tr>
+<td>20</td>
+<td>8.1</td>
+</tr>
+</tbody></table>
+<h2 id="gradle和gradle插件"><a href="#gradle和gradle插件" class="headerlink" title="gradle和gradle插件"></a>gradle和gradle插件</h2><table>
+<thead>
+<tr>
+<th align="left">插件版本</th>
+<th align="left">所需的 Gradle 版本</th>
+<th>Kotlin版本</th>
+<th>AS版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1.0.0 - 1.1.3</td>
+<td align="left">2.2.1 - 2.3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">1.2.0 - 1.3.1</td>
+<td align="left">2.2.1 - 2.9</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">1.5.0</td>
+<td align="left">2.2.1 - 2.13</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">2.0.0 - 2.1.2</td>
+<td align="left">2.10 - 2.13</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">2.1.3 - 2.2.3</td>
+<td align="left">2.14.1+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">2.3.0+</td>
+<td align="left">3.3+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.0.0+</td>
+<td align="left">4.1+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.1.0+</td>
+<td align="left">4.4+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.2.0 - 3.2.1</td>
+<td align="left">4.6+</td>
+<td>1.2.51+</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.3.0 - 3.3.3</td>
+<td align="left">4.10.1+</td>
+<td>1.3.0+（rec：1.3.21）</td>
+<td>rec：3.3.2+</td>
+</tr>
+<tr>
+<td align="left">3.4.0 - 3.4.3</td>
+<td align="left">5.1.1+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.5.0 - 3.5.4</td>
+<td align="left">5.4.1+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">3.6.0 - 3.6.4</td>
+<td align="left">5.6.4+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">4.0.0+</td>
+<td align="left">6.1.1+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">4.1.0+</td>
+<td align="left">6.5+</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="下载过慢或下载失败问题"><a href="#下载过慢或下载失败问题" class="headerlink" title="下载过慢或下载失败问题"></a>下载过慢或下载失败问题</h1><p>在Android studio中 如果自带的下载的gradle的话，会比较慢(最好魔法)，甚至会下载失败，那么就有个解决方法</p>
+<h2 id="选出对应版本"><a href="#选出对应版本" class="headerlink" title="选出对应版本"></a>选出对应版本</h2><p>在官方的<a target="_blank" rel="noopener" href="https://services.gradle.org/distributions/">下载链接</a>中找到warpper中的distributionurl（上文有提及）路径对应的zip，并下载。</p>
+<p>（这里可以使用迅雷复制下载链接去下载）</p>
+<h2 id="处理warpper文件"><a href="#处理warpper文件" class="headerlink" title="处理warpper文件"></a>处理warpper文件</h2><p>打开Android studio 让他自动生成warpper文件，看到有下载gradle下载后关闭</p>
+<p>注:这边的Android studio  默认是C:/user/.gradle 文件下 gradle 会比较大(1-2G)</p>
+<p>可以在Android studio-&gt; File 菜单 -&gt;Setting -&gt; Build, Execution, Deployment-&gt; Build Tools-&gt; Gradle -&gt; 修改 Gradle user home : 到指定的文件夹</p>
+<h2 id="放入Zip文件"><a href="#放入Zip文件" class="headerlink" title="放入Zip文件"></a>放入Zip文件</h2><p>点开 Android studio-&gt; File 菜单 -&gt;Setting -&gt; Build, Execution, Deployment-&gt; Build Tools-&gt; Gradle -&gt; Gradle user home  </p>
+<p>Gradle user home  就是存放gradle 的目录地址 </p>
+<p>粘贴Gradle user home 到我的电脑  </p>
+<p>继续点击文件夹 warpper/dists/gradle-7.5-bin/f1wOcc9nuoDeivz97x2xlu9sv</p>
+<p>里面会有 gradle-7.5-bin.zip.lck 和  gradle-7.5-bin.zip.part</p>
+<p>把刚才下载的zip复制进去</p>
+<p>点开Android studio 大象图标（右上）或者重启 Android studio</p>
+<p>等待解压就好了</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在导入gradle中还是有很多坑的，比如说版本不一致，下载失败等等等</p>
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Qhx20040819/article/details/131911031">https://blog.csdn.net/Qhx20040819/article/details/131911031</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011897062/article/details/109357551">https://blog.csdn.net/u011897062/article/details/109357551</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1AW411i76x/?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1AW411i76x/?spm_id_from=333.999.0.0</a></p>
+<p><a target="_blank" rel="noopener" href="https://services.gradle.org/distributions/">https://services.gradle.org/distributions/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1GQ4y1t7y8/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d19e47552f1614194f0d0b0662850083">https://www.bilibili.com/video/BV1GQ4y1t7y8/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d19e47552f1614194f0d0b0662850083</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/07/15/0035-Gradle/">http://example.com/2024/07/15/0035-Gradle/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/07/19/0036-U3DSaveSB/" title="数据可持续化-ScriptableObject"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">数据可持续化-ScriptableObject</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/15/0034-SVN/" title="SVN食用说明"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SVN食用说明</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85AndroidStudio%E4%BB%A5%E5%8F%8A%E4%B8%8B%E8%BD%BDSDK"><span class="toc-number">2.</span> <span class="toc-text">安装AndroidStudio以及下载SDK</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E6%9C%89%E5%85%B3%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">对比有关文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84gradle%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">根目录下的gradle文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#warpper%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text">warpper文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#app%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84gradle%E6%96%87%E4%BB%B6"><span class="toc-number">3.3.</span> <span class="toc-text">app目录下的gradle文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%89%88%E6%9C%AC"><span class="toc-number">3.3.1.</span> <span class="toc-text">简单版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%89%88%E6%9C%AC"><span class="toc-number">3.3.2.</span> <span class="toc-text">完整版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">版本问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E5%92%8CGradle"><span class="toc-number">4.1.</span> <span class="toc-text">Java和Gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gradle%E5%92%8Cgradle%E6%8F%92%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">gradle和gradle插件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E8%BF%87%E6%85%A2%E6%88%96%E4%B8%8B%E8%BD%BD%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">下载过慢或下载失败问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E5%87%BA%E5%AF%B9%E5%BA%94%E7%89%88%E6%9C%AC"><span class="toc-number">5.1.</span> <span class="toc-text">选出对应版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86warpper%E6%96%87%E4%BB%B6"><span class="toc-number">5.2.</span> <span class="toc-text">处理warpper文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BE%E5%85%A5Zip%E6%96%87%E4%BB%B6"><span class="toc-number">5.3.</span> <span class="toc-text">放入Zip文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="toc-number">7.</span> <span class="toc-text">相关链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/07/19/0036-U3DSaveSB/" title="数据可持续化-ScriptableObject"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据可持续化-ScriptableObject"/></a><div class="content"><a class="title" href="/2024/07/19/0036-U3DSaveSB/" title="数据可持续化-ScriptableObject">数据可持续化-ScriptableObject</a><time datetime="2024-07-18T16:38:34.000Z" title="发表于 2024-07-19 00:38:34">2024-07-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/15/0035-Gradle/" title="AndroidStudio-导入Gradle"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AndroidStudio-导入Gradle"/></a><div class="content"><a class="title" href="/2024/07/15/0035-Gradle/" title="AndroidStudio-导入Gradle">AndroidStudio-导入Gradle</a><time datetime="2024-07-14T16:38:34.000Z" title="发表于 2024-07-15 00:38:34">2024-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/15/0034-SVN/" title="SVN食用说明"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SVN食用说明"/></a><div class="content"><a class="title" href="/2024/07/15/0034-SVN/" title="SVN食用说明">SVN食用说明</a><time datetime="2024-07-14T16:00:00.000Z" title="发表于 2024-07-15 00:00:00">2024-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity 优化"/></a><div class="content"><a class="title" href="/2024/05/10/AAAunityOptimize/" title="unity 优化">unity 优化</a><time datetime="2024-05-10T10:21:03.000Z" title="发表于 2024-05-10 18:21:03">2024-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/06/0033-cpp/" title="c++基础理论"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++基础理论"/></a><div class="content"><a class="title" href="/2024/05/06/0033-cpp/" title="c++基础理论">c++基础理论</a><time datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
