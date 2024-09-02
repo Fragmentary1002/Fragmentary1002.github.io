@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>OverDraw | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="UGUI优化  OverDrawUnity基础：性能杀手Overdraw详解 - 知乎 (zhihu.com) Overdraw介绍    Overdraw是指屏幕上的某个像素在同一帧的时间内被绘制了多次。  3.2 Overdraw影响什么      过多Overdraw可能会引起GPU过载，影响动画的播放和界面响应速度。  3.3  降低Overdraw      1.将Mask（自带两层Ov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OverDraw">
+<meta property="og:url" content="http://example.com/2024/09/02/0043-OverDraw/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="UGUI优化  OverDrawUnity基础：性能杀手Overdraw详解 - 知乎 (zhihu.com) Overdraw介绍    Overdraw是指屏幕上的某个像素在同一帧的时间内被绘制了多次。  3.2 Overdraw影响什么      过多Overdraw可能会引起GPU过载，影响动画的播放和界面响应速度。  3.3  降低Overdraw      1.将Mask（自带两层Ov">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2024-09-02T09:52:48.000Z">
+<meta property="article:modified_time" content="2024-09-02T07:04:16.275Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="Unity 优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/09/02/0043-OverDraw/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OverDraw',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-02 15:04:16'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">OverDraw</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-02T09:52:48.000Z" title="发表于 2024-09-02 17:52:48">2024-09-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-02T07:04:16.275Z" title="更新于 2024-09-02 15:04:16">2024-09-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="OverDraw"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="UGUI优化-OverDraw"><a href="#UGUI优化-OverDraw" class="headerlink" title="UGUI优化  OverDraw"></a>UGUI优化  OverDraw</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/350778355">Unity基础：性能杀手Overdraw详解 - 知乎 (zhihu.com)</a></p>
+<h2 id="Overdraw介绍"><a href="#Overdraw介绍" class="headerlink" title="Overdraw介绍"></a>Overdraw介绍</h2><pre><code>    Overdraw是指屏幕上的某个像素在同一帧的时间内被绘制了多次。
+
+3.2 Overdraw影响什么
+
+    过多Overdraw可能会引起GPU过载，影响动画的播放和界面响应速度。
+
+3.3  降低Overdraw
+
+    1.将Mask（自带两层Overdraw）替换为RectMask2D（自带一层Overdraw）
+
+    2.全屏遮挡的情况，则为被遮挡的canvas添加CanvasGroup 组件，然后在被挡住时将其alpha值设为0，不参与绘制，没有 DrawCall也没有Overdraw，同时顶点也不会参与重绘。
+
+    3.unity的文字显示中自带阴影组件shadow/Outline减少使用，自带overcall。
+
+    4.UI摆放，减少UI的叠加效果。
+
+    5.将不想显示的物体直接禁用，而不是将其透明度改为0，仍会产生overcall。
+    
+</code></pre>
+<h2 id="如何降低OverDraw"><a href="#如何降低OverDraw" class="headerlink" title="如何降低OverDraw"></a>如何降低OverDraw</h2><h3 id="减少不透明OverDraw"><a href="#减少不透明OverDraw" class="headerlink" title="减少不透明OverDraw"></a>减少不透明OverDraw</h3><p>与流行的游戏开发理念相反，渲染不透明的几何形状可能会导致大量OverDraw。</p>
+<p>不透明几何产生的OverDraw相比透明几何产生的OverDraw开销更低，因为不透明渲染只是替换像素。透明渲染通常会与Alpha Blend一起使用，这对于移动设备来说有更加昂贵。</p>
+<p>但是，不要低估不透明OverDraw产生的性能开销。浪费内存带宽的开销依然很昂贵。</p>
+<p>Unity会尽最大努力从近到远渲染不透明元素。这就是说，我们首先渲染距离摄像机更近的元素，以便使用Z-Test剔除被遮挡的物体的像素。</p>
+<p>该排序基于相机与每个对象的边界框中心之间的距离。</p>
+<p>这种排序非常有利于GPU性能。</p>
+<p>但是，在某些情况下，会导致渲染队列排序混乱，这会使OverDraw增加。</p>
+<p>你知道是什么时候吗？</p>
+<h3 id="由于低效率的渲染策略，导致GPU-OverDraw"><a href="#由于低效率的渲染策略，导致GPU-OverDraw" class="headerlink" title="由于低效率的渲染策略，导致GPU OverDraw"></a>由于低效率的渲染策略，导致GPU OverDraw</h3><p>事情是这样的：某些网格肯定是麻烦制造者。</p>
+<p>假设你位于巨大的倒球面的中心，就像力场效应一样。</p>
+<p>好吧，你到球面的距离是多少？</p>
+<p>它接近于零，因为球体的中心恰好是摄影机所在的位置，这意味着将先渲染该球体，即使可能会在其前面绘制一些对象。这将导致OverDraw。</p>
+<p>这就是为什么在Unity中应该把渲染天空盒放在渲染不透明几何图形之后的原因。首先渲染天空盒会产生大量OverDraw。</p>
+<h3 id="Unity-Batching导致GPU-OverDraw增加"><a href="#Unity-Batching导致GPU-OverDraw增加" class="headerlink" title="Unity Batching导致GPU OverDraw增加"></a>Unity Batching导致GPU OverDraw增加</h3><p>我喜欢批处理。而且你也应该喜欢。</p>
+<p>批处理可以帮助你我减少渲染线程的CPU负载，这在未经优化的游戏中通常是一个巨大的瓶颈（CPU瓶颈）。它能够将多个绘制调用合并在一起提交给GPU。</p>
+<p>但是，合并绘制调用意味着Unity将不再能够对其按原有的顺序进行排序，因为现在已经合为一体。这可能会导致严重的OverDraw。</p>
+<p>这在所有类型的批处理中都会发生：静态，动态和GPU Instance。通常发生的环境不是确定性的，这会使你的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?q=%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90&zhida_source=entity&is_preview=1">性能分析</a>工作更加困难。</p>
+<p>可悲的是，常见的解决方案是禁用麻烦对象的批处理（或者按区域手动来进行批合）。</p>
+<p>另一种解决方案是通过将渲染队列更改为Geometry-1，Geometry + 1等来手动设置<a href="https://link.zhihu.com/?target=https://docs.unity3d.com/ScriptReference/Rendering.RenderQueue.html">Unity渲染顺序</a>。这几乎可以完全控制渲染顺序，但这带来了责任/风险（常见的是把地表、天空盒进行延后渲染）。使用Standard材质要求检查器处于<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?q=%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F&zhida_source=entity&is_preview=1">调试模式</a>。</p>
+<h3 id="减少透明渲染的OverDraw"><a href="#减少透明渲染的OverDraw" class="headerlink" title="减少透明渲染的OverDraw"></a>减少透明渲染的OverDraw</h3><p>半透明对象是导致OverDraw最常见的元凶</p>
+<p>由透明度引起的OverDraw对性能特别不利，因为渲染通常伴随Alpha Blend，这需要额外的读取和算术运算。</p>
+<p>更糟糕的是，透明材质通常不会写入Z-buffer，因此最终会写入更多无法丢弃的像素。</p>
+<p>你要做的是减少绘制<strong>的透明像素</strong>的<strong>数量</strong>及其<strong>成本</strong>。</p>
+<ul>
+<li>减少渲染的<strong>透明层</strong>的数量。</li>
+<li>减小透明几何图形所需的<strong>屏幕尺寸</strong></li>
+<li>您可以<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?q=%E6%8C%89%E6%AF%94%E4%BE%8B%E7%BC%A9%E5%B0%8F&zhida_source=entity&is_preview=1">按比例缩小</a>透明对象的（屏幕）大小。</li>
+<li>尽最大可能从精灵中删除100％透明纹理像素。</li>
+<li>制作紧密的网格，以减少完全透明的区域。</li>
+</ul>
+<p><strong>Unity UI通常会导致OverDraw</strong>，因为系统仅支持全四方渲染。将可绘制的UI元素彼此堆叠非常容易。这些渲染为完整的四边形而不是紧密的网格。</p>
+<p>但是，精灵渲染器支持绘图网格，这些网格可以更准确地表示精灵的不透明部分，以减少过度绘制。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/09/02/0043-OverDraw/">http://example.com/2024/09/02/0043-OverDraw/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Unity-%E4%BC%98%E5%8C%96/">Unity 优化</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/09/02/0042-OPtimizeArtWork/" title="unity 优化资源加载相关"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">unity 优化资源加载相关</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/09/02/0042-OPtimizeArtWork/" title="unity 优化资源加载相关"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-02</div><div class="title">unity 优化资源加载相关</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#UGUI%E4%BC%98%E5%8C%96-OverDraw"><span class="toc-number">1.</span> <span class="toc-text">UGUI优化  OverDraw</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overdraw%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">Overdraw介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%99%8D%E4%BD%8EOverDraw"><span class="toc-number">1.2.</span> <span class="toc-text">如何降低OverDraw</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E4%B8%8D%E9%80%8F%E6%98%8EOverDraw"><span class="toc-number">1.2.1.</span> <span class="toc-text">减少不透明OverDraw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B1%E4%BA%8E%E4%BD%8E%E6%95%88%E7%8E%87%E7%9A%84%E6%B8%B2%E6%9F%93%E7%AD%96%E7%95%A5%EF%BC%8C%E5%AF%BC%E8%87%B4GPU-OverDraw"><span class="toc-number">1.2.2.</span> <span class="toc-text">由于低效率的渲染策略，导致GPU OverDraw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unity-Batching%E5%AF%BC%E8%87%B4GPU-OverDraw%E5%A2%9E%E5%8A%A0"><span class="toc-number">1.2.3.</span> <span class="toc-text">Unity Batching导致GPU OverDraw增加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E9%80%8F%E6%98%8E%E6%B8%B2%E6%9F%93%E7%9A%84OverDraw"><span class="toc-number">1.2.4.</span> <span class="toc-text">减少透明渲染的OverDraw</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/09/02/0043-OverDraw/" title="OverDraw"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OverDraw"/></a><div class="content"><a class="title" href="/2024/09/02/0043-OverDraw/" title="OverDraw">OverDraw</a><time datetime="2024-09-02T09:52:48.000Z" title="发表于 2024-09-02 17:52:48">2024-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/09/02/0042-OPtimizeArtWork/" title="unity 优化资源加载相关"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity 优化资源加载相关"/></a><div class="content"><a class="title" href="/2024/09/02/0042-OPtimizeArtWork/" title="unity 优化资源加载相关">unity 优化资源加载相关</a><time datetime="2024-09-02T02:08:44.000Z" title="发表于 2024-09-02 10:08:44">2024-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/29/0041-Bulid-In/" title="unity Bulid-in 渲染管线"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity Bulid-in 渲染管线"/></a><div class="content"><a class="title" href="/2024/08/29/0041-Bulid-In/" title="unity Bulid-in 渲染管线">unity Bulid-in 渲染管线</a><time datetime="2024-08-29T12:08:44.000Z" title="发表于 2024-08-29 20:08:44">2024-08-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/30/0040-U3dPhysics/" title="关于游戏物理实现"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关于游戏物理实现"/></a><div class="content"><a class="title" href="/2024/07/30/0040-U3dPhysics/" title="关于游戏物理实现">关于游戏物理实现</a><time datetime="2024-07-30T12:08:44.000Z" title="发表于 2024-07-30 20:08:44">2024-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/25/0039-windowsCMD/" title="unity Bulid-in 渲染管线"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity Bulid-in 渲染管线"/></a><div class="content"><a class="title" href="/2024/07/25/0039-windowsCMD/" title="unity Bulid-in 渲染管线">unity Bulid-in 渲染管线</a><time datetime="2024-07-25T12:08:44.000Z" title="发表于 2024-07-25 20:08:44">2024-07-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
