@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Dotween笔记 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Dotween是unity里非常常用的插件，但是很多人应该没有仔细的阅读过它的api，它实际有很多好用的方法，下面我就针对一些相对常用的方法，做下总结： Dotween常用方法详解-CSDN博客 Transform拓展方法1) Position1）改变世界坐标移动方法，第一个参数是要移动到的目标点，不是移动这个向量的距离。 1transform.DOMove(new Vector3(1, 1, 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dotween笔记">
+<meta property="og:url" content="http://example.com/2025/03/15/0056-Dotween/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="Dotween是unity里非常常用的插件，但是很多人应该没有仔细的阅读过它的api，它实际有很多好用的方法，下面我就针对一些相对常用的方法，做下总结： Dotween常用方法详解-CSDN博客 Transform拓展方法1) Position1）改变世界坐标移动方法，第一个参数是要移动到的目标点，不是移动这个向量的距离。 1transform.DOMove(new Vector3(1, 1, 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2025-03-15T11:20:05.000Z">
+<meta property="article:modified_time" content="2025-03-14T14:36:24.195Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="unity插件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/03/15/0056-Dotween/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Dotween笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-14 22:36:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Dotween笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-15T11:20:05.000Z" title="发表于 2025-03-15 19:20:05">2025-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-14T14:36:24.195Z" title="更新于 2025-03-14 22:36:24">2025-03-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Dotween笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Dotween是unity里非常常用的插件，但是很多人应该没有仔细的阅读过它的api，它实际有很多好用的方法，下面我就针对一些相对常用的方法，做下总结：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zcaixzy5211314/article/details/84886663">Dotween常用方法详解-CSDN博客</a></p>
+<h1 id="Transform拓展方法"><a href="#Transform拓展方法" class="headerlink" title="Transform拓展方法"></a>Transform拓展方法</h1><h2 id="1-Position"><a href="#1-Position" class="headerlink" title="1) Position"></a>1) Position</h2><h3 id="1）改变世界坐标"><a href="#1）改变世界坐标" class="headerlink" title="1）改变世界坐标"></a>1）改变世界坐标</h3><p>移动方法，第一个参数是要移动到的目标点，不是移动这个向量的距离。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOMove(<span class="keyword">new</span> Vector3(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>只控制x轴上的移动，其他两个方向同理。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOMoveX(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2）改变局部坐标"><a href="#2）改变局部坐标" class="headerlink" title="2）改变局部坐标"></a>2）改变局部坐标</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transform.DOLocalMove(<span class="keyword">new</span> Vector3(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), <span class="number">2</span>);</span><br><span class="line">transform.DOLocalMoveX(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Rotation"><a href="#2-Rotation" class="headerlink" title="2) Rotation"></a>2) Rotation</h2><h3 id="1）世界旋转"><a href="#1）世界旋转" class="headerlink" title="1）世界旋转"></a>1）世界旋转</h3><p>旋转到给定的值，改变的是欧拉角。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DORotate(<span class="keyword">new</span> Vector3(<span class="number">0</span>, <span class="number">90</span>, <span class="number">0</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>旋转到给定的值，改变的是四元数。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DORotateQuaternion(<span class="keyword">new</span> Quaternion(<span class="number">0.1f</span>, <span class="number">0.1f</span>, <span class="number">0.1f</span>, <span class="number">0.1f</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2）局部旋转"><a href="#2）局部旋转" class="headerlink" title="2）局部旋转"></a>2）局部旋转</h3><p>旋转到给定的值，改变的是欧拉角。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOLocalRotate(<span class="keyword">new</span> Vector3(<span class="number">0</span>, <span class="number">90</span>, <span class="number">0</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>旋转到给定的值，改变的是四元数。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOLocalRotateQuaternion(<span class="keyword">new</span> Quaternion(<span class="number">0.1f</span>, <span class="number">0.1f</span>, <span class="number">0.1f</span>, <span class="number">0.1f</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在给定时间内，平滑的让自身的z轴正方向指向目标点。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOLookAt(<span class="keyword">new</span> Vector3(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Scale"><a href="#3-Scale" class="headerlink" title="3) Scale"></a>3) Scale</h2><p>同上面一样，这里改变物体的缩放到目标值。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOScale(<span class="keyword">new</span> Vector3(<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>其他两个轴向同理。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOScaleX(<span class="number">3</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Punch"><a href="#4-Punch" class="headerlink" title="4) Punch"></a>4) Punch</h2><p>第一个参数 punch：表示方向及强度。<br>第二个参数 duration：表示动画持续时间。<br>第三个参数 vibrato：震动次数。<br>第四个参数 elascity: 这个值是0到1的。<br>当为0时，就是在起始点到目标点之间运动。<br>不为0时，会把你赋的值乘上一个参数，作为你运动方向反方向的点，物体在这个点和目标点之间运动。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">transform.DOPunchPosition(<span class="keyword">new</span> Vector3(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>), <span class="number">2</span>, <span class="number">2</span>, <span class="number">0.1f</span>);</span><br><span class="line">transform.DOPunchRotation(<span class="keyword">new</span> Vector3(<span class="number">0</span>, <span class="number">90</span>, <span class="number">0</span>), <span class="number">2</span>, <span class="number">2</span>, <span class="number">0.1f</span>);</span><br><span class="line">transform.DOPunchScale(<span class="keyword">new</span> Vector3(<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>), <span class="number">2</span>, <span class="number">2</span>, <span class="number">0.1f</span>);</span><br></pre></td></tr></table></figure>
+
+<p>以position为例，elascity的取值是 0 到 1 的。<br>elascity为0时，物体就在起始点和目标点之间运动。<br>elascity不为0时，会自动计算，产生一个反向点，数值越大方向点离的越远。</p>
+<h2 id="5）Shake"><a href="#5）Shake" class="headerlink" title="5）Shake"></a>5）Shake</h2><p>参数：持续时间，力量，震动，随机性，淡出。<br>力量：实际就是震动的幅度,可以理解成相机施加的力的大小 使用Vector3可以选择每个轴向不同的强度。<br>震动：震动次数。<br>随机性：改变震动方向的随机值（大小：0~180）。<br>淡出：就是运动最后是否缓慢移动回到原本位置。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">transform.DOShakePosition(<span class="number">1</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="literal">true</span>);</span><br><span class="line">transform.DOShakeRotation(<span class="number">3</span>);</span><br><span class="line">transform.DOShakeScale(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="6）Blend"><a href="#6）Blend" class="headerlink" title="6）Blend"></a>6）Blend</h2><p>带Blend名称的方法，允许混合动画。<br>原本同时执行两个Move方法，只会执行最新的一个动画命令。<br>例如：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transform.DOMove(Vector3.one, <span class="number">2</span>);</span><br><span class="line">transform.DOMove(Vector3.one * <span class="number">2</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>结果是物体运动到了（2,2,2）坐标上。</p>
+<p><code>DOBlendableMoveBy</code>方法有两个特点：<br>1）允许多个同时执行。<br>例如：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transform.DOBlendableMoveBy(<span class="keyword">new</span> Vector3(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), <span class="number">1</span>);</span><br><span class="line">transform.DOBlendableMoveBy(<span class="keyword">new</span> Vector3(<span class="number">-1</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>假设其实点为（0,0,0），最后动画停止时的坐标就是（0,1,1）。<br>2）它是增量动画。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform.DOBlendableMoveBy(<span class="keyword">new</span> Vector3(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>假设其实点为（1,1,1），最后动画停止时的坐标就是（2,2,2）。<br>它的参数不是目标点，而是要移动的量。</p>
+<p>以下三个函数同理：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">transform.DOBlendableRotateBy()</span><br><span class="line">transform.DOBlendableScaleBy()</span><br><span class="line">transform.DOBlendablePunchRotation()</span><br></pre></td></tr></table></figure>
+
+<h1 id="Camera拓展方法"><a href="#Camera拓展方法" class="headerlink" title="Camera拓展方法"></a>Camera拓展方法</h1><h2 id="1）调整屏幕视角的宽高比"><a href="#1）调整屏幕视角的宽高比" class="headerlink" title="1）调整屏幕视角的宽高比"></a>1）调整屏幕视角的宽高比</h2><p>第一个参数是宽高的比值。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOAspect(<span class="number">0.6f</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="2）改变相机background参数的颜色"><a href="#2）改变相机background参数的颜色" class="headerlink" title="2）改变相机background参数的颜色"></a>2）改变相机background参数的颜色</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOColor(Color.blue, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3）改变相机近切面的值"><a href="#3）改变相机近切面的值" class="headerlink" title="3）改变相机近切面的值"></a>3）改变相机近切面的值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DONearClipPlane(<span class="number">200</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4）改变相机远切面的值"><a href="#4）改变相机远切面的值" class="headerlink" title="4）改变相机远切面的值"></a>4）改变相机远切面的值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOFarClipPlane(<span class="number">2000</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5）改变相机FOV的值"><a href="#5）改变相机FOV的值" class="headerlink" title="5）改变相机FOV的值"></a>5）改变相机FOV的值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOFieldOfView(<span class="number">30</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="6）改变相机正交大小"><a href="#6）改变相机正交大小" class="headerlink" title="6）改变相机正交大小"></a>6）改变相机正交大小</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOOrthoSize(<span class="number">10</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="7）按照屏幕像素计算的显示范围"><a href="#7）按照屏幕像素计算的显示范围" class="headerlink" title="7）按照屏幕像素计算的显示范围"></a>7）按照屏幕像素计算的显示范围</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOPixelRect(<span class="keyword">new</span> Rect(<span class="number">0f</span>, <span class="number">0f</span>, <span class="number">600f</span>, <span class="number">500f</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="8）按照屏幕百分比计算的显示范围"><a href="#8）按照屏幕百分比计算的显示范围" class="headerlink" title="8）按照屏幕百分比计算的显示范围"></a>8）按照屏幕百分比计算的显示范围</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DORect(<span class="keyword">new</span> Rect(<span class="number">0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.5f</span>, <span class="number">0.5f</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="9）相机震动"><a href="#9）相机震动" class="headerlink" title="9）相机震动"></a>9）相机震动</h2><p>相机震动效果 参数：持续时间，力量，震动，随机性，淡出。<br>力量：实际就是震动的幅度,可以理解成相机施加的力的大小 使用Vector3可以选择每个轴向不同的强度。<br>震动：震动次数。<br>随机性：改变震动方向的随机值（大小：0~180）。<br>淡出：就是运动最后是否缓慢移动回到原本位置。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.DOShakePosition(<span class="number">1</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Material拓展方法"><a href="#Material拓展方法" class="headerlink" title="Material拓展方法"></a>Material拓展方法</h1><h2 id="1）改变颜色"><a href="#1）改变颜色" class="headerlink" title="1）改变颜色"></a>1）改变颜色</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOColor(Color.black, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="2）按照shader的属性名，修改颜色"><a href="#2）按照shader的属性名，修改颜色" class="headerlink" title="2）按照shader的属性名，修改颜色"></a>2）按照shader的属性名，修改颜色</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOColor(Color.clear, <span class="string">&quot;_Color&quot;</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3）修改alpha值"><a href="#3）修改alpha值" class="headerlink" title="3）修改alpha值"></a>3）修改alpha值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOFade(<span class="number">0</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="4）颜色渐变"><a href="#4）颜色渐变" class="headerlink" title="4）颜色渐变"></a>4）颜色渐变</h2><p>Gradient是unity的渐变编辑器（下面有渐变编辑器的图）。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOGradientColor(Gradient, <span class="string">&quot;_Color&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5）改变材质offset的值"><a href="#5）改变材质offset的值" class="headerlink" title="5）改变材质offset的值"></a>5）改变材质offset的值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOOffset(<span class="keyword">new</span> Vector2(<span class="number">1</span>, <span class="number">1</span>), <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="6）改变提供的shader属性的名称对应的Vector4值"><a href="#6）改变提供的shader属性的名称对应的Vector4值" class="headerlink" title="6）改变提供的shader属性的名称对应的Vector4值"></a>6）改变提供的shader属性的名称对应的Vector4值</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOVector(<span class="keyword">new</span> Vector4(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="string">&quot;_Color&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="7）颜色混合"><a href="#7）颜色混合" class="headerlink" title="7）颜色混合"></a>7）颜色混合</h2><p>跟位置混合动画同理，可以同时执行而不干扰，产生混合在一起的颜色。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">material.DOBlendableColor(Color.red, <span class="string">&quot;_Color&quot;</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Text拓展方法"><a href="#Text拓展方法" class="headerlink" title="Text拓展方法"></a>Text拓展方法</h1><p>头三个都是常规方法，不多介绍了。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text.DOColor(Color.black, <span class="number">2</span>);</span><br><span class="line">text.DOFade(<span class="number">0</span>, <span class="number">2</span>);</span><br><span class="line">text.DOBlendableColor(Color.black, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这个方法比较有意思，是把第一个参数传入的内容按照时间，一个字一个字的输入到文本框中。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text.DOText(<span class="string">&quot;context&quot;</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>```</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/03/15/0056-Dotween/">http://example.com/2025/03/15/0056-Dotween/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity%E6%8F%92%E4%BB%B6/">unity插件</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/03/14/0055-TimeLineQA/" title="每日一题"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">每日一题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/03/10/0051-DialogueSystem/" title="Dialogue System for Unity"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-10</div><div class="title">Dialogue System for Unity</div></div></a></div><div><a href="/2025/03/11/0052-Fungus/" title="Fungus 笔记"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-11</div><div class="title">Fungus 笔记</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Transform%E6%8B%93%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">Transform拓展方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Position"><span class="toc-number">1.1.</span> <span class="toc-text">1) Position</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%89%E6%94%B9%E5%8F%98%E4%B8%96%E7%95%8C%E5%9D%90%E6%A0%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">1）改变世界坐标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%89%E6%94%B9%E5%8F%98%E5%B1%80%E9%83%A8%E5%9D%90%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">2）改变局部坐标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Rotation"><span class="toc-number">1.2.</span> <span class="toc-text">2) Rotation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%89%E4%B8%96%E7%95%8C%E6%97%8B%E8%BD%AC"><span class="toc-number">1.2.1.</span> <span class="toc-text">1）世界旋转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%89%E5%B1%80%E9%83%A8%E6%97%8B%E8%BD%AC"><span class="toc-number">1.2.2.</span> <span class="toc-text">2）局部旋转</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Scale"><span class="toc-number">1.3.</span> <span class="toc-text">3) Scale</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Punch"><span class="toc-number">1.4.</span> <span class="toc-text">4) Punch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%BC%89Shake"><span class="toc-number">1.5.</span> <span class="toc-text">5）Shake</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%BC%89Blend"><span class="toc-number">1.6.</span> <span class="toc-text">6）Blend</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Camera%E6%8B%93%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">Camera拓展方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%BC%89%E8%B0%83%E6%95%B4%E5%B1%8F%E5%B9%95%E8%A7%86%E8%A7%92%E7%9A%84%E5%AE%BD%E9%AB%98%E6%AF%94"><span class="toc-number">2.1.</span> <span class="toc-text">1）调整屏幕视角的宽高比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%BC%89%E6%94%B9%E5%8F%98%E7%9B%B8%E6%9C%BAbackground%E5%8F%82%E6%95%B0%E7%9A%84%E9%A2%9C%E8%89%B2"><span class="toc-number">2.2.</span> <span class="toc-text">2）改变相机background参数的颜色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%BC%89%E6%94%B9%E5%8F%98%E7%9B%B8%E6%9C%BA%E8%BF%91%E5%88%87%E9%9D%A2%E7%9A%84%E5%80%BC"><span class="toc-number">2.3.</span> <span class="toc-text">3）改变相机近切面的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%BC%89%E6%94%B9%E5%8F%98%E7%9B%B8%E6%9C%BA%E8%BF%9C%E5%88%87%E9%9D%A2%E7%9A%84%E5%80%BC"><span class="toc-number">2.4.</span> <span class="toc-text">4）改变相机远切面的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%BC%89%E6%94%B9%E5%8F%98%E7%9B%B8%E6%9C%BAFOV%E7%9A%84%E5%80%BC"><span class="toc-number">2.5.</span> <span class="toc-text">5）改变相机FOV的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%BC%89%E6%94%B9%E5%8F%98%E7%9B%B8%E6%9C%BA%E6%AD%A3%E4%BA%A4%E5%A4%A7%E5%B0%8F"><span class="toc-number">2.6.</span> <span class="toc-text">6）改变相机正交大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%BC%89%E6%8C%89%E7%85%A7%E5%B1%8F%E5%B9%95%E5%83%8F%E7%B4%A0%E8%AE%A1%E7%AE%97%E7%9A%84%E6%98%BE%E7%A4%BA%E8%8C%83%E5%9B%B4"><span class="toc-number">2.7.</span> <span class="toc-text">7）按照屏幕像素计算的显示范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%BC%89%E6%8C%89%E7%85%A7%E5%B1%8F%E5%B9%95%E7%99%BE%E5%88%86%E6%AF%94%E8%AE%A1%E7%AE%97%E7%9A%84%E6%98%BE%E7%A4%BA%E8%8C%83%E5%9B%B4"><span class="toc-number">2.8.</span> <span class="toc-text">8）按照屏幕百分比计算的显示范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%BC%89%E7%9B%B8%E6%9C%BA%E9%9C%87%E5%8A%A8"><span class="toc-number">2.9.</span> <span class="toc-text">9）相机震动</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Material%E6%8B%93%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Material拓展方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%BC%89%E6%94%B9%E5%8F%98%E9%A2%9C%E8%89%B2"><span class="toc-number">3.1.</span> <span class="toc-text">1）改变颜色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%BC%89%E6%8C%89%E7%85%A7shader%E7%9A%84%E5%B1%9E%E6%80%A7%E5%90%8D%EF%BC%8C%E4%BF%AE%E6%94%B9%E9%A2%9C%E8%89%B2"><span class="toc-number">3.2.</span> <span class="toc-text">2）按照shader的属性名，修改颜色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%BC%89%E4%BF%AE%E6%94%B9alpha%E5%80%BC"><span class="toc-number">3.3.</span> <span class="toc-text">3）修改alpha值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%BC%89%E9%A2%9C%E8%89%B2%E6%B8%90%E5%8F%98"><span class="toc-number">3.4.</span> <span class="toc-text">4）颜色渐变</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%BC%89%E6%94%B9%E5%8F%98%E6%9D%90%E8%B4%A8offset%E7%9A%84%E5%80%BC"><span class="toc-number">3.5.</span> <span class="toc-text">5）改变材质offset的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%BC%89%E6%94%B9%E5%8F%98%E6%8F%90%E4%BE%9B%E7%9A%84shader%E5%B1%9E%E6%80%A7%E7%9A%84%E5%90%8D%E7%A7%B0%E5%AF%B9%E5%BA%94%E7%9A%84Vector4%E5%80%BC"><span class="toc-number">3.6.</span> <span class="toc-text">6）改变提供的shader属性的名称对应的Vector4值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%BC%89%E9%A2%9C%E8%89%B2%E6%B7%B7%E5%90%88"><span class="toc-number">3.7.</span> <span class="toc-text">7）颜色混合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Text%E6%8B%93%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">Text拓展方法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/03/15/0056-Dotween/" title="Dotween笔记"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dotween笔记"/></a><div class="content"><a class="title" href="/2025/03/15/0056-Dotween/" title="Dotween笔记">Dotween笔记</a><time datetime="2025-03-15T11:20:05.000Z" title="发表于 2025-03-15 19:20:05">2025-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/14/0055-TimeLineQA/" title="每日一题"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="每日一题"/></a><div class="content"><a class="title" href="/2025/03/14/0055-TimeLineQA/" title="每日一题">每日一题</a><time datetime="2025-03-14T11:20:05.000Z" title="发表于 2025-03-14 19:20:05">2025-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/13/0054-U3dFSM/" title="FSM与BT"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FSM与BT"/></a><div class="content"><a class="title" href="/2025/03/13/0054-U3dFSM/" title="FSM与BT">FSM与BT</a><time datetime="2025-03-13T11:20:05.000Z" title="发表于 2025-03-13 19:20:05">2025-03-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/12/0053-U3dBase/" title="unity引擎基础"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity引擎基础"/></a><div class="content"><a class="title" href="/2025/03/12/0053-U3dBase/" title="unity引擎基础">unity引擎基础</a><time datetime="2025-03-12T11:20:05.000Z" title="发表于 2025-03-12 19:20:05">2025-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/11/0052-Fungus/" title="Fungus 笔记"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Fungus 笔记"/></a><div class="content"><a class="title" href="/2025/03/11/0052-Fungus/" title="Fungus 笔记">Fungus 笔记</a><time datetime="2025-03-10T18:35:45.000Z" title="发表于 2025-03-11 02:35:45">2025-03-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
