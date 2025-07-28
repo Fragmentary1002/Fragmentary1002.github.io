@@ -1,0 +1,771 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>UE常见API | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="以下是将您提供的所有 UE4 C++ 代码片段整理成的 Markdown 表格格式： 🧩 核心类与宏定义   功能 代码示例 说明    蓝图可编辑类 UCLASS(Blueprintable) 使C++类可在蓝图中编辑   蓝图可生成组件 UCLASS(ClassGroup&#x3D;(Custom), meta&#x3D;(BlueprintSpawnableComponent)) 组件可在蓝图中直接添加到Ac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE常见API">
+<meta property="og:url" content="http://example.com/2025/07/27/0073-UeAPI/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="以下是将您提供的所有 UE4 C++ 代码片段整理成的 Markdown 表格格式： 🧩 核心类与宏定义   功能 代码示例 说明    蓝图可编辑类 UCLASS(Blueprintable) 使C++类可在蓝图中编辑   蓝图可生成组件 UCLASS(ClassGroup&#x3D;(Custom), meta&#x3D;(BlueprintSpawnableComponent)) 组件可在蓝图中直接添加到Ac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2025-07-27T01:16:49.000Z">
+<meta property="article:modified_time" content="2025-07-27T06:14:46.922Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/07/27/0073-UeAPI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UE常见API',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-07-27 14:14:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE常见API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-27T01:16:49.000Z" title="发表于 2025-07-27 09:16:49">2025-07-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-27T06:14:46.922Z" title="更新于 2025-07-27 14:14:46">2025-07-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE常见API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>以下是将您提供的所有 UE4 C++ 代码片段整理成的 Markdown 表格格式：</p>
+<h3 id="🧩-核心类与宏定义"><a href="#🧩-核心类与宏定义" class="headerlink" title="🧩 核心类与宏定义"></a>🧩 核心类与宏定义</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>蓝图可编辑类</td>
+<td><code>UCLASS(Blueprintable)</code></td>
+<td>使C++类可在蓝图中编辑</td>
+</tr>
+<tr>
+<td>蓝图可生成组件</td>
+<td><code>UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))</code></td>
+<td>组件可在蓝图中直接添加到Actor</td>
+</tr>
+<tr>
+<td>蓝图识别变量</td>
+<td><code>UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = &quot;XXX&quot;)</code></td>
+<td>变量在编辑器和蓝图中可见可编辑</td>
+</tr>
+<tr>
+<td>范围限制</td>
+<td><code>meta = (ClampMin=0.1, ClampMax = 100)</code></td>
+<td>限制数值输入范围</td>
+</tr>
+<tr>
+<td>蓝图调用函数</td>
+<td><code>UFUNCTION(BlueprintCallable, Category = &quot;XXX&quot;)</code></td>
+<td>函数可在蓝图中调用</td>
+</tr>
+<tr>
+<td>蓝图实现事件</td>
+<td><code>UFUNCTION(BlueprintImplementableEvent) void OnTest();</code></td>
+<td>蓝图实现C++定义的事件</td>
+</tr>
+<tr>
+<td>蓝图原生事件</td>
+<td><code>UFUNCTION(BlueprintNativeEvent) void SomeFunction();</code>  <code>void AMyActor::SomeFunction_Implementation()</code></td>
+<td>C++提供默认实现，蓝图可覆盖</td>
+</tr>
+<tr>
+<td>双分支输出</td>
+<td><code>UFUNCTION(BlueprintCallable, Meta = (ExpandEnumAsExecs = &quot;Branches&quot;))</code>  <code>void BranchFun(int32 Input, EMyEnum&amp; Branches);</code></td>
+<td>函数返回枚举分支供蓝图使用</td>
+</tr>
+<tr>
+<td>中文枚举</td>
+<td><code>UENUM(BlueprintType)</code>  <code>enum class EenumChinese :uint8 &#123;</code>  <code>E_EN UMETA(DisplayName = &quot;英文&quot;),</code>  <code>E_CH UMETA(DisplayName = &quot;中文&quot;)&#125;</code></td>
+<td>在蓝图中显示中文枚举选项</td>
+</tr>
+</tbody></table>
+<h3 id="🔄-生命周期与内存管理"><a href="#🔄-生命周期与内存管理" class="headerlink" title="🔄 生命周期与内存管理"></a>🔄 生命周期与内存管理</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字符串创建</td>
+<td><code>FString::Printf(TEXT(&quot;aa bb&quot;));</code></td>
+<td>格式化创建字符串</td>
+</tr>
+<tr>
+<td>防止GC回收</td>
+<td><code>Udata-&gt;AddToRoot();</code>  <code>Udata-&gt;RegisterWithGameInstance((UObject*)WorldContextObject);</code></td>
+<td>防止对象被垃圾回收</td>
+</tr>
+<tr>
+<td>强制GC</td>
+<td><code>GEngine-&gt;ForceGarbageCollection(true);</code></td>
+<td>强制进行垃圾回收</td>
+</tr>
+<tr>
+<td>对象销毁</td>
+<td><code>MyActor-&gt;Destroy();</code>  <code>MyActor-&gt;SetLifeSpan(1);</code></td>
+<td>立即或延迟销毁对象</td>
+</tr>
+<tr>
+<td>生命周期设置</td>
+<td><code>SetLifeSpan(10.0f);</code></td>
+<td>设置对象生命周期</td>
+</tr>
+<tr>
+<td>析构函数</td>
+<td><code>virtual void BeginDestroy() override;</code></td>
+<td>对象销毁时调用的函数</td>
+</tr>
+<tr>
+<td>编辑器属性变更</td>
+<td><code>#if WITH_EDITOR</code>  <code>virtual void PostEditChangeProperty(FPropertyChangedEvent&amp;) override;</code>  <code>#endif</code></td>
+<td>编辑器属性变更时回调</td>
+</tr>
+</tbody></table>
+<h3 id="📦-资源与引用管理"><a href="#📦-资源与引用管理" class="headerlink" title="📦 资源与引用管理"></a>📦 资源与引用管理</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类引用</td>
+<td><code>TSubClassOf&lt;UObject&gt;</code></td>
+<td>引用UObject派生类</td>
+</tr>
+<tr>
+<td>软引用</td>
+<td><code>TSoftObjectPtr&lt;UObject&gt;</code>  <code>TSoftClassPtr&lt;UObject&gt;</code></td>
+<td>非强制加载的资源引用</td>
+</tr>
+<tr>
+<td>软路径</td>
+<td><code>FSoftObjectPath SoftReferenceObject;</code>  <code>FSoftClassPath SoftReferenceClass;</code></td>
+<td>资源的软路径引用</td>
+</tr>
+<tr>
+<td>动态加载资源</td>
+<td><code>UClass* aa = LoadClass&lt;UUserWidget&gt;(NULL, TEXT(&quot;Blueprint&#39;/Game/...&#39;));</code></td>
+<td>运行时动态加载蓝图类</td>
+</tr>
+<tr>
+<td>查找类</td>
+<td><code>UClass* ActorRef = FindObject&lt;UClass&gt;(ANY_PACKAGE,*FString(&quot;AActor&quot;));</code></td>
+<td>查找已加载的类</td>
+</tr>
+<tr>
+<td>动态材质</td>
+<td><code>UMaterialInstanceDynamic::Create(Material, nullptr);</code></td>
+<td>创建动态材质实例</td>
+</tr>
+<tr>
+<td>设置材质参数</td>
+<td><code>MiniMapMatDynamic-&gt;SetTextureParameterValue(FName(&quot;Param&quot;), Texture);</code></td>
+<td>设置动态材质参数</td>
+</tr>
+</tbody></table>
+<h3 id="⏱️-时间与定时器"><a href="#⏱️-时间与定时器" class="headerlink" title="⏱️ 时间与定时器"></a>⏱️ 时间与定时器</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>延迟执行</td>
+<td><code>UKismetSystemLibrary::Delay(GetWorld(), 0.1, LatentActionInfo);</code></td>
+<td>蓝图样式的延迟执行</td>
+</tr>
+<tr>
+<td>Tick控制</td>
+<td><code>PrimaryActorTick.TickInterval = 1.0f;</code></td>
+<td>设置Tick调用间隔</td>
+</tr>
+<tr>
+<td>定时器</td>
+<td><code>FTimerHandle Handle;</code>  <code>GetWorldTimerManager().SetTimer(Handle, this, &amp;Func, 1.0f, true);</code>  <code>GetWorldTimerManager().ClearTimer(Handle);</code></td>
+<td>定时器管理</td>
+</tr>
+<tr>
+<td>获取时间</td>
+<td><code>FDateTime::Now().ToString();</code>  <code>FPlatformTime::Seconds;</code></td>
+<td>获取当前时间</td>
+</tr>
+<tr>
+<td>时间转换</td>
+<td><code>FDateTime::UtcNow().ToUnixTimestamp();</code></td>
+<td>转换为Unix时间戳</td>
+</tr>
+</tbody></table>
+<h3 id="🎮-输入与控制"><a href="#🎮-输入与控制" class="headerlink" title="🎮 输入与控制"></a>🎮 输入与控制</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入模式</td>
+<td><code>FInputModeGameOnly InputMode;</code>  <code>SetInputMode(InputMode);</code></td>
+<td>设置输入模式</td>
+</tr>
+<tr>
+<td>按键绑定</td>
+<td><code>InputComponent-&gt;BindKey(EKeys::Z, IE_Released, this, &amp;Action);</code>  <code>InputComponent-&gt;BindAction(&quot;Action&quot;, IE_Released, this, &amp;Action);</code></td>
+<td>绑定按键和动作</td>
+</tr>
+<tr>
+<td>按键检测</td>
+<td><code>GetWorld()-&gt;GetFirstPlayerController()-&gt;WasInputKeyJustPressed(Key)</code></td>
+<td>检测按键按下</td>
+</tr>
+<tr>
+<td>鼠标位置</td>
+<td><code>GEngine-&gt;GameViewport-&gt;GetMousePosition(MousePosition);</code></td>
+<td>获取鼠标位置</td>
+</tr>
+<tr>
+<td>控制器获取</td>
+<td><code>UGameplayStatics::GetPlayerController(GWorld, 0);</code></td>
+<td>获取玩家控制器</td>
+</tr>
+</tbody></table>
+<h3 id="🌐-网络与多人游戏"><a href="#🌐-网络与多人游戏" class="headerlink" title="🌐 网络与多人游戏"></a>🌐 网络与多人游戏</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>网络频率</td>
+<td><code>NetUpdateFrequency = 66.0f;</code>  <code>MinNetUpdateFrequency = 33.0f;</code></td>
+<td>设置网络更新频率</td>
+</tr>
+<tr>
+<td>复制变量</td>
+<td><code>UPROPERTY(Replicated)</code></td>
+<td>变量复制到客户端</td>
+</tr>
+<tr>
+<td>复制回调</td>
+<td><code>UPROPERTY(ReplicatedUsing=OnRep_GuardState)</code></td>
+<td>变量复制时回调</td>
+</tr>
+<tr>
+<td>服务器函数</td>
+<td><code>UFUNCTION(Server, Reliable, WithValidation)</code>  <code>void ServerFunc();</code>  <code>bool ServerFunc_Validate();</code></td>
+<td>RPC服务器函数</td>
+</tr>
+<tr>
+<td>权限检查</td>
+<td><code>Role == ROLE_Authority</code></td>
+<td>检查是否在服务器</td>
+</tr>
+<tr>
+<td>网络模式</td>
+<td><code>ENetMode netMode = GetNetMode();</code></td>
+<td>获取当前网络模式</td>
+</tr>
+<tr>
+<td>网络优化</td>
+<td><code>FVector_NetQuantize vectorr;</code></td>
+<td>减少网络传输精度</td>
+</tr>
+</tbody></table>
+<h3 id="🧱-组件与Actor管理"><a href="#🧱-组件与Actor管理" class="headerlink" title="🧱 组件与Actor管理"></a>🧱 组件与Actor管理</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>组件获取</td>
+<td><code>GetComponentByClass(UXXXComponent::StaticClass());</code></td>
+<td>按类获取组件</td>
+</tr>
+<tr>
+<td>组件附加</td>
+<td><code>SphereComp-&gt;SetupAttachment(MeshComp);</code></td>
+<td>附加组件到父组件</td>
+</tr>
+<tr>
+<td>Actor生成</td>
+<td><code>World-&gt;SpawnActor&lt;AActor&gt;(Class, Location, Rotation);</code></td>
+<td>生成Actor</td>
+</tr>
+<tr>
+<td>Actor查找</td>
+<td><code>UGameplayStatics::GetAllActorsOfClass(GetWorld(), Class, FoundActors);</code></td>
+<td>查找场景中的Actor</td>
+</tr>
+<tr>
+<td>设置位置</td>
+<td><code>SetActorLocation(FVector(0,0,250));</code></td>
+<td>设置Actor位置</td>
+</tr>
+<tr>
+<td>设置旋转</td>
+<td><code>SetActorRotation(FRotator(0,0,0));</code></td>
+<td>设置Actor旋转</td>
+</tr>
+<tr>
+<td>设置子Actor</td>
+<td><code>HandObject-&gt;SetChildActorClass(ASlAiHandObject::StaticClass());</code></td>
+<td>设置子Actor类</td>
+</tr>
+</tbody></table>
+<h3 id="📐-数学与几何计算"><a href="#📐-数学与几何计算" class="headerlink" title="📐 数学与几何计算"></a>📐 数学与几何计算</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>距离计算</td>
+<td><code>FVector::Dist(PointA, PointB);</code></td>
+<td>计算两点距离</td>
+</tr>
+<tr>
+<td>向量长度</td>
+<td><code>Vector.Size();</code></td>
+<td>计算向量长度</td>
+</tr>
+<tr>
+<td>方向计算</td>
+<td><code>FRotationMatrix::MakeFromX(End-Start).Rotator();</code></td>
+<td>计算朝向目标的旋转</td>
+</tr>
+<tr>
+<td>单位向量</td>
+<td><code>Vector.GetSafeNormal();</code></td>
+<td>获取单位向量</td>
+</tr>
+<tr>
+<td>速度计算</td>
+<td><code>FVector::DotProduct(Velocity, Direction);</code></td>
+<td>计算速度在方向上的分量</td>
+</tr>
+<tr>
+<td>限制范围</td>
+<td><code>FMath::Clamp&lt;float&gt;(Value, 0.0, 1.0);</code></td>
+<td>限制数值范围</td>
+</tr>
+<tr>
+<td>随机数</td>
+<td><code>Stream.RandRange(0, Max);</code></td>
+<td>生成随机数</td>
+</tr>
+</tbody></table>
+<h3 id="🛡️-碰撞与物理"><a href="#🛡️-碰撞与物理" class="headerlink" title="🛡️ 碰撞与物理"></a>🛡️ 碰撞与物理</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>碰撞设置</td>
+<td><code>SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);</code></td>
+<td>启用碰撞</td>
+</tr>
+<tr>
+<td>碰撞配置</td>
+<td><code>SetCollisionProfileName(FName(&quot;NoCollision&quot;));</code></td>
+<td>设置碰撞配置</td>
+</tr>
+<tr>
+<td>通道响应</td>
+<td><code>SetCollisionResponseToAllChannels(ECR_Ignore);</code></td>
+<td>设置对所有通道的响应</td>
+</tr>
+<tr>
+<td>物理材质</td>
+<td><code>UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());</code></td>
+<td>获取物理材质</td>
+</tr>
+<tr>
+<td>射线检测</td>
+<td><code>GetWorld()-&gt;LineTraceSingleByChannel(...);</code></td>
+<td>单射线检测</td>
+</tr>
+<tr>
+<td>物理旋转锁定</td>
+<td><code>BodyInstance-&gt;bLockZRotation = true;</code></td>
+<td>锁定物理旋转</td>
+</tr>
+<tr>
+<td>投射计算</td>
+<td><code>UGameplayStatics::SuggestProjectileVelocity(...);</code></td>
+<td>计算抛射体轨迹</td>
+</tr>
+</tbody></table>
+<h3 id="📝-调试与日志"><a href="#📝-调试与日志" class="headerlink" title="📝 调试与日志"></a>📝 调试与日志</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>屏幕输出</td>
+<td><code>GEngine-&gt;AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT(&quot;Msg&quot;));</code></td>
+<td>屏幕显示调试信息</td>
+</tr>
+<tr>
+<td>日志输出</td>
+<td><code>UE_LOG(LogTemp, Warning, TEXT(&quot;Info= %s&quot;), *Message);</code></td>
+<td>输出到日志</td>
+</tr>
+<tr>
+<td>自定义日志</td>
+<td><code>DEFINE_LOG_CATEGORY(LogCustom);</code>  <code>UE_LOG(LogCustom, Warning, TEXT(&quot;Msg&quot;));</code></td>
+<td>自定义日志分类</td>
+</tr>
+<tr>
+<td>蓝图打印</td>
+<td><code>FMessageLog(&quot;DebugLog&quot;).Warning(FText::FromString(Str));</code></td>
+<td>蓝图样式的消息打印</td>
+</tr>
+<tr>
+<td>确保验证</td>
+<td><code>ensure(IsValid(Object));</code></td>
+<td>验证条件，失败时中断</td>
+</tr>
+<tr>
+<td>控制台命令</td>
+<td><code>GetWorld()-&gt;GetFirstPlayerController()-&gt;ConsoleCommand(&quot;quit&quot;);</code></td>
+<td>执行控制台命令</td>
+</tr>
+</tbody></table>
+<h3 id="🗺️-游戏状态与UI"><a href="#🗺️-游戏状态与UI" class="headerlink" title="🗺️ 游戏状态与UI"></a>🗺️ 游戏状态与UI</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>游戏暂停</td>
+<td><code>SetPause(true);</code></td>
+<td>暂停游戏</td>
+</tr>
+<tr>
+<td>加载地图</td>
+<td><code>UGameplayStatics::OpenLevel(GetWorld(), *mapName);</code></td>
+<td>加载新地图</td>
+</tr>
+<tr>
+<td>退出游戏</td>
+<td><code>UKismetSystemLibrary::QuitGame(...);</code></td>
+<td>退出游戏</td>
+</tr>
+<tr>
+<td>创建UI</td>
+<td><code>CreateWidget&lt;UUserWidget&gt;(Controller, WidgetClass);</code></td>
+<td>创建UI控件</td>
+</tr>
+<tr>
+<td>添加UI到视图</td>
+<td><code>Widget-&gt;AddToViewport();</code></td>
+<td>显示UI控件</td>
+</tr>
+<tr>
+<td>屏幕尺寸</td>
+<td><code>GetViewportSize(ViewportSizeX, ViewportSizeY);</code></td>
+<td>获取屏幕尺寸</td>
+</tr>
+<tr>
+<td>获取HUD类</td>
+<td><code>HUDClass = AXXXHUD::StaticClass();</code></td>
+<td>获取HUD类</td>
+</tr>
+</tbody></table>
+<h3 id="📁-文件与系统操作"><a href="#📁-文件与系统操作" class="headerlink" title="📁 文件与系统操作"></a>📁 文件与系统操作</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>打开文件夹</td>
+<td><code>FPlatformProcess::ExploreFolder(*Path);</code></td>
+<td>打开系统文件夹</td>
+</tr>
+<tr>
+<td>执行程序</td>
+<td><code>FPlatformProcess::CreateProc(*ExePath, nullptr, true, false, false, nullptr, -1, nullptr, nullptr);</code></td>
+<td>执行外部程序</td>
+</tr>
+<tr>
+<td>截图</td>
+<td><code>FScreenshotRequest::RequestScreenshot(Filename, false, true);</code></td>
+<td>游戏截图</td>
+</tr>
+<tr>
+<td>配置文件</td>
+<td><code>GConfig-&gt;SetString(*Section, TEXT(&quot;Key&quot;), TEXT(&quot;Value&quot;), GGameIni);</code>  <code>GConfig-&gt;GetFloat(*Section, TEXT(&quot;Key&quot;), Value, GGameIni);</code></td>
+<td>读写配置文件</td>
+</tr>
+<tr>
+<td>项目信息</td>
+<td><code>FApp::GetProjectName();</code></td>
+<td>获取项目名称</td>
+</tr>
+<tr>
+<td>路径操作</td>
+<td><code>FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());</code></td>
+<td>路径转换</td>
+</tr>
+<tr>
+<td>MD5加密</td>
+<td><code>FMD5::HashAnsiString(TEXT(&quot;text&quot;));</code></td>
+<td>MD5加密字符串</td>
+</tr>
+<tr>
+<td>SHA1加密</td>
+<td><code>FSHA1::HashBuffer(...);</code></td>
+<td>SHA1加密</td>
+</tr>
+</tbody></table>
+<h3 id="🤖-AI与行为树"><a href="#🤖-AI与行为树" class="headerlink" title="🤖 AI与行为树"></a>🤖 AI与行为树</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>导航点</td>
+<td><code>UNavigationSystem::K2_GetRandomReachablePointInRadius(...);</code></td>
+<td>获取随机导航点</td>
+</tr>
+<tr>
+<td>行为树任务</td>
+<td><code>virtual EBTNodeResult::Type ExecuteTask(...) override;</code></td>
+<td>行为树任务执行</td>
+</tr>
+<tr>
+<td>装饰器</td>
+<td><code>virtual bool CalculateRawConditionValue(...) const;</code></td>
+<td>行为树条件检查</td>
+</tr>
+<tr>
+<td>黑板键</td>
+<td><code>UBlackboardKeyType_Vector* KeyType = NewObject&lt;UBlackboardKeyType_Vector&gt;();</code></td>
+<td>创建黑板键类型</td>
+</tr>
+<tr>
+<td>敌人状态</td>
+<td><code>UBlackboardKeyType_Enum* StateKey = NewObject&lt;UBlackboardKeyType_Enum&gt;();</code></td>
+<td>创建枚举类型黑板键</td>
+</tr>
+</tbody></table>
+<h3 id="🌍-本地化与多语言"><a href="#🌍-本地化与多语言" class="headerlink" title="🌍 本地化与多语言"></a>🌍 本地化与多语言</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地化文本</td>
+<td><code>NSLOCTEXT(&quot;namespace&quot;, &quot;key&quot;, &quot;value&quot;)</code></td>
+<td>创建本地化文本</td>
+</tr>
+<tr>
+<td>字符串转义</td>
+<td><code>data.ReplaceEscapedCharWithChar(&amp;data.GetCharArray());</code></td>
+<td>处理转义字符</td>
+</tr>
+<tr>
+<td>中文显示</td>
+<td><code>UENUM(BlueprintType)</code>  <code>enum class EenumChinese &#123;...&#125;</code></td>
+<td>支持中文显示</td>
+</tr>
+</tbody></table>
+<h3 id="🔊-音频管理"><a href="#🔊-音频管理" class="headerlink" title="🔊 音频管理"></a>🔊 音频管理</h3><table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>代码示例</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>播放音效</td>
+<td><code>UGameplayStatics::SpawnSoundAttached(soundcue, RootComponent);</code></td>
+<td>附加播放音效</td>
+</tr>
+<tr>
+<td>获取音频设备</td>
+<td><code>GEngine-&gt;GetMainAudioDevice();</code></td>
+<td>获取主音频设备</td>
+</tr>
+<tr>
+<td>混音器设置</td>
+<td><code>AudioDevice-&gt;SetSoundMixClassOverride(...);</code></td>
+<td>设置混音器覆盖</td>
+</tr>
+<tr>
+<td>失焦音量</td>
+<td><code>GConfig-&gt;GetFloat(TEXT(&quot;Audio&quot;), TEXT(&quot;UnfocusedVolumeMultiplier&quot;), ...);</code></td>
+<td>失焦时音量设置</td>
+</tr>
+</tbody></table>
+<p>这个表格整理涵盖了您提供的所有代码片段，按照功能分类组织，便于快速查找和使用。每个表格包含功能描述、代码示例和简要说明三列。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/07/27/0073-UeAPI/">http://example.com/2025/07/27/0073-UeAPI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/07/17/0072-UeObj/" title="unity2UE(正在更新)"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">unity2UE(正在更新)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/07/17/0072-UeObj/" title="unity2UE(正在更新)"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-17</div><div class="title">unity2UE(正在更新)</div></div></a></div><div><a href="/2025/07/14/0071-U3dToUe/" title="unity2UE"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-14</div><div class="title">unity2UE</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A9-%E6%A0%B8%E5%BF%83%E7%B1%BB%E4%B8%8E%E5%AE%8F%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">🧩 核心类与宏定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%84-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">🔄 生命周期与内存管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%A6-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%BC%95%E7%94%A8%E7%AE%A1%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">📦 资源与引用管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%8F%B1%EF%B8%8F-%E6%97%B6%E9%97%B4%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">4.</span> <span class="toc-text">⏱️ 时间与定时器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%AE-%E8%BE%93%E5%85%A5%E4%B8%8E%E6%8E%A7%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">🎮 输入与控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%90-%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%A4%9A%E4%BA%BA%E6%B8%B8%E6%88%8F"><span class="toc-number">6.</span> <span class="toc-text">🌐 网络与多人游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%B1-%E7%BB%84%E4%BB%B6%E4%B8%8EActor%E7%AE%A1%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">🧱 组件与Actor管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%90-%E6%95%B0%E5%AD%A6%E4%B8%8E%E5%87%A0%E4%BD%95%E8%AE%A1%E7%AE%97"><span class="toc-number">8.</span> <span class="toc-text">📐 数学与几何计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A1%EF%B8%8F-%E7%A2%B0%E6%92%9E%E4%B8%8E%E7%89%A9%E7%90%86"><span class="toc-number">9.</span> <span class="toc-text">🛡️ 碰撞与物理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%9D-%E8%B0%83%E8%AF%95%E4%B8%8E%E6%97%A5%E5%BF%97"><span class="toc-number">10.</span> <span class="toc-text">📝 调试与日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%97%BA%EF%B8%8F-%E6%B8%B8%E6%88%8F%E7%8A%B6%E6%80%81%E4%B8%8EUI"><span class="toc-number">11.</span> <span class="toc-text">🗺️ 游戏状态与UI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%81-%E6%96%87%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C"><span class="toc-number">12.</span> <span class="toc-text">📁 文件与系统操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A4%96-AI%E4%B8%8E%E8%A1%8C%E4%B8%BA%E6%A0%91"><span class="toc-number">13.</span> <span class="toc-text">🤖 AI与行为树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%8D-%E6%9C%AC%E5%9C%B0%E5%8C%96%E4%B8%8E%E5%A4%9A%E8%AF%AD%E8%A8%80"><span class="toc-number">14.</span> <span class="toc-text">🌍 本地化与多语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%8A-%E9%9F%B3%E9%A2%91%E7%AE%A1%E7%90%86"><span class="toc-number">15.</span> <span class="toc-text">🔊 音频管理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/27/0073-UeAPI/" title="UE常见API"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE常见API"/></a><div class="content"><a class="title" href="/2025/07/27/0073-UeAPI/" title="UE常见API">UE常见API</a><time datetime="2025-07-27T01:16:49.000Z" title="发表于 2025-07-27 09:16:49">2025-07-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/17/0072-UeObj/" title="unity2UE(正在更新)"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity2UE(正在更新)"/></a><div class="content"><a class="title" href="/2025/07/17/0072-UeObj/" title="unity2UE(正在更新)">unity2UE(正在更新)</a><time datetime="2025-07-17T01:16:49.000Z" title="发表于 2025-07-17 09:16:49">2025-07-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/14/0071-U3dToUe/" title="unity2UE"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="unity2UE"/></a><div class="content"><a class="title" href="/2025/07/14/0071-U3dToUe/" title="unity2UE">unity2UE</a><time datetime="2025-07-14T01:16:49.000Z" title="发表于 2025-07-14 09:16:49">2025-07-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/09/0070-lua5.4/" title="Lua 5.4 源码"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lua 5.4 源码"/></a><div class="content"><a class="title" href="/2025/07/09/0070-lua5.4/" title="Lua 5.4 源码">Lua 5.4 源码</a><time datetime="2025-07-09T01:16:49.000Z" title="发表于 2025-07-09 09:16:49">2025-07-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/17/0069-UeUMG/" title="UMG"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UMG"/></a><div class="content"><a class="title" href="/2025/06/17/0069-UeUMG/" title="UMG">UMG</a><time datetime="2025-06-17T01:16:49.000Z" title="发表于 2025-06-17 09:16:49">2025-06-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
