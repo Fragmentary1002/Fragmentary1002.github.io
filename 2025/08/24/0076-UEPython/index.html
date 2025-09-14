@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>UE Python | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言 python ue 自动化 本人在工作过程中需要去接入自动化流程，故撰写本篇。 （原生ue-Python真的好难用，悲） 文档Unreal 5.0  Python API Unreal 4.27 Python 官方文档   如何在ue中使用python – PingCode 一、启动python插件你需要在Unreal Engine中启用Python插件。  打开Unreal Engine编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UE Python">
+<meta property="og:url" content="http://example.com/2025/08/24/0076-UEPython/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言 python ue 自动化 本人在工作过程中需要去接入自动化流程，故撰写本篇。 （原生ue-Python真的好难用，悲） 文档Unreal 5.0  Python API Unreal 4.27 Python 官方文档   如何在ue中使用python – PingCode 一、启动python插件你需要在Unreal Engine中启用Python插件。  打开Unreal Engine编">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/p_66349124.png">
+<meta property="article:published_time" content="2025-08-24T11:29:00.747Z">
+<meta property="article:modified_time" content="2025-08-24T11:33:16.096Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/p_66349124.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/08/24/0076-UEPython/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UE Python',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-24 19:33:16'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/p_66349124.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE Python</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-24T11:29:00.747Z" title="发表于 2025-08-24 19:29:00">2025-08-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-24T11:33:16.096Z" title="更新于 2025-08-24 19:33:16">2025-08-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE Python"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p> python ue 自动化</p>
+<p>本人在工作过程中需要去接入自动化流程，故撰写本篇。</p>
+<p>（原生ue-Python真的好难用，悲）</p>
+<h2 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h2><p><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/?application_version=5.0">Unreal 5.0  Python API</a></p>
+<p><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/zh-cn/unreal-engine/scripting-the-editor-using-python?application_version=4.27">Unreal 4.27 Python 官方文档  </a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.pingcode.com/ask/ask-ask/1170584.html">如何在ue中使用python – PingCode</a></p>
+<h1 id="一、启动python插件"><a href="#一、启动python插件" class="headerlink" title="一、启动python插件"></a>一、启动python插件</h1><p>你需要在Unreal Engine中启用Python插件。</p>
+<ol>
+<li>打开Unreal Engine编辑器，进入项目。</li>
+<li>选择“编辑”菜单，然后选择“插件”。</li>
+<li>在插件窗口中，搜索“Python”。</li>
+<li>启用“Python Editor Script Plugin”和“Sequencer Scripting”插件。</li>
+<li>重新启动编辑器以使更改生效。</li>
+</ol>
+<p>启用Python插件后，你就可以在Unreal Engine中使用Python脚本了。</p>
+<h1 id="二、执行pyhon脚本"><a href="#二、执行pyhon脚本" class="headerlink" title="二、执行pyhon脚本"></a>二、执行pyhon脚本</h1><p>调成cmd模式</p>
+<p>执行</p>
+<p>py “O:\GR\GR_Thunk2\Tools\PbDelcare\RefreshVXCommon.py”</p>
+<h1 id="三、使用Python-API"><a href="#三、使用Python-API" class="headerlink" title="三、使用Python API"></a>三、使用Python API</h1><ol>
+<li>操作资产</li>
+</ol>
+<p>你可以使用Python API来操作Unreal Engine中的资产，例如导入、导出、重命名资产等。</p>
+<p> import unreal</p>
+<p> 导入资产</p>
+<p> asset_tools = unreal.AssetToolsHelpers.get_asset_tools()</p>
+<p> import_task = unreal.AssetImportTask()</p>
+<p> import_task.filename = “path/to/your/asset.fbx”</p>
+<p> import_task.destination_path = “/Game/YourFolder”</p>
+<p> import_task.automated = True</p>
+<p> asset_tools.import_asset_tasks([import_task])</p>
+<p> 重命名资产</p>
+<p> asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()</p>
+<p> asset_registry.rename_assets([(“/Game/YourFolder/OldAssetName”, “/Game/YourFolder/NewAssetName”)])</p>
+<ol>
+<li>创建和修改关卡</li>
+</ol>
+<p>你可以使用Python API来创建和修改关卡中的元素，例如添加、删除Actor等。</p>
+<p> import unreal</p>
+<p> 获取当前关卡</p>
+<p> world = unreal.EditorLevelLibrary.get_editor_world()</p>
+<p> 添加一个静态网格体</p>
+<p> actor_location = unreal.Vector(0.0, 0.0, 0.0)</p>
+<p> actor_rotation = unreal.Rotator(0.0, 0.0, 0.0)</p>
+<p> static_mesh_actor = unreal.EditorLevelLibrary.spawn_actor_from_class(unreal.StaticMeshActor, actor_location, actor_rotation)</p>
+<p> static_mesh_actor.set_actor_label(“MyStaticMeshActor”)</p>
+<p> 设置静态网格</p>
+<p> static_mesh = unreal.EditorAssetLibrary.load_asset(“/Game/YourStaticMesh”)</p>
+<p> static_mesh_actor.static_mesh_component.set_static_mesh(static_mesh)</p>
+<h1 id="四、创建自定义工具"><a href="#四、创建自定义工具" class="headerlink" title="四、创建自定义工具"></a>四、创建自定义工具</h1><p>你可以使用Python创建自定义工具，以提高工作效率。例如，你可以创建一个自定义工具来批量处理资产或自动化常见任务。</p>
+<ol>
+<li>创建自定义工具窗口</li>
+</ol>
+<p>你可以使用Unreal Engine的Slate框架创建自定义工具窗口。</p>
+<p> import unreal</p>
+<p> class MyCustomTool:</p>
+<p>​     def <strong>init</strong>(self):</p>
+<p>​         self.window = None</p>
+<p>​     def create_window(self):</p>
+<p>​         if self.window is None:</p>
+<p>​             self.window = unreal.SWindow()</p>
+<p>​             self.window.set_title(“My Custom Tool”)</p>
+<p>​             self.window.set_content(self.build_ui())</p>
+<p>​             unreal.EditorUtilityLibrary.add_window(self.window)</p>
+<p>​     def build_ui(self):</p>
+<p>​         vertical_box = unreal.SVerticalBox()</p>
+<p>​         button = unreal.SButton()</p>
+<p>​         button.set_text(“Click Me”)</p>
+<p>​         button.set_on_clicked(self.on_button_clicked)</p>
+<p>​         vertical_box.add_child(button)</p>
+<p>​         return vertical_box</p>
+<p>​     def on_button_clicked(self):</p>
+<p>​         unreal.log(“Button clicked!”)</p>
+<p>​         return unreal.SButtonReply.handled()</p>
+<p> tool = MyCustomTool()</p>
+<p> tool.create_window()</p>
+<ol>
+<li>批量处理资产</li>
+</ol>
+<p>你可以使用Python脚本来批量处理资产，例如重命名、移动或删除资产。</p>
+<p> import unreal</p>
+<p> def batch_rename_assets(asset_path, old_name, new_name):</p>
+<p>​     asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()</p>
+<p>​     assets = asset_registry.get_assets_by_path(asset_path, recursive=True)</p>
+<p>​     for asset in assets:</p>
+<p>​         if old_name in asset.asset_name:</p>
+<p>​             new_asset_name = asset.asset_name.replace(old_name, new_name)</p>
+<p>​             new_asset_path = f”{asset.package_path}/{new_asset_name}”</p>
+<p>​             unreal.EditorAssetLibrary.rename_asset(asset.object_path, new_asset_path)</p>
+<p> batch_rename_assets(“/Game/YourFolder”, “OldName”, “NewName”)</p>
+<h1 id="五、Python与蓝图结合"><a href="#五、Python与蓝图结合" class="headerlink" title="五、Python与蓝图结合"></a>五、Python与蓝图结合</h1><p>Python脚本可以与Unreal Engine的蓝图系统结合使用，以创建更复杂的功能。</p>
+<ol>
+<li>调用蓝图函数</li>
+</ol>
+<p>你可以在Python脚本中调用蓝图中的函数。</p>
+<p> import unreal</p>
+<p> 获取蓝图类</p>
+<p> blueprint_class = unreal.EditorAssetLibrary.load_blueprint_class(“/Game/YourBlueprint”)</p>
+<p> 获取蓝图实例</p>
+<p> blueprint_instance = unreal.EditorLevelLibrary.spawn_actor_from_class(blueprint_class, unreal.Vector(0.0, 0.0, 0.0))</p>
+<p> 调用蓝图函数</p>
+<p> unreal.EditorUtilityLibrary.call_function_by_name_with_arguments(blueprint_instance, “YourFunctionName”, [“Argument1”, “Argument2”])</p>
+<ol>
+<li>在蓝图中调用Python函数</li>
+</ol>
+<p>你可以在蓝图中调用Python函数，以实现更复杂的功能。首先，你需要创建一个Python函数，并使用<code>unreal</code>模块中的装饰器将其注册为蓝图节点。</p>
+<p> import unreal</p>
+<p> @unreal.uclass()</p>
+<p> class MyPythonFunctionLibrary(unreal.BlueprintFunctionLibrary):</p>
+<p>​     @unreal.ufunction(static=True, blueprint_callable=True)</p>
+<p>​     def my_python_function(arg1, arg2):</p>
+<p>​         unreal.log(f”Arg1: {arg1}, Arg2: {arg2}”)</p>
+<p>​         return arg1 + arg2</p>
+<p>然后，你可以在蓝图中使用“调用Python函数”节点来调用这个Python函数。</p>
+<h1 id="六、自动化工作流程"><a href="#六、自动化工作流程" class="headerlink" title="六、自动化工作流程"></a>六、自动化工作流程</h1><p>使用Python脚本自动化工作流程可以显著提高生产力。以下是一些自动化工作流程的示例。</p>
+<ol>
+<li>自动化导入和设置资产</li>
+</ol>
+<p>你可以编写Python脚本自动化导入和设置资产的过程。</p>
+<p> import unreal</p>
+<p> def import_and_setup_assets(asset_folder, destination_path):</p>
+<p>​     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()</p>
+<p>​     import_task = unreal.AssetImportTask()</p>
+<p>​     import_task.filename = asset_folder</p>
+<p>​     import_task.destination_path = destination_path</p>
+<p>​     import_task.automated = True</p>
+<p>​     asset_tools.import_asset_tasks([import_task])</p>
+<p>​     asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()</p>
+<p>​     assets = asset_registry.get_assets_by_path(destination_path, recursive=True)</p>
+<p>​     for asset in assets:</p>
+<p>​         # 设置资产属性</p>
+<p>​         static_mesh = unreal.EditorAssetLibrary.load_asset(asset.object_path)</p>
+<p>​         static_mesh.set_editor_property(“collision_trace_flag”, unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)</p>
+<p> import_and_setup_assets(“path/to/your/assets”, “/Game/YourFolder”)</p>
+<ol>
+<li>批量处理关卡</li>
+</ol>
+<p>你可以编写Python脚本批量处理关卡，例如批量添加或删除Actor。</p>
+<p> import unreal</p>
+<p> def batch_add_actor_to_levels(actor_class, levels):</p>
+<p>​     for level in levels:</p>
+<p>​         world = unreal.EditorLevelLibrary.load_level(level)</p>
+<p>​         actor_location = unreal.Vector(0.0, 0.0, 0.0)</p>
+<p>​         actor_rotation = unreal.Rotator(0.0, 0.0, 0.0)</p>
+<p>​         actor = unreal.EditorLevelLibrary.spawn_actor_from_class(actor_class, actor_location, actor_rotation)</p>
+<p>​         actor.set_actor_label(“BatchAddedActor”)</p>
+<p> levels = [“/Game/YourLevel1”, “/Game/YourLevel2”]</p>
+<p> batch_add_actor_to_levels(unreal.StaticMeshActor, levels)</p>
+<h1 id="七、调试和优化Python脚本"><a href="#七、调试和优化Python脚本" class="headerlink" title="七、调试和优化Python脚本"></a>七、调试和优化Python脚本</h1><p>调试和优化Python脚本可以帮助你发现并解决问题，提高脚本的性能和稳定性。</p>
+<ol>
+<li>使用日志和断点</li>
+</ol>
+<p>你可以使用<code>unreal.log</code>函数打印日志消息，帮助你调试脚本。</p>
+<p>import unreal</p>
+<p>def example_function():</p>
+<p>​    unreal.log(“This is a log message.”)</p>
+<p>​    # 断点</p>
+<p>​    breakpoint()</p>
+<p>example_function()</p>
+<ol>
+<li>优化性能</li>
+</ol>
+<p>优化Python脚本的性能可以提高工作效率。例如，你可以使用批量操作来减少API调用次数，或者使用多线程来并行处理任务。</p>
+<p>import unreal</p>
+<p>import threading</p>
+<p>def batch_process_assets(asset_paths):</p>
+<p>​    for asset_path in asset_paths:</p>
+<p>​        asset = unreal.EditorAssetLibrary.load_asset(asset_path)</p>
+<p>​        # 批量处理资产</p>
+<p>​        asset.set_editor_property(“some_property”, “new_value”)</p>
+<p>def process_assets_in_threads(asset_paths, num_threads=4):</p>
+<p>​    chunk_size = len(asset_paths) // num_threads</p>
+<p>​    threads = []</p>
+<p>​    for i in range(num_threads):</p>
+<p>​        start = i * chunk_size</p>
+<p>​        end = start + chunk_size if i != num_threads - 1 else len(asset_paths)</p>
+<p>​        thread = threading.Thread(target=batch_process_assets, args=(asset_paths[start:end],))</p>
+<p>​        threads.append(thread)</p>
+<p>​        thread.start()</p>
+<p>​    for thread in threads:</p>
+<p>​        thread.join()</p>
+<p>asset_paths = [“/Game/YourAsset1”, “/Game/YourAsset2”, “/Game/YourAsset3”]</p>
+<p>process_assets_in_threads(asset_paths)</p>
+<h1 id="八、实际应用案例"><a href="#八、实际应用案例" class="headerlink" title="八、实际应用案例"></a>八、实际应用案例</h1><p>了解一些实际应用案例可以帮助你更好地理解和应用Python编程。</p>
+<ol>
+<li>项目管理工具</li>
+</ol>
+<p>你可以编写Python脚本来管理项目，例如自动生成项目结构、管理资产和关卡等。</p>
+<p>import os</p>
+<p>import unreal</p>
+<p>def create_project_structure(base_path):</p>
+<p>​    folders = [</p>
+<p>​        “/Game/Assets”,</p>
+<p>​        “/Game/Blueprints”,</p>
+<p>​        “/Game/Materials”,</p>
+<p>​        “/Game/Textures”</p>
+<p>​    ]</p>
+<p>​    for folder in folders:</p>
+<p>​        folder_path = os.path.join(base_path, folder)</p>
+<p>​        if not os.path.exists(folder_path):</p>
+<p>​            os.makedirs(folder_path)</p>
+<p>​            unreal.log(f”Created folder: {folder_path}”)</p>
+<p>create_project_structure(“path/to/your/project”)</p>
+<ol>
+<li>自动化测试</li>
+</ol>
+<p>你可以使用Python脚本编写自动化测试，以确保项目的质量和稳定性。</p>
+<p>import unreal</p>
+<p>def run_automated_tests():</p>
+<p>​    test_framework = unreal.AutomationLibrary()</p>
+<p>​    test_results = test_framework.run_tests(“Functional Tests”)</p>
+<p>​    for result in test_results:</p>
+<p>​        unreal.log(f”Test: {result.test_name}, Result: {result.result}”)</p>
+<p>run_automated_tests()</p>
+<h1 id="九、主要官方库"><a href="#九、主要官方库" class="headerlink" title="九、主要官方库"></a>九、主要官方库</h1><table>
+<thead>
+<tr>
+<th>库名</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/EditorAssetLibrary?highlight=editorassetlibrary&application_version=5.0">unreal.EditorAssetLibrary</a></td>
+<td>Utility class to do most of the common functionalities with the ContentBrowser</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/AssetRegistryHelpers?highlight=assetregistryhelpers&application_version=5.0">unreal.AssetRegistryHelpers</a></td>
+<td>Asset Registry Helpers</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/_ObjectBase?highlight=object&application_version=5.0">unreal.ObjectBase</a></td>
+<td>Type for all Unreal exposed object instances</td>
+</tr>
+<tr>
+<td>EditorUtilityLibrary</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="十、其他python库"><a href="#十、其他python库" class="headerlink" title="十、其他python库"></a>十、其他python库</h1><p>sys 处理</p>
+<p>import sys</p>
+<p>if len(sys.argv) &gt; 1:</p>
+<p>​    script_name = sys.argv[0]    # 脚本名称</p>
+<p>​    first_arg = sys.argv[1]      # 第一个参数</p>
+<p>​    print(f”脚本: {script_name}, 参数1: {first_arg}”)</p>
+<p>else:</p>
+<p>​    print(“未提供参数”)</p>
+<p>cmd : python script.py hello</p>
+<h1 id="十一、总结"><a href="#十一、总结" class="headerlink" title="十一、总结"></a>十一、总结</h1><p>在Unreal Engine中使用Python可以显著提高开发效率和生产力。通过<strong>启用Python插件、编写Python脚本、使用Python API、创建自定义工具、与蓝图结合、自动化工作流程、调试和优化脚本</strong>，你可以实现许多复杂的功能和自动化任务。同时，利用学习资源和社区支持，不断提升自己的技能和知识。希望本文能帮助你更好地在Unreal Engine中使用Python，实现你的创意和项目目标。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/08/24/0076-UEPython/">http://example.com/2025/08/24/0076-UEPython/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/p_66349124.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/08/08/0075-UEDs/" title="UE 联机"><img class="cover" src="/img/p_66349124.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UE 联机</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/08/08/0075-UEDs/" title="UE 联机"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-08</div><div class="title">UE 联机</div></div></a></div><div><a href="/2025/08/03/0073-UEBase/" title="UE基础"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-03</div><div class="title">UE基础</div></div></a></div><div><a href="/2025/08/03/0074-UELyra/" title="UE Lyra"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-03</div><div class="title">UE Lyra</div></div></a></div><div><a href="/2025/07/27/0072-UEAPI/" title="UE常见API"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-27</div><div class="title">UE常见API</div></div></a></div><div><a href="/2025/07/17/0071-UEBlastj/" title="UE- Blast  (正在更新)"><img class="cover" src="/img/p_66349124.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-17</div><div class="title">UE- Blast  (正在更新)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3"><span class="toc-number">1.1.</span> <span class="toc-text">文档</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%90%AF%E5%8A%A8python%E6%8F%92%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">一、启动python插件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%89%A7%E8%A1%8Cpyhon%E8%84%9A%E6%9C%AC"><span class="toc-number">3.</span> <span class="toc-text">二、执行pyhon脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8Python-API"><span class="toc-number">4.</span> <span class="toc-text">三、使用Python API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7"><span class="toc-number">5.</span> <span class="toc-text">四、创建自定义工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Python%E4%B8%8E%E8%93%9D%E5%9B%BE%E7%BB%93%E5%90%88"><span class="toc-number">6.</span> <span class="toc-text">五、Python与蓝图结合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">六、自动化工作流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E8%B0%83%E8%AF%95%E5%92%8C%E4%BC%98%E5%8C%96Python%E8%84%9A%E6%9C%AC"><span class="toc-number">8.</span> <span class="toc-text">七、调试和优化Python脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">9.</span> <span class="toc-text">八、实际应用案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E4%B8%BB%E8%A6%81%E5%AE%98%E6%96%B9%E5%BA%93"><span class="toc-number">10.</span> <span class="toc-text">九、主要官方库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E5%85%B6%E4%BB%96python%E5%BA%93"><span class="toc-number">11.</span> <span class="toc-text">十、其他python库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">12.</span> <span class="toc-text">十一、总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/08/24/0076-UEPython/" title="UE Python"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE Python"/></a><div class="content"><a class="title" href="/2025/08/24/0076-UEPython/" title="UE Python">UE Python</a><time datetime="2025-08-24T11:29:00.747Z" title="发表于 2025-08-24 19:29:00">2025-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/08/0075-UEDs/" title="UE 联机"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 联机"/></a><div class="content"><a class="title" href="/2025/08/08/0075-UEDs/" title="UE 联机">UE 联机</a><time datetime="2025-08-07T16:00:00.000Z" title="发表于 2025-08-08 00:00:00">2025-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/03/0073-UEBase/" title="UE基础"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE基础"/></a><div class="content"><a class="title" href="/2025/08/03/0073-UEBase/" title="UE基础">UE基础</a><time datetime="2025-08-02T16:00:00.000Z" title="发表于 2025-08-03 00:00:00">2025-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/03/0074-UELyra/" title="UE Lyra"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE Lyra"/></a><div class="content"><a class="title" href="/2025/08/03/0074-UELyra/" title="UE Lyra">UE Lyra</a><time datetime="2025-08-02T16:00:00.000Z" title="发表于 2025-08-03 00:00:00">2025-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/27/0072-UEAPI/" title="UE常见API"><img src="/img/p_66349124.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE常见API"/></a><div class="content"><a class="title" href="/2025/07/27/0072-UEAPI/" title="UE常见API">UE常见API</a><time datetime="2025-07-27T01:16:49.000Z" title="发表于 2025-07-27 09:16:49">2025-07-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
