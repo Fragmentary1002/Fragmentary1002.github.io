@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>ue 增强输入 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言UE5 使用了一个最新的输入架构EnhancedInput(增强输入系统) 简介 增强输入框架就是改进一些过往问题的新答案。它以模块化的方式解耦了从输入的按键配置到事件处理的逻辑处理过程，通过提供输入动作(UInputAction)、输入修改器（UInputModifier)、输入触发器（UInputTrigger）和输入映射环境（UInputMappingContext）这些可组合功能，在新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ue 增强输入">
+<meta property="og:url" content="http://example.com/2025/10/11/0082-UeIA/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言UE5 使用了一个最新的输入架构EnhancedInput(增强输入系统) 简介 增强输入框架就是改进一些过往问题的新答案。它以模块化的方式解耦了从输入的按键配置到事件处理的逻辑处理过程，通过提供输入动作(UInputAction)、输入修改器（UInputModifier)、输入触发器（UInputTrigger）和输入映射环境（UInputMappingContext）这些可组合功能，在新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2025-10-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-12T16:48:39.966Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/10/11/0082-UeIA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ue 增强输入',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-13 00:48:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ue 增强输入</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-10T16:00:00.000Z" title="发表于 2025-10-11 00:00:00">2025-10-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-12T16:48:39.966Z" title="更新于 2025-11-13 00:48:39">2025-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ue 增强输入"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>UE5 使用了一个最新的输入架构EnhancedInput(增强输入系统)</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><blockquote>
+<p>增强输入框架就是<strong>改进一些过往问题的新答案</strong>。它以模块化的方式解耦了从输入的按键配置到事件处理的逻辑处理过程，通过提供<strong>输入动作(UInputAction)<strong>、</strong>输入修改器（<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=192786660&content_type=Article&match_order=1&q=UInputModifier&zhida_source=entity">UInputModifier</a>)<strong>、</strong>输入触发器（<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=192786660&content_type=Article&match_order=1&q=UInputTrigger&zhida_source=entity">UInputTrigger</a>）</strong>和<strong>输入映射环境（UInputMappingContext）</strong>这些可组合功能，在新的增强玩家输入(UEnhancedPlayerInput)和增强输入组件( UEnhancedInputComponent)的配合下提供了更灵活和更便利的输入配置和处理功能。<br>考虑到基于 <a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=192786660&content_type=Article&match_order=1&q=%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E5&zhida_source=entity">虚幻引擎5</a>（UE5）的项目可能需要<strong>更多高级输入功能</strong>，例如复杂的输入处理、运行时重新映射输入，我们开发了增强输入插件（Enhanced Input Plugin），以便开发者拥抱次世代项目，同时又能向后兼容 <a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=192786660&content_type=Article&match_order=1&q=%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E4&zhida_source=entity">虚幻引擎4</a>（UE4）中的默认输入系统。</p>
+</blockquote>
+<p><strong>目标：</strong></p>
+<ul>
+<li><p>重新梳理简化： Axis/Action —&gt; Action（统一）</p>
+</li>
+<li><p>运行时重新映射输入场景： UInputMappingContext</p>
+</li>
+<li><p>对初级用户易配置。大量默认行为实现，Tap/Hold…</p>
+</li>
+<li><p>对高级用户易扩展，可继承子类扩展</p>
+</li>
+<li><ul>
+<li>修改器：修改输入值</li>
+<li>触发器：决定触发条件</li>
+<li>优先级：配置输入场景优先级</li>
+</ul>
+</li>
+<li><p>模块化，不再只依赖Ini配置，以资源asset方式配置，堆栈式分隔逻辑</p>
+</li>
+<li><p>提高性能，不需要检查所有输入，只需要关心当前的场景和绑定</p>
+</li>
+<li><p>UE5正式替换掉旧有输入系统</p>
+</li>
+</ul>
+<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>￮ IC: Input Component 输入组件</p>
+<p>￮ IA: Input Actions 输入动作</p>
+<p>￮ IMC: Input Mapping Contexts (输入映射上下文 IA 的集合)</p>
+<p>￮ PMI: Player Mappable Input Config (玩家可映射输入配置 IMC 的集合) </p>
+<p>￮ IM: 输入修饰符 Input Modifies</p>
+<p>￮ IT: 输入触发器 InputTriggers</p>
+<p>IMC</p>
+<p>一套当前的Key-&gt;InputAction的映射集合 </p>
+<p>多个IMC同时作用，高优先级的会先处理，如果没有则触发到低优先级的 </p>
+<p>高优先级的Key绑定会屏蔽低优先级的绑定</p>
+<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="Input处理流程"><a href="#Input处理流程" class="headerlink" title="Input处理流程"></a>Input处理流程</h2><img src="./../../pic/picture/0082-UeIA/%E4%B8%8B%E8%BD%BD%20(1).png" alt="下载 (1)" style="zoom:33%;" />
+
+
+
+<h2 id="硬件平台与Input关系"><a href="#硬件平台与Input关系" class="headerlink" title="硬件平台与Input关系"></a>硬件平台与Input关系</h2><img src="./../../pic/picture/0082-UeIA/%E4%B8%8B%E8%BD%BD-1762161110160-23.png" alt="下载" style="zoom:33%;" />
+
+
+
+
+
+
+
+
+
+<h2 id="Trigger-与-UI-事件-对应关系"><a href="#Trigger-与-UI-事件-对应关系" class="headerlink" title="Trigger  与 UI 事件 对应关系"></a><strong>Trigger  与 UI 事件 对应关系</strong></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">UInputTriggerDoubleTap    --&gt; OnDoubleClicked</span><br><span class="line">  UInputTriggerDown      --&gt; OnDownClicked</span><br><span class="line">  UInputTriggerPressed     --&gt; OnPressed</span><br><span class="line">  UInputTriggerReleased    --&gt; OnReleased</span><br><span class="line">  UInputTriggerHold      --&gt; OnHold</span><br><span class="line">  UInputTriggerHoldAndRelease --&gt; OnHoldAndRelease</span><br><span class="line">  UInputTriggerPulse      --&gt; OnPulse</span><br><span class="line">  UInputTriggerTap       --&gt; OnTap</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="./../../pic/picture/0082-UeIA/%E4%B8%8B%E8%BD%BD%20(2).png" alt="下载 (2)" style="zoom:33%;" />
+
+<h1 id="CPP绑定"><a href="#CPP绑定" class="headerlink" title="CPP绑定"></a>CPP绑定</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MyCharacter.h 多数省略</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * TObjectPtr: 增加在SHIPPING发布之前的安全性</span></span><br><span class="line"><span class="comment"> * 想处理什么Action，就响应什么动作，不太关心动作是由什么按键触发的</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputMappingContext&gt; InputMappingContext;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_MoveForward;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_MoveRight;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_Turn;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_LookUp;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_Jump;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UPROPERTY</span>(EditDefaultsOnly, BlueprintReadWrite, Category=<span class="string">&quot;EnhancedInput|Action&quot;</span>, meta=(AllowPrivateAccess=<span class="string">&quot;true&quot;</span>))</span><br><span class="line">TObjectPtr&lt;UInputAction&gt; IA_Fire;</span><br><span class="line"></span><br><span class="line"><span class="comment">//MyCharacter.cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AMyCharacter::SetupPlayerInputComponent</span><span class="params">(UInputComponent* PlayerInputComponent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Super::<span class="built_in">SetupPlayerInputComponent</span>(PlayerInputComponent);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 先添加IMC还是绑定IA不重要，因为IMC代表的只是一个从按键到Action的关系，下面的Action是怎么到一个回调</span></span><br><span class="line">	<span class="keyword">if</span>(APlayerController* PC = <span class="built_in">CastChecked</span>&lt;APlayerController&gt;(<span class="built_in">GetController</span>()))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::<span class="built_in">GetSubsystem</span>&lt;UEnhancedInputLocalPlayerSubsystem&gt;(PC-&gt;<span class="built_in">GetLocalPlayer</span>()))</span><br><span class="line">		&#123;</span><br><span class="line">			Subsystem-&gt;<span class="built_in">AddMappingContext</span>(InputMappingContext, <span class="number">100</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(UEnhancedInputComponent* EnhancedInputComponent = <span class="built_in">CastChecked</span>&lt;UEnhancedInputComponent&gt;(PlayerInputComponent))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(IA_MoveForward)</span><br><span class="line">		&#123;</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_MoveForward, ETriggerEvent::Triggered, <span class="keyword">this</span>, &amp;AMyCharacter::MoveForward);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(IA_MoveRight)</span><br><span class="line">		&#123;</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_MoveRight, ETriggerEvent::Triggered, <span class="keyword">this</span>, &amp;AMyCharacter::MoveRight);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(IA_Turn)</span><br><span class="line">		&#123;</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_Turn, ETriggerEvent::Triggered, <span class="keyword">this</span>, &amp;AMyCharacter::TurnAtRate);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(IA_LookUp)</span><br><span class="line">		&#123;</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_LookUp, ETriggerEvent::Triggered, <span class="keyword">this</span>, &amp;AMyCharacter::LookUpAtRate);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(IA_Jump)</span><br><span class="line">		&#123;</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_Jump, ETriggerEvent::Started, <span class="keyword">this</span>, &amp;AMyCharacter::OnJump);</span><br><span class="line">			EnhancedInputComponent-&gt;<span class="built_in">BindAction</span>(IA_Jump, ETriggerEvent::Completed, <span class="keyword">this</span>, &amp;AMyCharacter::OnStopJumping);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h1><h2 id="为什么IMC和IA都有Triggers和Modifiers？"><a href="#为什么IMC和IA都有Triggers和Modifiers？" class="headerlink" title="为什么IMC和IA都有Triggers和Modifiers？"></a>为什么IMC和IA都有Triggers和Modifiers？</h2><p><strong>因为一个操作配置在IA里面相当于是全局的，如果两个都配了，两个都起作用，先是IMC里的起作用，再是IA里起作用。（比如：IMC、IA里都配了Negate，那么最终的值就是正的。）</strong></p>
+<p><strong>如果有一个重攻击的Action，在IA里配上相应的全局Trigger，在各个不同的IMC里只需要改按键，不需要每一个再配一套Trigger。（IA全局 IMC当前）</strong>实践</p>
+<p><strong>IMC BindAction</strong></p>
+<ul>
+<li>初始情况应该在哪里开始应用IMC</li>
+<li>后续运行时在蓝图中如何切换IMC</li>
+<li>何时Remove IMC</li>
+<li>在哪里绑定Action和Axis</li>
+<li>在蓝图中如何BindAction</li>
+</ul>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><h2 id="初始情况应该在哪里开始应用IMC"><a href="#初始情况应该在哪里开始应用IMC" class="headerlink" title="初始情况应该在哪里开始应用IMC"></a>初始情况应该在哪里开始应用IMC</h2><p><img src="./../../pic/picture/0082-UeIA/v2-4037e152140876e3800cf68d38768362_1440w.jpg" alt="img"></p>
+<p><img src="./../../pic/picture/0082-UeIA/v2-f2f175577bf19f63d64f7af8a8c782d5_1440w.jpg" alt="img"></p>
+<h2 id="何时Remove-IMC"><a href="#何时Remove-IMC" class="headerlink" title="何时Remove IMC"></a>何时Remove IMC</h2><p><img src="./../../pic/picture/0082-UeIA/v2-edeb4eaffc48573ccc93b6afaa620d01_1440w.jpg" alt="img"></p>
+<h2 id="IMC-BindAction最佳实践"><a href="#IMC-BindAction最佳实践" class="headerlink" title="IMC BindAction最佳实践"></a>IMC BindAction最佳实践</h2><ul>
+<li>分层的IMC设计：基本输入(移动)，武器/载具，行为/Buff </li>
+<li>Add(IMC,Priority),规划好Priority的值, IMC的Priorit体现的是Key和InputAction之间的映射关系,但是找到InputAction之后，还是依然按照InputStack的顺序来处理。</li>
+<li>Pawn上可携带多个IMC，但只Apply一个 IMC不一定跟Pawn绑定关联,可根据运行时逻辑灵活Add </li>
+<li>IMC代表输入的逻辑处理环境，BindAction代表输入事件该由谁来处理的职责</li>
+</ul>
+<p><img src="./../../pic/picture/0082-UeIA/v2-e0013a6363ac20f470b472e12b255c59_1440w.jpg" alt="img"></p>
+<h2 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h2><p><strong>调试手段</strong></p>
+<p>ShowDebug EnhancedInput 显示调试界面</p>
+<p>Input.+action ActionName Value 强制添加某个 action 的输入</p>
+<p>Input.-action ActionName 移除某 Action 的输入</p>
+<p>Input.+key key Value 添加某 Key 的输入</p>
+<p>Input.-key keyName 移除某 key 的输入</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>Lyra 待更新</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/608528503">UE5-Lyra中的输入系统（增强输入） - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/470949422"> UE5 – EnhancedInput(增强输入系统) - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV14r4y1r7nz/?spm_id_from=333.337.search-card.all.click&vd_source=bb73bfd72560f6e12e22718244d317eb">虎跳龙拿–新一代增强输入框架EnhancedInput | Epic 大钊</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/478772021">EnHanced Input - 知乎</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/10/11/0082-UeIA/">http://example.com/2025/10/11/0082-UeIA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ue 多线程与 Flush</div></div></a></div><div class="next-post pull-right"><a href="/2025/09/11/0080-UeGC/" title="ue gc"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ue gc</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-07</div><div class="title">UE 适配与多分辨率</div></div></a></div><div><a href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-06</div><div class="title">ue Slate初探</div></div></a></div><div><a href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-13</div><div class="title">ue 多线程与 Flush</div></div></a></div><div><a href="/2025/09/11/0080-UeGC/" title="ue gc"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-11</div><div class="title">ue gc</div></div></a></div><div><a href="/2025/08/27/0078-UeUBT/" title="UObject"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-27</div><div class="title">UObject</div></div></a></div><div><a href="/2025/08/27/0077-UeUObject/" title="UObject"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-27</div><div class="title">UObject</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">3.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">4.</span> <span class="toc-text">流程图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Input%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">Input处理流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%B9%B3%E5%8F%B0%E4%B8%8EInput%E5%85%B3%E7%B3%BB"><span class="toc-number">4.2.</span> <span class="toc-text">硬件平台与Input关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Trigger-%E4%B8%8E-UI-%E4%BA%8B%E4%BB%B6-%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB"><span class="toc-number">4.3.</span> <span class="toc-text">Trigger  与 UI 事件 对应关系</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPP%E7%BB%91%E5%AE%9A"><span class="toc-number">5.</span> <span class="toc-text">CPP绑定</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#QA"><span class="toc-number">6.</span> <span class="toc-text">QA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88IMC%E5%92%8CIA%E9%83%BD%E6%9C%89Triggers%E5%92%8CModifiers%EF%BC%9F"><span class="toc-number">6.1.</span> <span class="toc-text">为什么IMC和IA都有Triggers和Modifiers？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">7.</span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E6%83%85%E5%86%B5%E5%BA%94%E8%AF%A5%E5%9C%A8%E5%93%AA%E9%87%8C%E5%BC%80%E5%A7%8B%E5%BA%94%E7%94%A8IMC"><span class="toc-number">7.1.</span> <span class="toc-text">初始情况应该在哪里开始应用IMC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%95%E6%97%B6Remove-IMC"><span class="toc-number">7.2.</span> <span class="toc-text">何时Remove IMC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IMC-BindAction%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">7.3.</span> <span class="toc-text">IMC BindAction最佳实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">7.4.</span> <span class="toc-text">Debug</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate初探"/></a><div class="content"><a class="title" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探">ue Slate初探</a><time datetime="2025-11-05T16:00:00.000Z" title="发表于 2025-11-06 00:00:00">2025-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Als 使用(占坑)"/></a><div class="content"><a class="title" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)">ue Als 使用(占坑)</a><time datetime="2025-10-22T16:00:00.000Z" title="发表于 2025-10-23 00:00:00">2025-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 多线程与 Flush"/></a><div class="content"><a class="title" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush">ue 多线程与 Flush</a><time datetime="2025-10-12T16:00:00.000Z" title="发表于 2025-10-13 00:00:00">2025-10-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/11/0082-UeIA/" title="ue 增强输入"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 增强输入"/></a><div class="content"><a class="title" href="/2025/10/11/0082-UeIA/" title="ue 增强输入">ue 增强输入</a><time datetime="2025-10-10T16:00:00.000Z" title="发表于 2025-10-11 00:00:00">2025-10-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

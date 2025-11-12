@@ -1,0 +1,570 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Lua 5.4 数据结构 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言Lua5.4源代码剖析 - 知乎 https:&#x2F;&#x2F;blog.csdn.net&#x2F;initphp&#x2F;article&#x2F;details&#x2F;82703846 https:&#x2F;&#x2F;gitee.com&#x2F;SimanX&#x2F;lua-Chinese 数据类型有这些： https:&#x2F;&#x2F;www.zhihu.com&#x2F;column&#x2F;c_1595011738562494465 nil、boolean、number、string、use">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua 5.4 数据结构">
+<meta property="og:url" content="http://example.com/2025/07/09/0070-lua5.4Table/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言Lua5.4源代码剖析 - 知乎 https:&#x2F;&#x2F;blog.csdn.net&#x2F;initphp&#x2F;article&#x2F;details&#x2F;82703846 https:&#x2F;&#x2F;gitee.com&#x2F;SimanX&#x2F;lua-Chinese 数据类型有这些： https:&#x2F;&#x2F;www.zhihu.com&#x2F;column&#x2F;c_1595011738562494465 nil、boolean、number、string、use">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2025-07-09T01:16:49.000Z">
+<meta property="article:modified_time" content="2025-11-12T16:48:39.957Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="lua">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/07/09/0070-lua5.4Table/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lua 5.4 数据结构',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-13 00:48:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Lua 5.4 数据结构</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-09T01:16:49.000Z" title="发表于 2025-07-09 09:16:49">2025-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-12T16:48:39.957Z" title="更新于 2025-11-13 00:48:39">2025-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Lua 5.4 数据结构"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1595011738562494465">Lua5.4源代码剖析 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/initphp/article/details/82703846">https://blog.csdn.net/initphp/article/details/82703846</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/SimanX/lua-Chinese">https://gitee.com/SimanX/lua-Chinese</a></p>
+<p>数据类型有这些：</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1595011738562494465">https://www.zhihu.com/column/c_1595011738562494465</a></p>
+<p>nil、boolean、number、string、userdata、function、thread 和 table</p>
+<h1 id="动态弱类型语言"><a href="#动态弱类型语言" class="headerlink" title="动态弱类型语言"></a>动态弱类型语言</h1><p>在开始之前，我们先插入讲解一下什么是动态弱类型语言，先说一下这类语言的优缺点：</p>
+<p><em>优点：</em>对使用者来说方便阅读，不需要写许多类型相关的代码，变量不需要提前声明类型；</p>
+<p><em>缺点：</em>不方便调试，安全性比静态语言差。</p>
+<h2 id="TValue"><a href="#TValue" class="headerlink" title="TValue"></a>TValue</h2><p>TValue是所有数据结构的基础，这边可以看到Value的结构</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NjIwNzZhNWU4OWIyZDhjZGUyNmJmZDgyOGZiZGE5MzJfRDZXT1dwRlMweEtWdVRvTHI5bDdBR2ZUTVVzbnRaUzNfVG9rZW46QXk4SmJGNkdzb0R1Nzl4QXJRWGNMWEpNbmpLXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p><strong>TValue</strong>中引用了<strong>TValuefields</strong>，它是一个宏定义，我们把宏展开可以把TValue看作如下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct <span class="title class_">TValue</span> &#123;</span><br><span class="line">  union <span class="title class_">Value</span> &#123;</span><br><span class="line">    struct <span class="title class_">GCObject</span> gc;    <span class="regexp">/ collectable objects */</span></span><br><span class="line">    <span class="keyword">void</span> p;         <span class="regexp">/ light userdata /</span></span><br><span class="line">      lua_CFunction f; <span class="regexp">/ light C functions /</span></span><br><span class="line">      lua_Integer i;   <span class="regexp">/ integer numbers /</span></span><br><span class="line">      lua_Number n;    <span class="regexp">/ float numbers */</span></span><br><span class="line">    &#125; value_;</span><br><span class="line">  lu_byte tt_;</span><br><span class="line">&#125; <span class="title class_">TValue</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中<strong>lu_byte</strong>类型的<strong>tt_<strong>即为我们上述所说的”<strong>type</strong>“字段，</strong>Value</strong>类型的**value_**则分别用于表示相应的数据。</p>
+<p><strong>lu_byte</strong>的定义<em><strong>《limits.h》</strong></em>为<strong>unsigned char</strong>，英文注释中说用char是因为各个平台中存储一个char一般只需要最小的存储单位，而lua中变量的类型不多，不需要太多内存用几个位就能区分完，所以使用char做类型的存储。我们这里不需要把char理解为字符类型，可以简单把他当作<strong>1个字节</strong>即8位的内存片段就好了，见源码<em><strong>《llimits.h》</strong></em>类型定义：</p>
+<p>我们再看声明为<strong>Union</strong>的<strong>Value</strong>字段，我们知道Union内部声明的变量是<strong>互斥</strong>只能使用其中一个的，Union为内存中的一个片段，其真实运行时的类型为Union内定义的其中一个，而Value value_占用的内存则由Union中声明的类型中<strong>占用内存最大</strong>的那个来决定。</p>
+<h2 id="union——联合体"><a href="#union——联合体" class="headerlink" title="union——联合体"></a>union——联合体</h2><p>为了让更多同学看明白清楚，这里插入一个简单例子讲解一下Union的用法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> intOrBoolean&#123;</span><br><span class="line">  bool bValue;</span><br><span class="line">  <span class="type">int</span> iValue1;</span><br><span class="line">  <span class="type">int</span> iValue2;</span><br><span class="line">&#125;t;</span><br><span class="line"></span><br><span class="line">我们可以这样用：</span><br><span class="line"> t.bValue <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">  <span class="comment">-- do something with bool value t.bValue</span></span><br><span class="line">或者</span><br><span class="line">  t.iValue1 <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line">  <span class="comment">-- do something with int value t.iValue1</span></span><br><span class="line">或者</span><br><span class="line">  t.iValue2 <span class="operator">=</span> <span class="number">200</span>;</span><br><span class="line">  <span class="comment">-- do something with int value t.iValue2</span></span><br><span class="line"> 但我们无法同时使用<span class="keyword">Union</span>中的多个值:</span><br><span class="line"> t.iValue1 <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"> t.iValue2 <span class="operator">=</span> <span class="number">200</span>;</span><br></pre></td></tr></table></figure>
+
+<p>  若同时对iValue1和iValue2赋值，</p>
+<p>  在内存中，后赋值的变量会覆盖掉前赋值的变量所在的内存区块；</p>
+<p>  在iValue2赋值完成后bValue和iValue1都变为无意义状态。</p>
+<p>  所以更不可能有 t.iValue1 + t.iValue2 这样的操作出现。</p>
+<p> 在内存占用方面：</p>
+<p> bool bValue 布尔占用1字节；</p>
+<p> int iValue1,iValue2 整型占用4字节；</p>
+<p> 所以取他们中的最大值4字节。</p>
+<p> 所以这个intOrBoolean在内存中占用4字节，就算只用bValue也是占用4字节。</p>
+<p>我们回来再看一下Value这个结构体，其中声明的<strong>gc</strong>, <strong>p</strong>, <strong>f</strong>字段都可以简单理为一个<strong>指针</strong>，指针在32位平台占用4个字节，在64位平台占用8个字节。然后<strong>i</strong>字段为整型，<strong>n</strong>字段为浮点型，具体占用多少空间则根据编译时的自己的使用的宏进行选择决定。也可以先简单理解为4或8个字节。</p>
+<p>所以TValue这个结构体占用的内存空间，在不考虑内存对齐的情况下，就是tt<em>字段sizeof(unsigned char) 1个字节 + value</em>字段4或8个字节，即为5或9个字节。</p>
+<p>讲完union，我们接着继续学习bool布尔类型。</p>
+<h2 id="lu-byte-tt"><a href="#lu-byte-tt" class="headerlink" title="lu_byte tt_"></a>lu_byte tt_</h2><p>我们可以看到Value结构体中并没有类似<strong>整型</strong>和<strong>浮点</strong>那样像<strong>lua_Boolean b</strong>这样声明方式，那么布尔类型的实际值难道不是存放在<strong>value_<strong>这个Union字段中吗？事实上，确实也不是，为了减少判断和内存的寻址，在Lua中，布尔的值直接存放在类型字段</strong>tt_<strong>中了。我们接下来详细讲解一下</strong>lu_byte tt_<strong>字段, tt在源码中英文为</strong>type tag</strong>，即类型标记：</p>
+<p>**lu_byte tt_**字段占用一个字节（8位），lua中充分利用了每一个位，各个位都有其不同的含义：</p>
+<p><em><strong>bit 0 ~ bit 3</strong></em>： 这里4个位，2的4次方即可以代表16个数值，用于存储变量的<strong>基本类型</strong>，变量的基本类型即为本文开始时图1中类型枚举中0到8分别代表的nil到thread。</p>
+<p><em><strong>bit 4 ~ bit 5</strong></em>:     这里2个位，2的2次方即可以代表4个数值，用于存放<strong>类型变体</strong>，类型变体也属于它0到3位所对应的的基本类型。</p>
+<p><em><strong>bit 6</strong></em>: 这里1个位，2的1次方即可以代表2个数值，用于存储该变量是否可以<strong>垃圾回收</strong>，后面学习垃圾回收算法的时候再详细学习。</p>
+<p>8个位的tt_字段中，lua用了其中0到6共7个位，真是利用得够充分的。</p>
+<h1 id="Boolean——布尔类型"><a href="#Boolean——布尔类型" class="headerlink" title="Boolean——布尔类型"></a>Boolean——布尔类型</h1><p>我们由浅入深，先说最简单的类型：布尔类型。</p>
+<p>如果我们有其它的编程语言基础，我们知道布尔类型就是true或者false，分别代表真和假，一般在内存中占用最小单位1个字节进行表示。</p>
+<h2 id="tt"><a href="#tt" class="headerlink" title="tt_"></a>tt_</h2><p>布尔类型，刚刚提到它的值是存在tt_这个类型字段中，实际中它就是通过声明类型变体的方式进行实现的。</p>
+<p>源码（lobject.h）中会有下面定义：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> makevariant(t,v)  ((t) | ((v) &lt;&lt; 4))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_VFALSE  makevariant(LUA_TBOOLEAN, 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_VTRUE  makevariant(LUA_TBOOLEAN, 1)</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看得出来这里为布尔类型声明了两个<strong>类型变体</strong>，用第<strong>5</strong>位0代表false，1代表true。布尔的基本类型值为LUA_TBOOLEAN为1，看前4位，与第5位的值，看得出来tt_ 若为（高位在左） 0000 0001，即为false；若为 0001 0001，即为true。</p>
+<p>判断布尔变量的宏定义见源码<em>《lobject.h》</em>：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjU3MjNjOTNjOGE5ODY1N2UxY2Q1NGU3NDcwNjE2YjFfMEQwZjZaam1ZU0ZsT1ZVazhObm5jZWRoc3pWcEJQMldfVG9rZW46Q1ZubWJlcjI3b0NRZFJ4Q1Nxa2NCZ2FKbkxlXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<h2 id="TValue-1"><a href="#TValue-1" class="headerlink" title="TValue"></a>TValue</h2><p>因为存储的直接用变体形式 则TValue 不存在</p>
+<h1 id="数字类型-Int-and-Float"><a href="#数字类型-Int-and-Float" class="headerlink" title="数字类型 Int and Float"></a>数字类型 Int and Float</h1><h2 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h2><p>数字我们都知道是什么，在编程上面，数字分为<strong>整数</strong>和<strong>浮点数</strong>两种。</p>
+<p> int iValue = 1; //整数</p>
+<p> float fValue = 3.14f; //浮点</p>
+<p>Lua在<strong>5.3</strong>版本之前，在底层实现中，所有数字都是<strong>浮点数</strong>，没有<strong>整数</strong>的概念，整数在通过浮点数（<strong>IEEE</strong>表示法）存储，会产生<strong>浮点误差</strong>。</p>
+<p>而在Lua5.3版本开始，Lua添加了对整数的支持，让整数从浮点中独立出来，不再使用浮点数进行表示，并支持了<strong>位运算</strong>这类整数运算的操作符。</p>
+<p>上文对布尔类型的讲解中我们提到Lua中每个基础对象会需要存储其类型标识 <strong>type tag</strong>(简称tt)，见源码*<strong>《lua.h》*<strong>，可以看到数字类型的tt枚举值为</strong>LUA_TNUMBER</strong>（对应数字3）。</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OTgwYzRjY2QyMjJhYWI1MjgxMDM5MWI1OTg5YzFhM2VfSmYyT0pYa0NkdTF5bVE4aGt1RHd1ejBOUTBmaWlwTHJfVG9rZW46UW50ZmJMQ2pZb0o0SER4MGlLRWNpeEV0bkVoXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>我们说数字分为整型和浮点，他们都属于<strong>LUA_TNUMBER</strong>，像布尔值通过类型变体区分true和false的方式一样，数字类型也是通过<strong>类型变体</strong>来区分整型和浮点。</p>
+<p>见源码<em><strong>《lobject.h》*</strong>, 类型变体</em>*LUA_VNUMINT<strong>即为</strong>整型<strong>，而</strong>LUA_VNUMFLT<strong>即为</strong>浮点型**：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OGUxNDNkNzQ5MGRlN2M2NmVhY2EyOWQzYTJlMTNjYjJfR1hSVWJvdVFpM2FLR0hDb1M2YnBaOG5DUGlldlZoQW9fVG9rZW46UlhPSmI0WVpmb1prNEV4ZUE2d2NWZ2lRbkVkXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<h2 id="tt-1"><a href="#tt-1" class="headerlink" title="tt_"></a>tt_</h2><p>我们再次复习一下，对象类型标识type tag(tt)字段共<strong>8</strong>位，前4位用于代表基本类型，此处即为LUA_TNUMBER（3, 二进制为11），第5位用于表达类型变体，而makevariant 函数即是用于修改前4位之后的数值：</p>
+<p>所以tt字段，整型LUA_VNUMINT的2进制8个位的具体值即为 <strong>0000 0011</strong> ；</p>
+<p>浮点型LUA_VNUMFLT则为：<strong>0001 0011</strong> 。</p>
+<h2 id="TValue-2"><a href="#TValue-2" class="headerlink" title="TValue"></a>TValue</h2><p>数字类型与布尔类型不同的是，数字类型除了要定义这个类型标识以外，还需要存储实际的数值。说到这里，我们再重新看一下TValue中Value字段的定义，可以看到里面有 <strong>i</strong> 和 <strong>n</strong> 两个字段：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MWQzYTM5MTFkYzQ3NWMyN2VkNmZkZjUxMGRiNGI0MzRfUTkxRHFxU2pWeTFFVnY3dU5aWEpsNzZscXNVM0xEaFRfVG9rZW46Vnl4eWJTVVR0b3FxeDZ4dzNiZGM0QzZPbmliXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图4</p>
+<p>如英文注释的字面意思，这个Union联合体Value中的 i 字段即是用来存储整型， n 用于存储浮点型。lua_Number这里不能按英文意思，<strong>单指浮点类型</strong>；而lua_Integer则单指整型。</p>
+<p>所以，用于设置整数或者浮点数的方法也呼之欲出了，见***《lobject.h》***：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MDVlOTQ5ZjM4MTU1MDk4ZWM0OTE1OGI0NjY4MzQwNjlfZEVEM3JUeHRMSFE0dERVT2NxRkdiVXhjNU5LN2NVaUhfVG9rZW46RFhRUmJtSkFLb3pyaWp4WFplc2NVR3Z6bjhmXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图5</p>
+<p>val<em>宏的作用即为取Value的value</em>字段：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=Mzg5YmVhOTFmMDllNWI3ZTQzNmQxNDk5YjQ2MTM4MTNfS1FnV3pwVUc0RFFpc1g5UWpBeGJyNHVLcXRMNUJENUhfVG9rZW46TWpXaGJpUUhWb2xPekZ4ZVQ1OWN1V2xobk5nXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图6</p>
+<p>所以存储一个数字类型需要先设置 <strong>value_<strong>字段中的</strong>n</strong>字段（整型）或者 <strong>i</strong> 字段（浮点型），然后用settt_宏设置type tag(tt)字段为对应上面所说的值<strong>LUA_VNUMFLT</strong>或者<strong>LUA_VNUMINT</strong>。</p>
+<p>除了set函数，上图中的chg(代表change)开头的函数用于修改数值，用于相同类型操作，单纯改变数值，不改变tt。</p>
+<h2 id="默认数据类型"><a href="#默认数据类型" class="headerlink" title="默认数据类型"></a>默认数据类型</h2><p>接下来我们再看一下代表整数的lua_Integer 和 代表浮点数的lua_Number 在底层到底是什么样的数据类型。</p>
+<p>源码***《lua.h》***中声明lua_Number为LUA_NUMBER，而lua_Integer的为LUA_INTERGER。</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NTk3MzgwMDBiMDMwNzk1YzY5OTg5NmQ5NjE3MjJkNTBfQnowekRJaHNadG9IdFFkWlp3UVQwc1czb1FQRUFmOFFfVG9rZW46V0pPN2JRV1JRb3NpY0N4YXc2b2NQVkRWbnlnXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图7</p>
+<p>再继续深入学习它们的定义，这里我们先看源码***《luaconf.h》***这个地方：</p>
+<p>图8</p>
+<p>上图表示整型有3种：int, long, long long；默认long long Windows可以使用__int64</p>
+<p>浮点型也有3种: float, double, long double。 默认double</p>
+<p>然后箭头所指表示当前使用的默认类型，看注释可见Lua5.4默认为<strong>64</strong>位，然后整型使用<strong>long long</strong>，浮点型使用的是<strong>double</strong>。</p>
+<p>还是源码***《luaconf.h》***下面部分则有真正的类型声明：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MzdhYWEzMzQ2MTVhNTc2NWIwMTA5YjYxYTlmMDk3M2VfTlc2YW1pNk44VmtIb0ZQU0syYWN4QU9QQmpnQVpiSFNfVG9rZW46WnhBRmJGSkpZbzEzSU14V3RtbWNZN2h2bmZmXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图9</p>
+<p>可见默认定义LUA_INT_LONGLONG最后就是对应long long类型。另外看另一个箭头可以看得出来在Windows平台上整型会使用__int64类型。</p>
+<p>浮点的定义也是类似，默认的LUA_FLOAT_DOUBLE会被定义为类型double，这里不再赘述：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YzhjNzhlYWVmY2I0MGQ4YTBkMGU0ODQzNTUyZTlhMjFfTThENmZSZ1lpSzRhOWRLMUM1aklTZ01GVFBYTU1tZ0dfVG9rZW46R1NPbGJVTGEzb2RrSFp4Z2RabmNlN1hSblViXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图10</p>
+<h1 id="字符串-String"><a href="#字符串-String" class="headerlink" title="字符串 String"></a>字符串 String</h1><h2 id="tt-2"><a href="#tt-2" class="headerlink" title="tt_"></a>tt_</h2><p><em>《lua.h》</em>字符串的基础数据类型的枚举为<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=220522979&content_type=Article&match_order=1&q=LUA_TSTRING&zhida_source=entity">LUA_TSTRING</a>，对应数值4</p>
+<p>在LUA中，为了有更好的性能，在底层实现中字符串分为两种：一种为短字符串，一种为长字符串，对应两种类型变体<em>《lobject.h》</em>：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzkzY2ZmYTk3OTQxMGIyZTI1YzU3NmVmZGExNjQyZGVfMTFtS08zMmZaTTF6UEdJZEx0eVRuQWZ2akhSM0tSRFZfVG9rZW46TEFXZ2JnRDR6b0pRVGt4ZG5WbGMxQm1Pbk9lXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<h2 id="TValue-3"><a href="#TValue-3" class="headerlink" title="TValue"></a>TValue</h2><p>用类型TString初始化创建一个TValue令其为字符串的函数如下：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjMyN2Y1MTM2MTc2YTMzODkyMTMyYTU5MzJhNjdmYjFfeTdvQkhHa2RiTm1FY3RpZHJPcFpFSXBXOGNPcFg4c0NfVG9rZW46TUVSamJPaUVJb21aTXp4am83V2M1d3ZsblFlXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图6</p>
+<p>上图的TValue* io即为需要返回的TValue，主要做两件事：</p>
+<p>1）设置io的value字段里面的gc字段指向这个TString字符串；</p>
+<p>2）标记type tag(tt)为IS_COLLECTABLE可回收。</p>
+<p>CommonHeader宏定义：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=M2M4MGFiMzkzZThlZjk1OTJiZTM4ZjAwNjhjMjlkMzFfR0VWTnNsUFBZcXZsYTlyZHlVVXI1N0Vxelg1NFU4MjhfVG9rZW46RU02QmJoNFp0bzNvZnh4c1RmN2NDeWp5bk5kXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>图7</p>
+<p>所有可以被GC垃圾回收的对象结构都会有这个宏加在结构体头部，我们这里先不深入。也正是因为有这个GC对象头部，TValue中的GC指针才能指向同样有此GC头部的TStringcf对象。</p>
+<h2 id="类型字段含义"><a href="#类型字段含义" class="headerlink" title="类型字段含义"></a>类型字段含义</h2><p>短字符串会用到的字段，用到了下面括号（1~4）共4个变量</p>
+<p>1）<strong>shrlen：</strong>表示<strong>短字符串</strong>的长度，lua_byte代表短字符串最长为<strong>8</strong>位即长度最长可为2的8次方即<strong>256</strong>；</p>
+<p>（2）<strong>hash：</strong>代表字符串的<strong>哈希值</strong></p>
+<p>（3）<strong>stringtable：</strong>哈希表，冲突解决方案为链表法。u在短字符串中使用<strong>hnext</strong>字段，用于指向缓冲短字符串的哈希表中的下一个元素。</p>
+<p>（4）<strong>contents：</strong>指向这个字符串char[]数组的第一个字符，用于访问该字符数组。</p>
+<p>长字符串则会用到下面括号（1~4）共4个变量：</p>
+<p>（1）<strong>extra：</strong>表示该字符串是否已经计算过哈希值，0代表没有计算过，此时hash字段无意义，使用前需要先进行一次计算。1代表已经计算过，此时hash字段是contents所指向字符串的哈希值；</p>
+<p>（2）<strong>hash：</strong>代表字符串的哈希值；</p>
+<p>（3）<strong>u</strong>：在长字符串中使用lnglen字段，代表长字符串的长度，类型为size_t，足以表示上亿的长度。</p>
+<p>（4）<strong>contents：</strong>跟短字符串一样，表示指向这个字符串char[]数组的第一个字符，用于访问该字符数组。</p>
+<h2 id="为什么要有短字符串"><a href="#为什么要有短字符串" class="headerlink" title="为什么要有短字符串"></a>为什么要有短字符串</h2><p>stringtable</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NWM4MTAxZjNkMjE4YzdlODhkMzE0Y2NhNDUzZWQwZTNfcjJtYmM2bkk0dndZSHFQYVVFS29wOTZnS05KN2FYclBfVG9rZW46QTJJcGJydXFyb0oyU1h4WEV4eWN6d3RDbkpoXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>1）<em>hash</em>：指向一个TString链表的数组，即数组里面每一个元素为一个TString链表；</p>
+<p>2）<em>nuse</em>：代表hash中实际存储了多少个TString字符串；</p>
+<p>3）<em>size</em>：代表hash的容量。</p>
+<p>这个stringtable变量是在global_State中进行定义</p>
+<p>lua运行的时候全局会有且仅有一个global_State变量</p>
+<p>会调用下面luaS_init函数进行字符串相关数据的初始化，这里会初始化stringtable和strcache缓存</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OGJlOTI4YmIyOGYyYjY5NTA5N2Y5NGYyOTcyZGE0Y2JfbWxhTGN0VE1iMklFbkl2ZFRsMHJUeVdqVnZUZzJXbjZfVG9rZW46TGV5Z2JXbzBMb0ZaeGZ4a3NVeWN5ckhCbkxlXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>tb-&gt;hash = luaM_newvector(L, MINSTRTABSIZE, TString*); </p>
+<p>初始化这个hash数组第一维的大小为MINSTRTABSIZE 128</p>
+<p>字符串TString通过size_t l长度进行创建的接口luaS_newlstr</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjYzZjUwZTE1ZDQ2ODYyYzNkMTI0ODBiZTk3ZDMwNDNfUjFjR1Y4SDRETVpsOHdmR2Z3Y0RGNVFUalVGYk91RVNfVG9rZW46T2xKMmJGVjFmb09VQzd4RkZ1RGNoTjhCbkJkXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>若要创建的字符串长度小于等于LUAI_MAXSHORTLEN（40），即视作创建短字符串</p>
+<p>调用的创建短字符的接口internshrstr如下</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MmMxOWNlNWJmMzcyMDJhMWRkNjYwY2I3NDI4ODEwZDRfSkJ5U1BtODhtQndvRVlRRTkzM0ptR1FNWGVaTmRtUDVfVG9rZW46S3NUUmJ5eDc4b3cyRE94aGtJamNPRW9sblhkXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>（1）char* str是我们用来创建TString的字符数组，首先计算它的哈希值，并根据hash的size进行模运算使其在合理数组长度范围内</p>
+<p>（2）遍历这个TString列表list，根据长度和逐字符判断要创建的值是否已经在list中存在，如果是的话则直接返回进行复用</p>
+<p>（3）观察hash中num是否达到size，hash冲突使用链表展开，growstrtab会进行双倍扩容。</p>
+<p>（4）调用 createstrobj 放入短字符串 链接hash的key</p>
+<ul>
+<li>luaS_createlngstrobj创建长字符串</li>
+</ul>
+<p>使用createstrobj 并extra赋值为0，extra如果为0代表该字符串哈希值还无意义，在使用时需要重新计算</p>
+<p>因为计算哈希值需要遍历字符串中的每一个字符，而长字符串字符较多，所以长字符串为了创建的时候能更快速，并没有直接在创建时计算出来哈希值，而是通过<strong>extra</strong>作为<strong>延迟处理</strong>标记，用到的时候再进行计算，在Lua5.4版本的代码实现中，目前只会在长字符串作为Table的Key值的时候，才会去计算其哈希值。</p>
+<p>luaS_New</p>
+<p>在此之前代码做的事情就是简单地通过地址判断字符串是否已经在缓存中，point2uint(str)</p>
+<p>访问r的G(L)-&gt;strcache为字符串根据地址的缓存数组，也是全局唯一</p>
+<p>大小是一个TString[53][2]的一个二维数组</p>
+<p>短字符串的stringtable是个缓存，与此相比，这个strcache也是缓存，而更像是1级缓存，然后stringtable相当于短字符串的2级缓存。</p>
+<h2 id="Strcache"><a href="#Strcache" class="headerlink" title="Strcache"></a>Strcache</h2><p>即是类似C# string 的不可变性</p>
+<h1 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/595807320">https://zhuanlan.zhihu.com/p/595807320</a></p>
+<p><em>《lua.h》</em>表的基础数据类型的枚举为LUA_TTABLE，对应数值5</p>
+<h2 id="tt-3"><a href="#tt-3" class="headerlink" title="_tt"></a>_tt</h2><p>tt二进制8位为：0000 0101。</p>
+<h2 id="TValue-4"><a href="#TValue-4" class="headerlink" title="TValue"></a>TValue</h2><p>表是存储在Value中的gc字段指向的内存地址空间中，对象类型名字叫作”Table”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Table *x_ = (x);</span><br><span class="line">val_(io).gc = obj2gco(x_);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Table结构"><a href="#Table结构" class="headerlink" title="Table结构"></a>Table结构</h2><p>CommonHeader,能上相当于Table对象继承自GCObject（前面讲string有讲过）</p>
+<p>表能同时充当数组和字典，注意，这里是支持“同时”！</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Table</span> &#123;<span class="comment">//GC对象通用头部定义</span></span><br><span class="line">  CommonHeader;<span class="comment">// 这几个字段暂时先不管</span></span><br><span class="line">  lu_byte flags; <span class="comment">//元表字段查询标记</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">Table</span> *metatable; <span class="comment">//元表</span></span><br><span class="line">  GCObject *gclist; <span class="comment">//垃圾回收相关</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/////////// 数组相关变量声明</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> alimit; <span class="comment">// 数组长度</span></span><br><span class="line">  TValue *array;  <span class="comment">// 指向数组的指针</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">//////////// 字典相关变量声明</span></span><br><span class="line">  lu_byte lsizenode;  <span class="comment">/* 存储字典容量log2后的值 */</span>Node *node; <span class="comment">// 指向字典首个结点的指针</span></span><br><span class="line">  Node *lastfree; <span class="comment">// 上一次空的结点位置</span></span><br><span class="line">&#125; Table;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Table的创建"><a href="#Table的创建" class="headerlink" title="Table的创建"></a>Table的创建</h2><p><em>《ltable.c》luaH_new和luaH_free是表的创建与删除函数</em></p>
+<p>初始化数组部分 是直接  t-&gt;array = NULL; 而没有用一个默认长度初始化。</p>
+<p>字典初始化setnodevector(L, t, 0) 传入一个size为0 即为初始化。</p>
+<p>所以空表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">local t = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内存占用不会太大</p>
+<h2 id="Table中元素的操作"><a href="#Table中元素的操作" class="headerlink" title="Table中元素的操作"></a>Table中元素的操作</h2><p>对于Table中每个元素，都称为一个槽位（Slot），槽位指向数组or字典部分，根据类型查询or插入实际的数据。</p>
+<p>查询：</p>
+<ul>
+<li><em>《ltable.c》luaH_get</em> 返回参数key的槽位<ul>
+<li>若 tt==（短字符串，整数，浮点，nil）则调用特殊get函数，其他调用默认get函数getgeneric（）</li>
+</ul>
+</li>
+<li><h2 id="getgeneric（）-查询key是否在hash中"><a href="#getgeneric（）-查询key是否在hash中" class="headerlink" title="getgeneric（） 查询key是否在hash中"></a>getgeneric（） 查询key是否在hash中</h2></li>
+</ul>
+<p>修改：</p>
+<p>luaH_set ：先用luaH_get 获取tt 后赋值</p>
+<h2 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h2><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lu_byte lsizenode;  /* 存储字典容量log2后的值 */</span><br><span class="line">Node *node; // 指向字典首个结点的指针</span><br><span class="line">Node *lastfree; // 上一次空的结点位置</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化 setnodevector（）<ul>
+<li>size向上取整2次幂，然后初始化kv都为nil </li>
+<li>每一个节点都是Node</li>
+<li><em>Key：NodeKey {key_tt，key_val}</em> </li>
+<li>Val：<em>i_val</em></li>
+</ul>
+</li>
+<li>哈希函数，在getgeneric（）第一行的mainpositionTV（）计算</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Node *n = mainpositionTV(t, key);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>简单的介绍一下hashint（）</li>
+</ul>
+<p>对lsizenode2次幂减1取模（最后按位或1，是为了保持要用来取模的数字是不为0，是大于等于1的数）</p>
+<ul>
+<li>哈希冲突：链地址 开放寻址</li>
+<li>开放寻址<ul>
+<li>冲突在luaH_set（）中调用luaH_finishset（）</li>
+<li>luaH_finishset（）调用 luaH_newkey()<ul>
+<li>功能包含了槽位定位，哈希处理，哈希表扩容，槽位设置数据。</li>
+<li>也就是开放寻址法的落地</li>
+<li>寻找空槽位在getfreepos（）中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjFhN2JmY2Y0MDJiODk0OThmOWY4OWQ3NWE0N2E4NzhfajZId0tlTEtvOFFYUnpPalRrSmRqT2s0RGx0S1Q5RnhfVG9rZW46T0g5U2JkQTRkb21jb0l4eEJzQ2NTcW9qbjhkXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<h2 id="扩容Rehash"><a href="#扩容Rehash" class="headerlink" title="扩容Rehash"></a>扩容Rehash</h2><h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组需要满足：2 的幂次方扩容”和“使用率超过 50%</p>
+<p>满足：<strong>数组部分的结点数量必须要大于数组长度的一半。</strong></p>
+<p>则迭代</p>
+<p>迭代中止后，以满足条件可以放入数组部分的数量，修正返回的na值，na值为最大合法数组长度时的整数key数量，若没有合法长度，则修正为0；</p>
+<p>那么</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">local t = &#123;&#125;</span><br><span class="line">t[<span class="number">5</span>] = <span class="string">&quot;hello&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>是存在hash还是array呢？</p>
+<p>一开始na（<em>需要放入数组部分的元素个数</em>）= 1</p>
+<p>数组扩容为1：<code>na &gt; (1 / 2)</code> =&gt; <code>1 &gt; 0.5</code> ，key=5不属于[1,1]</p>
+<p>数组扩容为2：<code>na &gt; (2 / 2)</code> =&gt; <code>1 &gt; 1</code>，不满足</p>
+<p>所以这个元素是在hash中</p>
+<p>它不会为了一个稀疏的、孤立的整数键（比如 <code>t[1000000] = v</code>）而分配一个巨大的数组，从而有效地节省了内存</p>
+<h3 id="哈希表-1"><a href="#哈希表-1" class="headerlink" title="哈希表"></a>哈希表</h3><p>1）统计插入当前新元素前所有Key的数量，令为totaluse；</p>
+<p>2）totaluse加1 （因为当前准备要插入新的元素，预留多一个位置给当前将要插入的元素）；</p>
+<p>3）令所有key为整数的数量为na（如果新插入的元素的键也是整数，则也统计上）；</p>
+<p>4）哈希表长度即为totaluse - na，然后向上取最近的2次幂即为实际哈希表分配长度。</p>
+<p>在本例t[5] = “hello” 中算法执行逻辑如下：</p>
+<p>1）在插入该新元素前，table为空，所以totaluse为0；</p>
+<p>2）准备插入新元素，totaluse + 1，所以totaluse为1；</p>
+<p>3）在插入该新元素前，key为整数的数量为0，所以na为0；</p>
+<p>4）准备插入的新元素的key为整数，所以na + 1，所以na为1；</p>
+<p>5）经过我们上述的computesizes算法计算，没有合法数组长度，na被修正为0;</p>
+<p>6）最终哈希表长度即为totaluse - na，即1-0为1;</p>
+<p>所以 t[5] = “hello” 这句代码会创建出长度为1的哈希表。</p>
+<h1 id="MetaTable"><a href="#MetaTable" class="headerlink" title="MetaTable"></a>MetaTable</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/595829550">https://zhuanlan.zhihu.com/p/595829550</a></p>
+<p>见源码<em>《lobject.h》</em>Table中的metatable</p>
+<p>Struct Table* metatable；</p>
+<p>元表相关的方法都叫元方法，源码中大多以<strong>tm（tag method）</strong>开头</p>
+<p>源码<em>《ltm.h》</em>中有注册元方法的枚举值TMS(tag methods)，枚举值对应的key（string）见luaT_eventname。</p>
+<h2 id="元方法"><a href="#元方法" class="headerlink" title="元方法"></a>元方法</h2><h3 id="index"><a href="#index" class="headerlink" title="__index"></a>__index</h3><p>Table 在查询自身不存在的key的时候会调用该函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">local t = &#123;&#125;</span><br><span class="line">local <span class="type">metatable_t</span> = &#123;&#125;</span><br><span class="line"><span class="built_in">setmetatable</span>(t, <span class="type">metatable_t</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以这样重定义元方法</p>
+<p>metatable_t.__index = { [1] = “hello 1”,[2] = “hello 2”,}</p>
+<p>在调用 print(t[1]) 可以打印 hello 1</p>
+<ul>
+<li><em>luaV_finishget</em> <ul>
+<li>会去访问’val = t[key]’ 而在这边会回调 __index</li>
+<li>利用tm 进行去 获得元方法的指针（TValue *）会赋值与以下四点<ul>
+<li>若为非table类型变量，则调用自身的__index元方法。</li>
+<li>若为table类型变量，则去查询metatable的__index，若无metatable or metatable 无 __index 则 返回空，若有返回值则为tm</li>
+<li>若tm为函数，则调用该函数</li>
+<li>若tm为table，则尝试去key从tm这个table中获取val</li>
+</ul>
+</li>
+<li>上面这个tm判定会在一个for中，这个for相当于递归的上层，这边代表可以支持多层级递归。</li>
+</ul>
+</li>
+</ul>
+<h3 id="newindex"><a href="#newindex" class="headerlink" title="__newindex"></a>__newindex</h3><p>table在设置一个自身还不存在的键的值的时候会调用__newindex元方法来完成设置</p>
+<p><em><strong>用法1（函数方式）</strong></em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">local t = &#123;&#125;</span><br><span class="line">local <span class="type">metatable_t</span> = &#123;</span><br><span class="line">    __newindex = <span class="built_in">function</span>(tt, key, value)</span><br><span class="line">        <span class="built_in">rawset</span>(tt, key, value)</span><br><span class="line">    end,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>用法2（table方式）</strong></em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">local t = &#123;&#125;</span><br><span class="line">local newIndexTable = &#123; </span><br><span class="line">    [<span class="number">1</span>] = <span class="string">&quot;hello in metatable_t __newindex&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line">local <span class="type">metatable_t</span> = &#123; </span><br><span class="line">    newindex = newIndexTable, </span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">setmetatable</span>(t, <span class="type">metatable_t</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>luaV_finishset </li>
+</ul>
+<p>同index 在 luaV_finishset 中 也一样 会触发不同的tm情况</p>
+<h3 id="gc"><a href="#gc" class="headerlink" title="__gc"></a>__gc</h3><p><em>《lgc.c》实现，</em>在清除对象的时候会调用GCTM</p>
+<ul>
+<li>GCTM<ul>
+<li>获取__gc元方法</li>
+<li>若定义了__gc元方法，则调用此函数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="mode"><a href="#mode" class="headerlink" title="__mode"></a>__mode</h3><p>用于控制元表的数据引用方式。lua中会满足该对象没有被引用的时候才会被GC</p>
+<p><em>1)”k”:</em> 声明键为弱引用，当键引用的对象被置空时，table会清除这个结点。</p>
+<p><em>2)”v”</em>: 声明值为弱引用，当值引用的对象被置空时，table会清除这个结点。</p>
+<p><em>3)”kv”</em>: 声明键和值都为弱引用，当其中一个引用的对象被置空时，table会清除这个结点。</p>
+<p>在<em>《lgc.c》traversetable中</em></p>
+<p>会分析__mode 的值，若无值，则会标记所有kv，依次下去</p>
+<p>后会进行可达性分析，遍历所有table，标记清除table树。</p>
+<p>最后清除在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linkgclist(h, g-&gt;allweak);  /* nothing to traverse now */</span><br></pre></td></tr></table></figure>
+
+<p>中，进行GC。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> clearValue <span class="operator">=</span> &#123;&quot;123&quot;&#125;</span><br><span class="line"><span class="keyword">local</span> t <span class="operator">=</span> &#123;</span><br><span class="line">  [&quot;value_key&quot;] <span class="operator">=</span> clearValue <span class="comment">--1.这边为深拷贝</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2.声明值为弱引用 浅拷贝</span></span><br><span class="line">setmetatable(t, &#123;__mode <span class="operator">=</span> &quot;v&quot;&#125;) </span><br><span class="line"></span><br><span class="line"><span class="comment">-- set value to nil</span></span><br><span class="line">clearValue <span class="operator">=</span> nil</span><br><span class="line"></span><br><span class="line"><span class="comment">--  手动执行gc回收操作</span></span><br><span class="line">collectgarbage()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> pairs(t[&quot;value_key&quot;]) do</span><br><span class="line">  print(k, v) <span class="comment">-- 1.依旧输出123   2.输出nil</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="len与"><a href="#len与" class="headerlink" title="__len与#"></a>__len与#</h3><p><em>《ltable.c》中luaH_getn</em></p>
+<p>为#t 的底层，针对数组部分，若hash的key连着数组部分则一起计算（ipair）</p>
+<p>在Table数据结构中</p>
+<p>边界长度有关的2个变量分别为</p>
+<ul>
+<li>alimit：在大部份情况下为数组的长度（2次幂数），若不等于数组长度的时候，则数组长度为刚好比这个数大的下一个2次幂数，此时其数值为上次计算边界后缓存的返回值</li>
+<li>flags：第8位0表达当前alimit是真正的数组长度，1的话则不是</li>
+</ul>
+<h3 id="eq-相等方法"><a href="#eq-相等方法" class="headerlink" title="__eq 相等方法"></a>__eq 相等方法</h3><p>自定义相等判断方法</p>
+<ul>
+<li><em>《lvm.c》luaV_equalobj</em><ul>
+<li>没有定义__eq的话会直接通过指针地址判断两个table对象t1, t2是否相等。</li>
+<li>若t1或t2定义了__eq元方法，这里注意不需要两个table都定义，其中一个定义了即生效，则调用此元方法来做判断。</li>
+</ul>
+</li>
+</ul>
+<h3 id="add"><a href="#add" class="headerlink" title="__add"></a>__add</h3><p>自定义加法</p>
+<ul>
+<li><em>《lobject.c》luaO_arith</em><ul>
+<li>当执行加法的两个类型无法做加法运算的时候，就会尝试调用__add元方法。其它元方法的调用判断流程也是类似。</li>
+</ul>
+</li>
+</ul>
+<h1 id="UserData"><a href="#UserData" class="headerlink" title="UserData"></a>UserData</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/595959126">https://zhuanlan.zhihu.com/p/595959126</a></p>
+<p>源码<em>《lua.h》</em>，类型枚举为LUA_TUSERDATA，数值为7，二进制8位为0000 0111 没有其他变体</p>
+<ul>
+<li>UserData也可以看作为GCObject 的子类，<ul>
+<li>判断变量是否合法的时候都会使用ctb宏</li>
+<li>只有满足ctb宏IS_COLLECTABLE（第7位为1）才是合法的对象。</li>
+<li>所以一个合法的UserData类型的类型标识(type tag)8位二进制为0100 0111。</li>
+</ul>
+</li>
+<li>val_(o).gc表示UserData数据存于gc指针（GCObject*）指向的地址上</li>
+<li>gco2u(GCObject*)函数则把该指针转换为真正的对象</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> gco2u(o)  check_exp((o)-&gt;tt == LUA_VUSERDATA, &amp;((cast_u(o))-&gt;u))</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Udata"><a href="#Udata" class="headerlink" title="Udata"></a>Udata</h2><p>Udata就是UserData在源码中的具体数据类型结构</p>
+<p>union GCUnion 中有 struct Udata u； </p>
+<p>Udata 结构：</p>
+<p>luaS_newudata在C语言中创建一个userdata后，bindata这部分数据在栈顶（栈顶指针）</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzQ3YTQ2M2UzMjk4YTkzZjlkODJmZDE3ZDkyYTJiOTRfUGxtMDZTb0RERzVpZzhYandnWmtBazZPMmpiYU5ndzlfVG9rZW46RExxZGJxS1hHb1NveER4TnFoa2NWNlM4bmdjXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDM2NDMzYTM1ZGEzZjU3Y2ZhOTcxNDgxNTU1ZDMzYjVfeEN1RTd2MUtDSWZSTjV2eFRUQXU1OTRTbjRFWnVVOGxfVG9rZW46WER5aGJ5bDAwb1dLTFJ4SnpOemN5ZTFnbmNoXzE3NjExODgzNjI6MTc2MTE5MTk2Ml9WNA" alt="img"></p>
+<p>New:《<em>lstring.c》luaS_newudata</em></p>
+<p>Set: <em>《lapi.c》lua_setiuservalue</em></p>
+<p>Get:《lapi.c》lua_getiuservalue</p>
+<p>del: 通过GC清除，单独管理lua域。若c语言调用不算引用。</p>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">.lua</span><br><span class="line">local people = People.<span class="built_in">New</span>()<span class="built_in">print</span>(people.name)</span><br><span class="line"></span><br><span class="line">.c</span><br><span class="line"><span class="comment">// 只需要提前调用一次,把__name为&quot;People&quot;的元表注册到Lua</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="built_in">RegisterPeopleMetatable</span>(lua_State *L)&#123;</span><br><span class="line">    <span class="built_in">luaL_newmetatable</span>(L, <span class="string">&quot;People&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">People</span><span class="params">(lua_State *L)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">struct</span> <span class="title class_">People</span> *pPeople = (<span class="keyword">struct</span> People *)<span class="built_in">lua_newuserdata</span>(L, <span class="built_in">sizeof</span>(<span class="keyword">struct</span> People));</span><br><span class="line">     <span class="comment">// 设置上面这个UserData的metatable</span></span><br><span class="line">     <span class="comment">//为已经注册好的__name为&quot;People&quot;的元表</span></span><br><span class="line">     <span class="built_in">luaL_setmetatable</span>(L, <span class="string">&quot;People&quot;</span>);</span><br><span class="line">       </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 新的userdata已经在栈上了</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.c</span><br><span class="line"><span class="comment">//若修改一下 替换成luaL_testudata函数</span></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">InitName</span><span class="params">(lua_State *L)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 第 1 步</span></span><br><span class="line">      <span class="keyword">struct</span> <span class="title class_">People</span> *pPeople = (<span class="keyword">struct</span> People *)<span class="built_in">luaL_testudata</span>(L, <span class="number">1</span>， “People”);</span><br><span class="line">      <span class="comment">// 第 2 步</span></span><br><span class="line">      <span class="keyword">if</span>(pPeople != <span class="literal">NULL</span>)&#123;</span><br><span class="line">          pPeople-&gt;name = <span class="string">&quot;MaNong&quot;</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把lua_touserdata改成luaL_testudata函数，函数实现如下，区别在于调用lua_touserdata后，还会再获取它的元表，并判断元表中的__name字段，看是否我们参数中传进来的字符串，若相等才是我们真正期待获取的UserData并进行返回，否则返回NULL</p>
+<h2 id="LightUserData"><a href="#LightUserData" class="headerlink" title="LightUserData"></a>LightUserData</h2><p>LightUserData是指针比起(Full)UserData要简单很多。</p>
+<p>这种new 方法会将内存分配在c语言部分的堆中。</p>
+<p>C语言结构体对象的内存希望在C语言中进行分配与管理，则可以使用LightUserData，Lua只存储一个指针值；</p>
+<p>但若希望对象的内存在Lua中分配与管理，则需要使用UserData。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="type">int</span> <span class="title function_">People</span><span class="params">(lua_State *L)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// 对象分配在C语言的堆内存中，并不在Lua中</span></span><br><span class="line">  People *pPeople = <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">  </span><br><span class="line">  lua_pushlightuserdata(L, pPeople);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 新的lightuserdata已经在栈上了</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回一个指针，指向C语言堆中的People对象，</span></span><br><span class="line"><span class="comment">//函数内部会根据类型转化为UserData或LightUserData</span></span><br><span class="line"><span class="keyword">static</span> <span class="type">int</span> <span class="title function_">InitName</span><span class="params">(lua_State *L)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// 第 1 步</span></span><br><span class="line">  struct People *pPeople = (struct People *)lua_touserdata(L, <span class="number">1</span>);</span><br><span class="line">  <span class="comment">// 第 2 步</span></span><br><span class="line">  <span class="keyword">if</span>(pPeople != NULL)</span><br><span class="line">  &#123;</span><br><span class="line">    pPeople-&gt;name = <span class="string">&quot;MaNong&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Funtion"><a href="#Funtion" class="headerlink" title="Funtion"></a>Funtion</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/595965132">https://zhuanlan.zhihu.com/p/595965132</a></p>
+<p>Function即为函数，函数加上它的UpValue我们称之为闭包。UpValue可以理解为在当前函数外声明但函数内也可以访问到的变量，类似于全局变量但有一定作用域的一种数据，其中闭包又分为C类型闭包与Lua类型闭包。本文将对闭包进行详细讲解，并会讲解在Lua中如何实现函数的多返回值与尾调用。</p>
+<p>1）第一类值语言：它的函数跟数值类型，布尔类型等的地位是一样的，可被动态创建，存储与销毁。</p>
+<p>2）第二类值语言：这类编程语言不能存储函数，不能动态创建函数，不能动态销毁函数，函数在编译过后就存储于程序特定内存位置，其它地方只能存储一个指向函数的指针。</p>
+<p>Lua是第一类值语言，所以在Lua中可以动态创建销毁一个函数。接下来，我们正式开始函数的学习。</p>
+<ul>
+<li>类型枚举</li>
+</ul>
+<p>Lua中函数的基本类型枚举为<em>《lua.h》</em>LUA_TFUNCTION，数值为6，对应的8位二进制为0000 0110。</p>
+<ul>
+<li>变体</li>
+</ul>
+<p>总共有3种函数类型变体，分别用不同的参数调用了makevariant，</p>
+<p>CL是Closure（闭包）的缩写</p>
+<p>1）<em>LUA_VLCL</em>：Lua闭包，tt为：0000 0110。</p>
+<p>2）<em>LUA_VLCF</em>：C函数指针，LUA源码是用C语言实现的，这个是一个纯粹的指向一个C语言函数的指针，不带UpValue。tt为0001 0110。</p>
+<p>3）<em>LUA_VCCL</em>：C语言闭包，tt为0010 0110。</p>
+<ul>
+<li>声明<em>《lobject.h》</em></li>
+</ul>
+<p>C语言闭包<em>CClosure</em> </p>
+<p>Lua闭包，LClosure</p>
+<p>都声明了ClosureHeader 宏 -&gt;CommonHeader宏</p>
+<h2 id="Lua闭包"><a href="#Lua闭包" class="headerlink" title="Lua闭包"></a>Lua闭包</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> Main()</span><br><span class="line">  <span class="keyword">local</span> v1 <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">  <span class="keyword">local</span> inner_func <span class="operator">=</span> <span class="keyword">function</span>()</span><br><span class="line">    <span class="keyword">local</span> v2 <span class="operator">=</span> <span class="number">99</span></span><br><span class="line">    print(v1 <span class="operator">+</span> v2)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  inner_func()</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Main()</span><br></pre></td></tr></table></figure>
+
+<p>inner_func中成功访问了不在自身函数作用域内的变量v1，这个v1即为UpValue</p>
+<h2 id="Proto"><a href="#Proto" class="headerlink" title="Proto"></a>Proto</h2><p><em>《lvm.c》pushclosure</em></p>
+<p>Proto即为函数的底层数据结构，函数中也对UpValue数组进行了初始化</p>
+<p>1）lu_byte numparams：函数参数的数量。</p>
+<p>2）lu_byte maxstacksize：该函数所需要的寄存器数量。</p>
+<p>3）int sizeupvalues，Upvaldesc *upvalues：UpValue的数量与描述（描述并不是UpValue的具体数值，而只是描述UpValue的变量名字，作用域是在本函数内部还是在外层，还有一个用于定位UpValue所在位置的指针偏移值）。</p>
+<p>4）int sizek，TValue *k：k代表常量，这里分别是常量的数量与常量所存储在的数组。这里可以知道常量在Lua中也是像普通数据类型一样需要占用内存的。</p>
+<p>5）Proto **p：函数内部又定义了的其它函数，所以说Lua的函数支持嵌套定义。</p>
+<p>6）int sizecode，Instruction *code：该函数所调用的所有指令码数量和指令码数组。函数执行的时候就是按顺序跑这些的指令码。</p>
+<p>7）int linedefined，int lastlinedefined：函数的开始与结束的行。</p>
+<p>debug库</p>
+<p>1）ls_byte *lineinfo，int sizelineinfo，AbsLineInfo *abslineinfo，int sizeabslineinfo：存储函数内各条指令码的地址偏移量。若偏移值过大，则会同时记录该指令的绝对偏移值。</p>
+<p>2）LocVar *locvars：局部变量的描述。</p>
+<p>3）TString *source：该函数的源代码的字符串表示。</p>
+<h2 id="UpValue"><a href="#UpValue" class="headerlink" title="UpValue"></a>UpValue</h2><h1 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h1><p><em>《lua.h》LUA_TTHREAD  数值为8，所以8位二进制类型标识type tag(tt)为: 0000 1000。</em></p>
+<p>Thread也是可以看作GCObject的子类型，所以设置与检测一个变量类型是否为合法的Thread类型的时候也需要加上ctb宏标记当前是合法的GC可收集对象</p>
+<h2 id="lua-State"><a href="#lua-State" class="headerlink" title="lua_State"></a>lua_State</h2><p>thread是通过基础数据结构TValue的gc字段进行访问，然后它指向的真正类型为lua_State</p>
+<p>协程有着独立的堆栈，独立的局部变量，独立的指令指针，同时又与其它协程共享大部分全局数据。而这些独立的东西，正是存储于上面这个lua_State</p>
+<p>1）lu_byte status：当前状态机的状态，这里的状态与协程的状态不太一样，这里的状态的定义见如下源码<em>《lua.h》</em></p>
+<p>2）</p>
+<p>《lua.h》</p>
+<p>代表分别函数可以在以下阶段设置勾子：</p>
+<ol>
+<li><em>LUA_MASKCALL</em>: 被调用时；</li>
+<li><em>LUA_MASKRET</em>: 执行结束返回的时候；</li>
+<li><em>LUA_MASKLINE</em>: 每一行执行完后；</li>
+<li><em>LUA_MASKCOUNT</em>: 每次执行统计运行次数；</li>
+</ol>
+<h2 id="协程-Coroutine-的使用"><a href="#协程-Coroutine-的使用" class="headerlink" title="协程(Coroutine)的使用"></a>协程(Coroutine)的使用</h2><p>1）<em><strong>挂起（suspended）</strong></em>：对应枚举为<strong>COS_YIELD</strong>，当一个协程刚被创建时或遇到函数中的yield关键字时。</p>
+<p>2）<em><strong>运行（running）</strong></em>：对应枚举为<strong>COS_RUN</strong>，当协程运行时。</p>
+<p>3）<em><strong>正常（normal）</strong></em>：对应枚举为<strong>COS_NORM</strong>，当协程处于活跃状态，但没有被运行（这意味着程序在运行另一个协程，比如从协程A中唤醒协程B，此时A就处于正常状态，因为当前运行的是协程B）。</p>
+<p>4）<em><strong>死亡（dead）</strong></em>：对应枚举为<strong>COS_DEAD</strong>，当协程运行完要执行的代码时或者在运行代码时发生了错误(error)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//1)</span><br><span class="line"><span class="built_in">local</span> co1</span><br><span class="line"><span class="built_in">local</span> co2</span><br><span class="line">co1 = coroutine.create(<span class="keyword">function</span>( ... )</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;cor1:&#x27;</span>, ...)</span><br><span class="line">    //3.1)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;cor1 resume cor2 1:&quot;</span>, coroutine.resume(co2, <span class="string">&quot;param from co1 1&quot;</span>))</span><br><span class="line">    //4.2) -&gt; 5.1)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;cor1 resume cor2 2:&quot;</span>, coroutine.resume(co2, <span class="string">&quot;param from co1 2&quot;</span>))</span><br><span class="line">end)</span><br><span class="line">    </span><br><span class="line">co2 = coroutine.create(<span class="keyword">function</span>( ... )</span><br><span class="line">    //3.2)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;cor2:&#x27;</span>, ...)</span><br><span class="line">    //4.1)</span><br><span class="line">    <span class="built_in">print</span>(coroutine.yield(<span class="string">&quot;param from co2&quot;</span>))</span><br><span class="line">    //5.2</span><br><span class="line">end)</span><br><span class="line"></span><br><span class="line">//2) -&gt; 6)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main:&quot;</span>, coroutine.resume(co1, <span class="string">&quot;param from main&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>1）首先通过coroutine.create创建了两个协程co1,co2。</p>
+<p>2）接着调用coroutine.resume(co1, “param from main”)，使co1由创建时候的suspended状态切换到running状态，co1对应函数开始执行，调用resume的后面的参数则直接作为运行co1函数的传入参数，所以第一个打印为”co1:    param from main”。</p>
+<p>3）co1在running状态下又调用了resume(co2)，并输入参数”param from co1 1”，这时候co1由running状态切换到normal状态，co2由resume状态切换到running状态。所以第二个打印为”co2:    param from co1 1”。</p>
+<p>4）接下来在co2的执行中调用了coroutine.yield，co2由running状态切换到suspended状态，co2把 “param from co2” 返回给上次resume它的那个协程，所以控制权又回到了co1，co1由normal状态再次进入runner状态，此时输出第三个打印”cor1 resume cor2 1:true param from co2”。</p>
+<p>5）co1再次resume co2，co2此时再次由suspended状态进入到running状态，而由于co2函数已经执行完毕，所以co2进入dead状态，并再次返回给co1，此时在co1中输出第4个打印：”cor1 resume cor2 2:true”。</p>
+<p>6）co1执行完毕，进入dead状态，返回到外部主函数，输出最后一个打印”main:true”。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/07/09/0070-lua5.4Table/">http://example.com/2025/07/09/0070-lua5.4Table/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/lua/">lua</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/07/17/0071-UEBlastj/" title="UE- Blast"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UE- Blast</div></div></a></div><div class="next-post pull-right"><a href="/2025/06/17/0069-UeUMG/" title="UMG"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UMG</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/22/0037-lua/" title="unity热更新Lua"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">unity热更新Lua</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BC%B1%E7%B1%BB%E5%9E%8B%E8%AF%AD%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">动态弱类型语言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TValue"><span class="toc-number">2.1.</span> <span class="toc-text">TValue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#union%E2%80%94%E2%80%94%E8%81%94%E5%90%88%E4%BD%93"><span class="toc-number">2.2.</span> <span class="toc-text">union——联合体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lu-byte-tt"><span class="toc-number">2.3.</span> <span class="toc-text">lu_byte tt_</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Boolean%E2%80%94%E2%80%94%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">Boolean——布尔类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#tt"><span class="toc-number">3.1.</span> <span class="toc-text">tt_</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TValue-1"><span class="toc-number">3.2.</span> <span class="toc-text">TValue</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B-Int-and-Float"><span class="toc-number">4.</span> <span class="toc-text">数字类型 Int and Float</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">4.1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tt-1"><span class="toc-number">4.2.</span> <span class="toc-text">tt_</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TValue-2"><span class="toc-number">4.3.</span> <span class="toc-text">TValue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.4.</span> <span class="toc-text">默认数据类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2-String"><span class="toc-number">5.</span> <span class="toc-text">字符串 String</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#tt-2"><span class="toc-number">5.1.</span> <span class="toc-text">tt_</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TValue-3"><span class="toc-number">5.2.</span> <span class="toc-text">TValue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%AD%97%E6%AE%B5%E5%90%AB%E4%B9%89"><span class="toc-number">5.3.</span> <span class="toc-text">类型字段含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%9F%AD%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">5.4.</span> <span class="toc-text">为什么要有短字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strcache"><span class="toc-number">5.5.</span> <span class="toc-text">Strcache</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Table"><span class="toc-number">6.</span> <span class="toc-text">Table</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#tt-3"><span class="toc-number">6.1.</span> <span class="toc-text">_tt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TValue-4"><span class="toc-number">6.2.</span> <span class="toc-text">TValue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Table%E7%BB%93%E6%9E%84"><span class="toc-number">6.3.</span> <span class="toc-text">Table结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Table%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">6.4.</span> <span class="toc-text">Table的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Table%E4%B8%AD%E5%85%83%E7%B4%A0%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">6.5.</span> <span class="toc-text">Table中元素的操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getgeneric%EF%BC%88%EF%BC%89-%E6%9F%A5%E8%AF%A2key%E6%98%AF%E5%90%A6%E5%9C%A8hash%E4%B8%AD"><span class="toc-number">6.6.</span> <span class="toc-text">getgeneric（） 查询key是否在hash中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="toc-number">6.7.</span> <span class="toc-text">哈希表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9Rehash"><span class="toc-number">6.8.</span> <span class="toc-text">扩容Rehash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84"><span class="toc-number">6.8.1.</span> <span class="toc-text">数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8-1"><span class="toc-number">6.8.2.</span> <span class="toc-text">哈希表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MetaTable"><span class="toc-number">7.</span> <span class="toc-text">MetaTable</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%83%E6%96%B9%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">元方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#index"><span class="toc-number">7.1.1.</span> <span class="toc-text">__index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#newindex"><span class="toc-number">7.1.2.</span> <span class="toc-text">__newindex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gc"><span class="toc-number">7.1.3.</span> <span class="toc-text">__gc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mode"><span class="toc-number">7.1.4.</span> <span class="toc-text">__mode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#len%E4%B8%8E"><span class="toc-number">7.1.5.</span> <span class="toc-text">__len与#</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eq-%E7%9B%B8%E7%AD%89%E6%96%B9%E6%B3%95"><span class="toc-number">7.1.6.</span> <span class="toc-text">__eq 相等方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#add"><span class="toc-number">7.1.7.</span> <span class="toc-text">__add</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#UserData"><span class="toc-number">8.</span> <span class="toc-text">UserData</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Udata"><span class="toc-number">8.1.</span> <span class="toc-text">Udata</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">8.2.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LightUserData"><span class="toc-number">8.3.</span> <span class="toc-text">LightUserData</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Funtion"><span class="toc-number">9.</span> <span class="toc-text">Funtion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lua%E9%97%AD%E5%8C%85"><span class="toc-number">9.1.</span> <span class="toc-text">Lua闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proto"><span class="toc-number">9.2.</span> <span class="toc-text">Proto</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UpValue"><span class="toc-number">9.3.</span> <span class="toc-text">UpValue</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Thread"><span class="toc-number">10.</span> <span class="toc-text">Thread</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#lua-State"><span class="toc-number">10.1.</span> <span class="toc-text">lua_State</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B-Coroutine-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">10.2.</span> <span class="toc-text">协程(Coroutine)的使用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate初探"/></a><div class="content"><a class="title" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探">ue Slate初探</a><time datetime="2025-11-05T16:00:00.000Z" title="发表于 2025-11-06 00:00:00">2025-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Als 使用(占坑)"/></a><div class="content"><a class="title" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)">ue Als 使用(占坑)</a><time datetime="2025-10-22T16:00:00.000Z" title="发表于 2025-10-23 00:00:00">2025-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 多线程与 Flush"/></a><div class="content"><a class="title" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush">ue 多线程与 Flush</a><time datetime="2025-10-12T16:00:00.000Z" title="发表于 2025-10-13 00:00:00">2025-10-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/11/0082-UeIA/" title="ue 增强输入"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 增强输入"/></a><div class="content"><a class="title" href="/2025/10/11/0082-UeIA/" title="ue 增强输入">ue 增强输入</a><time datetime="2025-10-10T16:00:00.000Z" title="发表于 2025-10-11 00:00:00">2025-10-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

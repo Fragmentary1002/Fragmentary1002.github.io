@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>InsideUE4之GamePlaye架构 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言在https:&#x2F;&#x2F;bcnn75axgqdf.feishu.cn&#x2F;wiki&#x2F;QmZcw3buCiMHkKk39bwceRhhn1g?from&#x3D;from_copylink 更新 本文为大钊老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。 《InsideUE4》目录 - 知乎  写给Unity开发者">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>UE GamePaly架构 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言本文为大钊老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。 《InsideUE4》目录 - 知乎 写给Unity开发者的Unreal Engine开发指南 （扫盲） - 知乎 Unity和UE5对比，以及踩坑记录 - 知乎 （注：本人现在是UE入门初学者，第一遍阅读粗略看基础架构） 开篇这边有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InsideUE4之GamePlaye架构">
+<meta property="og:title" content="UE GamePaly架构">
 <meta property="og:url" content="http://example.com/2025/06/16/0068-UeGP/index.html">
 <meta property="og:site_name" content="零の領域">
-<meta property="og:description" content="前言在https:&#x2F;&#x2F;bcnn75axgqdf.feishu.cn&#x2F;wiki&#x2F;QmZcw3buCiMHkKk39bwceRhhn1g?from&#x3D;from_copylink 更新 本文为大钊老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。 《InsideUE4》目录 - 知乎  写给Unity开发者">
+<meta property="og:description" content="前言本文为大钊老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。 《InsideUE4》目录 - 知乎 写给Unity开发者的Unreal Engine开发指南 （扫盲） - 知乎 Unity和UE5对比，以及踩坑记录 - 知乎 （注：本人现在是UE入门初学者，第一遍阅读粗略看基础架构） 开篇这边有">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/bg/default_cover.png">
-<meta property="article:published_time" content="2025-06-16T01:16:49.000Z">
-<meta property="article:modified_time" content="2025-10-22T14:26:54.889Z">
+<meta property="article:published_time" content="2025-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-12T16:48:39.956Z">
 <meta property="article:author" content="Fragmentary">
 <meta property="article:tag" content="UE">
 <meta name="twitter:card" content="summary">
@@ -52,12 +52,12 @@
     rightside: false,
   }
 }</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'InsideUE4之GamePlaye架构',
+  title: 'UE GamePaly架构',
   isPost: true,
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2025-10-22 22:26:54'
+  postUpdate: '2025-11-13 00:48:39'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,11 +161,10 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">InsideUE4之GamePlaye架构</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-16T01:16:49.000Z" title="发表于 2025-06-16 09:16:49">2025-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-22T14:26:54.889Z" title="更新于 2025-10-22 22:26:54">2025-10-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/UE/">UE</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="InsideUE4之GamePlaye架构"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在<a target="_blank" rel="noopener" href="https://bcnn75axgqdf.feishu.cn/wiki/QmZcw3buCiMHkKk39bwceRhhn1g?from=from_copylink">https://bcnn75axgqdf.feishu.cn/wiki/QmZcw3buCiMHkKk39bwceRhhn1g?from=from_copylink</a> 更新</p>
-<p>本文为<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/fjz13">大钊</a>老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。</p>
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UE GamePaly架构</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-15T16:00:00.000Z" title="发表于 2025-06-16 00:00:00">2025-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-12T16:48:39.956Z" title="更新于 2025-11-13 00:48:39">2025-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/UE/">UE</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UE GamePaly架构"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文为<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/fjz13">大钊</a>老师的学习UE4GamePlay架构的笔记以及阅读UE5.6的笔记，以下为自己的阅读笔记，本人熟悉unity引擎，以unity引擎角度去阅读这篇文章。</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22813908?refer=insideue4">《InsideUE4》目录 - 知乎</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/608296955"> 写给Unity开发者的Unreal Engine开发指南 （扫盲） - 知乎</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/12325645456">(99+ 封私信 / 80 条消息) Unity和UE5对比，以及踩坑记录 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/608296955">写给Unity开发者的Unreal Engine开发指南 （扫盲） - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/12325645456">Unity和UE5对比，以及踩坑记录 - 知乎</a></p>
 <p>（注：本人现在是UE入门初学者，第一遍阅读粗略看基础架构）</p>
 <h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><p>这边有一些准备链接</p>
 <ul>
@@ -182,6 +181,142 @@
 </ul>
 <p><a href="https://link.zhihu.com/?target=https://github.com/EpicGames/UnrealEngine">UnrealEngine官方Github地址</a></p>
 <p><strong>注意：</strong>因为UnrealEngine只是公开源码，但不是开源项目，依然是个私有项目。访问该Github地址，需要先链接你的Github到EpicGames的会员权限里，这个文档<a href="https://link.zhihu.com/?target=https://www.unrealengine.com/ue4-on-github">Linking your Github account</a>说明了步骤。</p>
+<h2 id="一段话解释GP架构"><a href="#一段话解释GP架构" class="headerlink" title="一段话解释GP架构"></a>一段话解释GP架构</h2><p>采自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1092234798">https://zhuanlan.zhihu.com/p/1092234798</a></p>
+<p>UE几乎所有的对象都继承于UObject，其提供了基础的GC垃圾回收，反射，元数据，序列化等功能，</p>
+<p>AActor继承自UObject，包含了诸如Replication，Spawn，Tick等基础功能。Actor可以添加UActorComponent（也继承自AActor）来实现功能的扩展。所有的Actor都存在于ULevel中，然后有一个UWorld负责管理所有的ULevel。</p>
+<p><code>GameModeBase</code>是UE4中定义游戏规则和逻辑的类。每个关卡会关联一个GameMode，它决定了游戏如何进行（如比赛规则、胜利条件、重生规则等）。游戏模式负责生成玩家控制器、角色等游戏元素。</p>
+<p><code>APlayerController</code>代表每个玩家在游戏中的逻辑接口，负责处理输入并控制玩家的角色或Pawn。它接收来自输入设备的信号，并将这些信号转换为对应的游戏行为。</p>
+<p><code>APawn</code>是可以被玩家或AI控制的任何实体。<code>ACharacter</code>是<code>APawn</code>的一个特化类，通常用于具有行走、跳跃、奔跑等功能的角色。Character继承自<code>Pawn</code>，增加了物理、动画、运动组件等。</p>
+<p><code>AHUD</code>负责绘制和管理屏幕上的游戏用户界面（UI）元素。通常会结合UMG（Unreal Motion Graphics）进行复杂的UI设计。</p>
+<p><code>UWorld</code>类管理整个游戏世界的状态，包括关卡、时间、事件等。它是UE4引擎中最高层次的管理单元，负责生成所有Actor（包括玩家、物体、特效等）。</p>
+<p><code>AActor</code>是UE4中所有可以在游戏世界中存在的对象的基类。所有场景中的实体（如道具、光源、角色等）都继承自Actor。</p>
+<p><code>UActorComponent</code>是Actor的功能单元，可以被添加到Actor中来扩展其功能。常见组件有移动组件（MovementComponent）、物理组件（PhysicsComponent）等，所有这些组件为Actor提供不同的功能和行为。</p>
+<p>AI通常通过<code>AIController</code>控制<code>Pawn</code>。AI使用行为树（Behavior Tree）和EQ（环境查询系统）来进行决策，能够轻松处理复杂的AI行为。</p>
+<p>Object-&gt;Actor+Component-&gt;Level-&gt;World-&gt;WorldContext-&gt;GameInstance-&gt;Engine</p>
+<table>
+<thead>
+<tr>
+<th>GP架构</th>
+<th>中文解释</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UObject</td>
+<td>反射父类</td>
+<td>元数据、反射生成、GC垃圾回收、序列化、编辑器可见，Class Default Object</td>
+</tr>
+<tr>
+<td>Actor</td>
+<td>运行最小单元</td>
+<td>Replication（网络复制）,Spawn（生生死死），Tick(有了心跳) 。无Transform</td>
+</tr>
+<tr>
+<td>Component</td>
+<td>组件</td>
+<td>EC模式</td>
+</tr>
+<tr>
+<td>Level</td>
+<td>关卡地图</td>
+<td>在world层面上可以理解为mc区块</td>
+</tr>
+<tr>
+<td>World</td>
+<td>Game地图</td>
+<td>整张地图，由Level形成</td>
+</tr>
+<tr>
+<td>WorldContext</td>
+<td>Game-World父类</td>
+<td>编辑器本身就也是一个World，里面显示的游戏场景也是一个World</td>
+</tr>
+<tr>
+<td>GameInstance</td>
+<td>WorldContexts</td>
+<td>可持续化单例GameManager ，存储WorldContext</td>
+</tr>
+<tr>
+<td>Engine</td>
+<td>引擎</td>
+<td>UE的编辑器其实也是个游戏</td>
+</tr>
+<tr>
+<td>GamePlayStatics</td>
+<td>蓝图操作</td>
+<td>Engine层次为我们提供了便利操作蓝图函数库UGameplayStatics</td>
+</tr>
+<tr>
+<td>Pawn</td>
+<td>棋子</td>
+<td>地图上的基本单位</td>
+</tr>
+<tr>
+<td>DefaultPawn</td>
+<td>默认的Pawn</td>
+<td>默认带了一个DefaultPawnMovementComponent、spherical CollisionComponent和StaticMeshComponent。</td>
+</tr>
+<tr>
+<td>SpectatorPawn</td>
+<td>观战Pawn</td>
+<td>派生于DefaultPawn的SpectatorPawn，提供了一个基本的USpectatorPawnMovement（不带重力漫游），并关闭了StaticMesh的显示，碰撞也设置到了“Spectator”通道</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>人形的Pawn</td>
+<td>大部分游戏中都会有用到人形的角色</td>
+</tr>
+<tr>
+<td>AController</td>
+<td>控制器</td>
+<td>MVC</td>
+</tr>
+<tr>
+<td>APlayState</td>
+<td>玩家状态</td>
+<td>单个玩家的Model</td>
+</tr>
+<tr>
+<td>APlayerController</td>
+<td>Player的C层</td>
+<td>Camera Input UPlayer HUD Level切换 Voice</td>
+</tr>
+<tr>
+<td>AAIController</td>
+<td>AI行为树</td>
+<td>Navigation AI组件 Task系统</td>
+</tr>
+<tr>
+<td>AGameMode</td>
+<td>游戏规则</td>
+<td>跑在服务器的内容 权威与安全 Login</td>
+</tr>
+<tr>
+<td>AGameModeBase</td>
+<td>游戏规则</td>
+<td>UE4的基类</td>
+</tr>
+<tr>
+<td>Game State</td>
+<td>游戏状态</td>
+<td>记录客户端数据的单局游戏全局Model</td>
+</tr>
+<tr>
+<td>GameSession</td>
+<td>游戏联机</td>
+<td>网络联机游戏中针对Session使用的一个方便的管理类，并不存储数据，</td>
+</tr>
+<tr>
+<td>GameInstance</td>
+<td>单例</td>
+<td>可持续化单例GameManager</td>
+</tr>
+<tr>
+<td>SaveGame</td>
+<td>本地保存</td>
+<td>本地保存样例</td>
+</tr>
+</tbody></table>
 <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><h2 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h2><table>
 <thead>
 <tr>
@@ -207,7 +342,7 @@
 </tr>
 <tr>
 <td><strong>Intermediate</strong></td>
-<td>中间文件（可加入 <code>.gitignore</code>），存放临时生成文件：<br> - Build 中间文件（如 <code>.obj</code> 和预编译头）<br> - UHT 预处理生成的 <code>.generated.h/.cpp</code><br> - 由 <code>.uproject</code> 生成的 VS <code>.vcxproj</code> 项目文件<br> - 编译生成的 Shader 文件</td>
+<td>中间文件（可加入 <code>.gitignore</code>），存放临时生成文件： - Build 中间文件（如 <code>.obj</code> 和预编译头） - UHT 预处理生成的 <code>.generated.h/.cpp</code> - 由 <code>.uproject</code> 生成的 VS <code>.vcxproj</code> 项目文件 - 编译生成的 Shader 文件</td>
 </tr>
 <tr>
 <td><strong>AssetRegistryCache</strong></td>
@@ -222,55 +357,44 @@
 <td>存放代码文件。</td>
 </tr>
 </tbody></table>
-<h2 id="编译类型"><a href="#编译类型" class="headerlink" title="编译类型"></a>编译类型</h2><p>很多人在使用UE4的时候，往往只是依照默认的DevelopmentEditor，但实际上编译选项是非常重要的。<br>UE4本身包含网络模式和编辑器，这意味着你的工程在部署的时候将包含Server和Client，而在开发的时候，也将有Editor和Stand-alone之分；同时你也可以单独选择是否为Engine和Game生成调试信息，接着你还可以选择是否在游戏里内嵌控制台等。</p>
-<p><img src="https://pica.zhimg.com/v2-c9660d193fdc18d204ba0d91ee3150be_1440w.png" alt="img"></p>
-<p><img src="https://pica.zhimg.com/v2-f049c9630ed11b9e7e2e69e502901dc8_1440w.png" alt="img"></p>
-<p><img src="https://picx.zhimg.com/v2-a7d465573bb2a07fb9a1bdfe8ed08393_1440w.png" alt="img"></p>
-<p>所以为了我们的调试代码方便，我们选择DebugEditor来加载游戏项目，当需要最简化流程的时候用Debug来运行独立版本。</p>
-<h2 id="基础概念-1"><a href="#基础概念-1" class="headerlink" title="基础概念"></a>基础概念</h2><p>和其他的3D引擎一样，UE4也有其特有的描述游戏世界的概念。在UE4中，几乎所有的对象都继承于UObject（跟Java,C#一样），UObject为它们提供了基础的垃圾回收，反射，元数据，序列化等，相应的，就有各种”UClass”的派生们定义了属性和行为的数据。<br>跟Unity（GameObject-Component）有些像的是，UE4也采用了组件式的架构，但细品起来却又有些不一样。在UE中，3D世界是由Actors构建起来的，而Actor又拥有各种Component，之后又有各种Controller可以控制Actor（Pawn）的行为。Unity中的Prefab，在UE4中变成了BlueprintClass，其实Class的概念确实更加贴近C++的底层一些。<br>Unity中，你可以为一个GameObject添加一个ScriptComponent，然后继承MonoBehaviour来编写游戏逻辑。在UE4中，你也可以为一个Actor添加一个蓝图或者C++ Component,然后实现它来直接组织逻辑。 UE4也支持各种插件。</p>
+<h2 id="基础概念-1"><a href="#基础概念-1" class="headerlink" title="基础概念"></a>基础概念</h2><p>和其他的3D引擎一样，UE4也有其特有的描述游戏世界的概念。在UE4中，几乎所有的对象都继承于UObject（跟Java,C#一样），UObject为它们提供了基础的垃圾回收，反射，元数据，序列化等，相应的，就有各种”UClass”的派生们定义了属性和行为的数据。 跟Unity（GameObject-Component）有些像的是，UE4也采用了组件式的架构，但细品起来却又有些不一样。在UE中，3D世界是由Actors构建起来的，而Actor又拥有各种Component，之后又有各种Controller可以控制Actor（Pawn）的行为。Unity中的Prefab，在UE4中变成了BlueprintClass，其实Class的概念确实更加贴近C++的底层一些。 Unity中，你可以为一个GameObject添加一个ScriptComponent，然后继承MonoBehaviour来编写游戏逻辑。在UE4中，你也可以为一个Actor添加一个蓝图或者C++ Component,然后实现它来直接组织逻辑。 UE4也支持各种插件。</p>
 <ul>
 <li>一些常用的Unity概念和它在Unreal中的对应部分。</li>
 </ul>
-<p><img src="https://pic3.zhimg.com/v2-d23dd3a1cce6257ef91518d73d3c0a58_1440w.jpg" alt="img"></p>
-<h1 id="Actor和Component"><a href="#Actor和Component" class="headerlink" title="Actor和Component"></a>Actor和Component</h1><h2 id="UObject"><a href="#UObject" class="headerlink" title="UObject"></a>UObject</h2><p><img src="https://pic1.zhimg.com/v2-750c05a282e8784c3af5815a481d549e_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjRhYmIxNjQ2NWU1MTg5ODA0OWRlOGY1MmZjYmYwNjRfTnA4MjlxeEh3ajJHVGlzN3QwM0VJaGpQVEQwSkRmVnpfVG9rZW46UW9sbmJnNGRjb1ZkcDl4V3pJRmNFejFobjNnXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<h1 id="Actor和Component"><a href="#Actor和Component" class="headerlink" title="Actor和Component"></a>Actor和Component</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22833151">https://zhuanlan.zhihu.com/p/22833151</a></p>
+<h2 id="UObject"><a href="#UObject" class="headerlink" title="UObject"></a>UObject</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NmVkYjA5ODU5ODg1NDljZmRiYzUxMDllYjhjNTE5OGFfREZYVjFnM2ZVcmQ1SjludTdib0pHY0RyNVN0MEQ5VzlfVG9rZW46QkZlZWI5MTFsbzBIU1d4ME5HeGNLbzhZbnpoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>藉着UObject提供的元数据、反射生成、GC垃圾回收、序列化、编辑器可见，Class Default Object等，UE可以构建一个Object运行的世界。（后续会有一个大长篇深挖UObject）</p>
-<h2 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h2><p><img src="https://pic3.zhimg.com/v2-9348f6bdadbe382a505aff9be7d5d99e_1440w.jpg" alt="img"></p>
-<p>脱胎自Object的Actor也多了一些本事：Replication（网络复制）,Spawn（生生死死），Tick(有了心跳)。<br>Actor无疑是UE中最重要的角色之一，组织庞大，最常见的有StaticMeshActor, CameraActor和 PlayerStartActor等。Actor之间还可以互相“嵌套”，拥有相对的“父子”关系。</p>
+<h2 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=Mzk3NDBhNGIyYTQ4YjNjNGE4NGViNGNjYmZlYzg1ZjdfZlBYY3ZMTzdGWWQ1NGJtS2tQV0xWVDVOaWF0QTZicUtfVG9rZW46SVlUZmIxeW0yb0dNR3N4ZE80eWNIdzdHblZnXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>脱胎自Object的Actor也多了一些本事：Replication（网络复制）,Spawn（生生死死），Tick(有了心跳)。 Actor无疑是UE中最重要的角色之一，组织庞大，最常见的有StaticMeshActor, CameraActor和 PlayerStartActor等。Actor之间还可以互相“嵌套”，拥有相对的“父子”关系。</p>
 <p><strong>思考：为何Actor不像GameObject一样自带Transform？</strong></p>
-<p>原文是这样说的：</p>
-<hr>
-<p>我们知道，如果一个对象需要在3D世界中表示，那么它必然要携带一个Transform matrix来表示其位置。关键在于，在UE看来，Actor并不只是3D中的“表示”，一些不在世界里展示的“不可见对象”也可以是Actor，如AInfo(派生类AWorldSetting,AGameMode,AGameSession,APlayerState,AGameState等)，AHUD,APlayerCameraManager等，代表了这个世界的某种信息、状态、规则。你可以把这些看作都是一个个默默工作的灵体Actor。所以，Actor的概念在UE里其实不是某种具象化的3D世界里的对象，而是世界里的种种元素，用更泛化抽象的概念来看，小到一个个地上的石头，大到整个世界的运行规则，都是Actor.<br>当然，你也可以说即使带着Transform，把坐标设置为原点，然后不可见不就行了？这样其实当然也是可以，不过可能因为UE跟贴近C++一些的缘故，所以设计哲学上就更偏向于C++的哲学“不为你不需要的东西付代价”。一个Transform再加上附带的逆矩阵之类的表示，内存占用上其实也是挺可观的。要知道UE可是会抠门到连bool变量都要写成uint bPending:1;位域来节省一个字节的内存的。<br>换一个角度讲，如果把带Transform也当成一个Actor的额外能力可以自由装卸的话，那其实也可以自圆其说。经过了UE的权衡和考虑，把Transform封装进了SceneComponent,当作RootComponent。但在权衡到使用的便利性的时候，大部分Actor其实是有Transform的，我们会经常获取设置它的坐标，如果总是得先获取一下SceneComponent，然后再调用相应接口的话，那也太繁琐了。所以UE也为了我们直接提供了一些便利性的Actor方法，如(Get/Set)ActorLocation等，其实内部都是转发到RootComponent。</p>
-<hr>
 <p>简述：</p>
 <ul>
-<li><p>Unity的强制绑定<br>每个GameObject必须携带Transform组件（不可移除），即使对象仅用于逻辑管理（如全局计时器)</p>
-</li>
-<li><p> UE的灵活分离</p>
-</li>
-<li><p>Transform能力由<code>SceneComponent</code>提供，作为<strong>可选组件</strong>。</p>
-</li>
-<li><p>若Actor无需位置信息（如  APlayerState ），可不附加任何组件；若需要位置，则附加SceneComponent 作为根组件RootComponent</p>
-</li>
+<li>Unity的强制绑定 每个GameObject必须携带Transform组件（不可移除），即使对象仅用于逻辑管理（如全局计时器)</li>
+<li>UE的灵活分离</li>
+<li>Transform能力由<code>SceneComponent</code>提供，作为<strong>可选组件</strong>。</li>
+<li>若Actor无需位置信息（如 APlayerState ），可不附加任何组件；若需要位置，则附加SceneComponent 作为根组件RootComponent</li>
 </ul>
 <p>设计优点：</p>
 <ul>
-<li><p>性能优先： 避免为无需Transform的对象支付内存/计算代价（尤其在大规模场景中）。</p>
-</li>
-<li><p>类型安全： 通过组件分离明确标识对象能力（如带SceneComponent=有位置，反之=纯逻辑）。</p>
-</li>
-<li><p>C++文化影响： 遵循“最小代价”原则，类似bool用位域（uint bPending:1）节省内存</p>
-</li>
+<li>性能优先： 避免为无需Transform的对象支付内存/计算代价（尤其在大规模场景中）。</li>
+<li>类型安全： 通过组件分离明确标识对象能力（如带SceneComponent=有位置，反之=纯逻辑）。</li>
+<li>C++文化影响： 遵循“最小代价”原则，类似bool用位域（uint bPending:1）节省内存</li>
 </ul>
 <h2 id="Component"><a href="#Component" class="headerlink" title="Component"></a>Component</h2><h3 id="UActorComponent"><a href="#UActorComponent" class="headerlink" title="UActorComponent"></a>UActorComponent</h3><p>看见UActorComponent的U前缀，是不是想起了什么？没错，UActorComponent也是基础于UObject的一个子类，这意味着其实Component也是有UObject的那些通用功能的。（关于Actor和Component之间Tick的传递后续再细讨论）</p>
-<p><img src="https://picx.zhimg.com/v2-825217f7dc7b7f3ce2068433b037dfb7_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzhhZTJiN2QzODhmODc5MDdiY2EzYjViMDY3YmU0MTJfVXdSNGhZZDZEMDB0WXk4VTVGYnlMSlJGeXBlSHkzMFJfVG9rZW46SW5rUWIwOHQ1b21vSnF4T3o4SGNFc0I0bjJjXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h3 id="SceneComponent"><a href="#SceneComponent" class="headerlink" title="SceneComponent"></a>SceneComponent</h3><p>ActorComponent下面最重要的一个Component就非SceneComponent莫属了。SceneComponent提供了两大能力：一是Transform，二是SceneComponent的互相嵌套。</p>
-<p><img src="https://pic1.zhimg.com/v2-91234c7d5bc32dd04c7221ac9dcc56d0_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2ZjNWZhMmVlMjllNWIzNzBkZjBhMDNlNzVmZGQ4YjFfaEVpWnVKMXE1WjZObWlYOTlGY3ZiOE80MEloVGF0eFBfVG9rZW46V0VVM2JSMWFxb2tuUnp4eTZkd2NQYWtJbkhmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p><strong>思考：为何ActorComponent不能互相嵌套？而在SceneComponent一级才提供嵌套？</strong></p>
+<p>UE更倾向于编写功能单一的Component（如UMovementComponent）,而不是一个整合了其他Component的大管家Component</p>
 <p><strong>思考：Actor的SceneComponent哲学</strong></p>
+<p>很多其他游戏引擎，还有一种设计思路是“万物皆Node”。Node都带变换。比如说你要设计一辆汽车，一种方式是车身作为一个Node,4个轮子各为车身的子Node，然后移动父Node来前进。</p>
+<p>在UE里，其实是把5个薄薄的SceneComponent表示再用Actor功能的盒子装了起来，而在这个盒子内部你可以编写操作这5个对象的逻辑。换做是Node模式，想编写操作逻辑的话，一般就来说就会内化到父Node的内部，不免会有逻辑与表现掺杂之嫌，而如果Node要把逻辑再用组合分离开的话，其实也就转化成了某种ScriptComponent。</p>
 <p><strong>思考：Actor之间的父子关系是怎么确定的？</strong></p>
 <p>你应该已经注意到了Actor里面的TArray&lt;AActor*&gt; Children字段，所以你可能会期望看到Actor:AddChild之类的方法，很遗憾。在UE里，Actor之间的父子关系却是通过Component确定的。同一般的Parent:AddChild操作原语不同，UE里是通过Child:AttachToActor或Child:AttachToComponent来创建父子连接的。</p>
 <h3 id="ChildActorComponent"><a href="#ChildActorComponent" class="headerlink" title="ChildActorComponent"></a>ChildActorComponent</h3><p>同作为最常用到的Component之一，ChildActorComponent担负着Actor之间互相组合的胶水。这货在蓝图里静态存在的时候其实并不真正的创建Actor，而是在之后Component实例化的时候才真正创建。</p>
-<h1 id="Level和World"><a href="#Level和World" class="headerlink" title="Level和World"></a>Level和World</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>不同的游戏引擎们，看待这个过程的角度和理念也不一样。</p>
+<h1 id="Level和World"><a href="#Level和World" class="headerlink" title="Level和World"></a>Level和World</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22924838">https://zhuanlan.zhihu.com/p/22924838</a></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>不同的游戏引擎们，看待这个过程的角度和理念也不一样。</p>
 <ul>
 <li>Cocos2dx</li>
 </ul>
@@ -288,34 +412,46 @@
 </ul>
 <p>把这种拆分叫做关卡（Level），由一个或多个Level组成一个World。</p>
 <p>不要觉得这种划分好像很随意，只是个名字不同而已。实际上一个游戏引擎的“世界观”关系到了一整串后续的内容组织，玩家的管理，世界的生成，变换和毁灭。游戏引擎内部的资源的加载释放也往往都是和这种划分（Level）绑定在一起的。</p>
-<h2 id="Level"><a href="#Level" class="headerlink" title="Level"></a>Level</h2><p><img src="https://pic1.zhimg.com/v2-bca44e1f846c37b12f08bc0a6659b4ae_1440w.png" alt="img"></p>
-<p>ALevelScriptActor，允许我们在关卡里编写脚本</p>
-<p>AWorldSettings</p>
+<h2 id="Level"><a href="#Level" class="headerlink" title="Level"></a>Level</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzRkMDQ1YzAyZjFhYjZkZGQ1MTg1YTU1ZDBhYTJkZTJfbExnTVNFRlVrcnh0ZlV4blJLYml3SFlXNXYxTTFVZ3BfVG9rZW46T3FNdmI1SlY2b1FJazh4QW5CamNlY0xnbmhmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>ALevelScriptActor，允许我们在关卡里编写脚本类似V层</p>
+<p>AWorldSettings，其实只是跟Level相关，和World无关</p>
 <p><strong>思考：为何AWorldSettings要放进在Actors[0]的位置？而ALevelScriptActor却不用？</strong></p>
+<p>Actors们的排序依据是把那些“非网络”的Actor放在前面，而把“网络可复制”的Actor们放在后面，然后加一个起始索引标记iFirstNetRelevantActor，相当于为网络Actor划分了一个缓存，从而加速了网络复制时的检测速度。</p>
 <p><strong>思考：既然ALevelScriptActor也继承于AActor,为何关卡蓝图不设计能添加Component？</strong></p>
+<p>Level其实更应该表现为一个Actor的容器。UE其实也是不鼓励在Level里编写太复杂的逻辑的</p>
 <h2 id="World"><a href="#World" class="headerlink" title="World"></a>World</h2><p>终于，到了把大陆们（Level）拼装起来的时候了。可以用SubLevel的方式：</p>
-<p><img src="https://pica.zhimg.com/v2-dfd6bc119d32cc4f9f958b682bd0d480_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjYxMzU2YTI2Y2EzNmJiYmU3MTA1ZjEzZDY3MTNiODhfVVRPRkxQcjlic1ZueDY5a3ZQN1d1OEkwaE14QjE4Y1dfVG9rZW46SnJ4TWJJTDhwb1VNVmd4Tnd5MGNkT3JyblVoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>也支持WorldComposition的方式自动把项目里的所有Level都组合起来，并设置摆放位置：</p>
-<p><img src="https://pic3.zhimg.com/v2-9119eecdae3bebffc8e306f41995a68c_1440w.jpg" alt="img"></p>
-<p><img src="https://pic4.zhimg.com/v2-41963e6f39bcefb2d799d31bec703759_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDc3ZmM1YmQzOTFkZmMyZTliNjU5NzVhZTAyYjU2OWZfaXlZbmEwUWh0VDBPUUJVM2ZxaXFRVFQwS0R3ZVhrNDZfVG9rZW46S2dOd2J4YWxYb2lKQ2V4Mm1XRWNyRlBMbnFoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>简单本质来说，就是一个World里有多个Level，这些Level在什么位置，是在一开始就加载进来，还是Streaming运行时加载。</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YTRlMzI4NzNjZGQ0MDExYmQ2MzQzNmE0NzEyNmRhNzlfNE5CSWJzUGJGZXNxM3gyNEt5VDVpaWdPaGs1b0hxNVBfVG9rZW46V3pwSWJmZVZwb1lvR0x4QzczdmM1SnlXbjdiXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>Persistent的意思是一开始就加载进World，Streaming是后续动态加载的意思。Levels里保存有所有的当前已经加载的Level，StreamingLevels保存整个World的Levels配置列表。PersistentLevel和CurrentLevel只是个快速引用。在编辑器里编辑的时候，CurrentLevel可以指向其他Level，但运行时CurrentLevel只能是指向PersistentLevel。</p>
 <p><strong>思考：为何要有主PersistentLevel？</strong></p>
+<p>先出生在一块大陆上才可以继续谈起去探索别的新大陆。所以这块玩家出生的大陆就是主Level了。</p>
 <p><strong>思考：Levels们的Actors和World有直接关系吗？</strong></p>
+<p>当别的Level被添加进当前World之后，我们能直接在WorldOutliner里看到其他Level的Actor们。</p>
+<p>Levels里的Actors的物理实体其实都是在World里的，毕竟物理的碰撞之类的当然要是全局的了。</p>
+<p>World在拼接Level的时候，也是会同时把两个Level的导航网格给“拼接”起来的。</p>
 <p><strong>思考：为什么要在Level里保存Actors，而不是把所有Map的Actors配置都生成在World一个总Actors里？</strong></p>
-<h1 id="WorldContext，GameInstance，Engine"><a href="#WorldContext，GameInstance，Engine" class="headerlink" title="WorldContext，GameInstance，Engine"></a>WorldContext，GameInstance，Engine</h1><h2 id="WorldContext"><a href="#WorldContext" class="headerlink" title="WorldContext"></a>WorldContext</h2><p>首先World就不是只有一种类型，比如编辑器本身就也是一个World，里面显示的游戏场景也是一个World，这两个World互相协作构成了我们的编辑体验。然后点播放的时候，引擎又可以生成新的类型World来让我们测试。简单来说，UE其实是一个平行宇宙世界观。<br>以下是一些世界类型：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> EWorldType</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">enum</span> <span class="title class_">Type</span></span><br><span class="line">	&#123;</span><br><span class="line">		None,		<span class="comment">// An untyped world, in most cases this will be the vestigial worlds of streamed in sub-levels</span></span><br><span class="line">		Game,		<span class="comment">// The game world</span></span><br><span class="line">		Editor,		<span class="comment">// A world being edited in the editor</span></span><br><span class="line">		PIE,		<span class="comment">// A Play In Editor world</span></span><br><span class="line">		Preview,	<span class="comment">// A preview world for an editor tool</span></span><br><span class="line">		Inactive	<span class="comment">// An editor world that was loaded but not currently being edited in the level editor</span></span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
+<p>应该是尽量的把损耗平摊（这里是把Level加载释放的损耗尽量减小），才不会产生比较大的帧率波动，让玩家感觉到卡帧。</p>
+<h1 id="WorldContext，GameInstance，Engine"><a href="#WorldContext，GameInstance，Engine" class="headerlink" title="WorldContext，GameInstance，Engine"></a>WorldContext，GameInstance，Engine</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23167068">https://zhuanlan.zhihu.com/p/23167068</a></p>
+<h2 id="WorldContext"><a href="#WorldContext" class="headerlink" title="WorldContext"></a>WorldContext</h2><p>首先World就不是只有一种类型，比如编辑器本身就也是一个World，里面显示的游戏场景也是一个World，这两个World互相协作构成了我们的编辑体验。然后点播放的时候，引擎又可以生成新的类型World来让我们测试。简单来说，UE其实是一个平行宇宙世界观。 以下是一些世界类型：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> EWorldType</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">enum</span> <span class="title class_">Type</span></span><br><span class="line">        &#123;</span><br><span class="line">                None,                <span class="comment">// An untyped world, in most cases this will be the vestigial worlds of streamed in sub-levels</span></span><br><span class="line">                Game,                <span class="comment">// The game world</span></span><br><span class="line">                Editor,                <span class="comment">// A world being edited in the editor</span></span><br><span class="line">                PIE,                <span class="comment">// A Play In Editor world</span></span><br><span class="line">                Preview,        <span class="comment">// A preview world for an editor tool</span></span><br><span class="line">                Inactive        <span class="comment">// An editor world that was loaded but not currently being edited in the level editor</span></span><br><span class="line">        &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而UE用来管理和跟踪这些World的工具就是WorldContext：</p>
-<p><img src="https://pic4.zhimg.com/v2-5ded56be67f4082ee7f77a0c3fa0960f_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2M1ZjUzMjI4MTkxMTYzMjU2ZWVhYjg2ZGVlNTBlNzNfTlRCNFZnMWJWbUZ4NDJXelVMVnM4ZjRxbkJSdUZldnpfVG9rZW46R1o4WGJHbUxub0FNWEd4NUJtUWNaV3U1bldmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>FWorldContext保存着ThisCurrentWorld来指向当前的World。而当需要从一个World切换到另一个World的时候（比如说当点击播放时，就是从Preview切换到PIE），FWorldContext就用来保存切换过程信息和目标World上下文信息。所以一般在切换的时候，比如OpenLevel，也都会需要传FWorldContext的参数。一般就来说，对于独立运行的游戏，WorldContext只有唯一个。</p>
+<p>这里的TravelURL和TravelType就是负责设定下一个Level的目标和转换过程。</p>
+<p>UE在OpenLevel的时候， 先设置当前World的Context上的TravelURL，然后在UEngine::TickWorldTravel的时候判断TravelURL非空来真正执行Level的切换。具体的Level切换详细流程比较复杂，目前先从大局上理解整体结构。总而言之，WorldContext既负责World之间切换的上下文，也负责Level之间切换的操作信息。</p>
 <p><strong>思考：为何Level的切换信息不放在World里？</strong></p>
+<p>因为UE有一个逻辑，一个World只有一个PersistentLevel（见上篇），而当我们OpenLevel一个PersistentLevel的时候，实际上引擎做的是先释放掉当前的World，然后再创建个新的World。所以如果我们把下一个Level的信息放在当前的World中，就不得不在释放当前World前又拷贝回来一遍了。 而LoadStreamLevel的时候，就只是在当前的World中载入对象了，所以其实就没有这个限制了。</p>
 <p><strong>思考：为何World和Level的切换要放在下一帧再执行？</strong></p>
+<p>首先Level的加载显然是比较慢的，需要载入Map，相应的Mesh，Material……等等。所以这个操作就必须异步化，</p>
 <h2 id="GameInstance"><a href="#GameInstance" class="headerlink" title="GameInstance"></a>GameInstance</h2><p>那么这些WorldContexts又是保存在哪里的呢？追根溯源：</p>
-<p><img src="https://pic2.zhimg.com/v2-36b45a7b36ac77d978719bc6fe8db17b_1440w.png" alt="img"></p>
-<p>GameInstance里会保存着当前的WorldConext和其他整个游戏的信息。明白了GameInstance是比World更高的层次之后，我们也就能明白为何那些独立于Level的逻辑或数据要在GameInstance中存储了。<br>这一点其实也很好理解，大凡游戏引擎都会有一个Game的概念，不管是叫Application还是Director，它都是玩家能直接接触到的最根源的操作类。而UE的GameInstance因为继承于UObject，所以就拥有了动态创建的能力，所以我们可以通过指定GameInstanceClass来让UE创建使用我们自定义的GameInstance子类。所以不论是C++还是BP，我们通常会继承于GameInstance，然后在里面编写应用于整个游戏范围的逻辑。<br>因为经常有初学者会问到：我的Level切换了，变量数据就丟了，我应该把那些数据放在哪？再清晰直白一点，GameInstance就是你不管Level怎么切换，还是会一直存在的那个对象！</p>
-<hr>
-<p>类似于可持续化单例GameManager</p>
-<h2 id="Engine"><a href="#Engine" class="headerlink" title="Engine"></a>Engine</h2><h2 id="Engine-1"><a href="#Engine-1" class="headerlink" title="Engine"></a>Engine</h2><p><img src="https://pica.zhimg.com/v2-94d1f4e3750b6f4fd09d02b20bc980b0_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MmI2YTc4ZDRkNzRkODA1NDQ5MDJhOWUyODQxNTMzZjZfY2lwaTA3T0ZYdlNWWWZPb0gwNnhXU3ZGMlBsbWEzaXhfVG9rZW46UW4yOWJhQjJ3bzVubUt4N1VaSWM2YVlTbmVlXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>GameInstance里会保存着当前的WorldConext和其他整个游戏的信息。明白了GameInstance是比World更高的层次之后，我们也就能明白为何那些独立于Level的逻辑或数据要在GameInstance中存储了。 这一点其实也很好理解，大凡游戏引擎都会有一个Game的概念，不管是叫Application还是Director，它都是玩家能直接接触到的最根源的操作类。而UE的GameInstance因为继承于UObject，所以就拥有了动态创建的能力，所以我们可以通过指定GameInstanceClass来让UE创建使用我们自定义的GameInstance子类。所以不论是C++还是BP，我们通常会继承于GameInstance，然后在里面编写应用于整个游戏范围的逻辑。 因为经常有初学者会问到：我的Level切换了，变量数据就丟了，我应该把那些数据放在哪？再清晰直白一点，GameInstance就是你不管Level怎么切换，还是会一直存在的那个对象！</p>
+<p>类似于可持续化单例GameManager ，可看下文有详细。</p>
+<h2 id="Engine"><a href="#Engine" class="headerlink" title="Engine"></a>Engine</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzAzMzlhZjRlOGFhMzgyYWViNzFiMjlhOThlYmM2Y2FfeXBiaWlKb0Y0RVdWSmNuOHBQaUFzWkxLZ1RPb3ZsRUNfVG9rZW46UU1ncmIzWWZzbzgyWnR4MDZ5V2NZaHg2blpmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>此处UEngine分化出了两个子类：UGameEngine和<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1452434&content_type=Article&match_order=1&q=UEditorEngine&zhida_source=entity">UEditorEngine</a>。众所周知，UE的编辑器也是UE用自己的引擎渲染出来的，采用的也是Slate那套UI框架。好处有很多，比如跨平台比较统一，UI框架可以复用一套控件库，Dogfood等等，此处不再细讲。所以本质上来说，UE的编辑器其实也是个游戏！我们是在编辑器这个游戏里面创造我们自己的另一个游戏。话虽如此，但比较编辑器和游戏还是有一定差别的，所以UE会在不同模式下根据编译环境而采用不同的具体Engine类，而在基类UEngine里通过一个WorldList保存了所有的World。</p>
 <ul>
 <li>Standalone Game：会使用UGameEngine来创建出唯一的一个GameWorld，因为也只有一个，所以为了方便起见，就直接保存了GameInstance指针。</li>
@@ -326,19 +462,25 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UCLASS</span> ()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UGameplayStatics</span> : <span class="keyword">public</span> UBlueprintFunctionLibrary </span><br></pre></td></tr></table></figure>
 
 <p>我们在蓝图里见到的GetPlayerController、SpawActor和OpenLevel等都是来至于这个类的接口。这个类比较简单，相当于一个C++的静态类，只为蓝图暴露提供了一些静态方法。在想借鉴或者是查询某个功能的实现时，此处往往会是一个入口。</p>
-<h1 id="Pawn"><a href="#Pawn" class="headerlink" title="Pawn"></a>Pawn</h1><p>在上一篇的内容里，我们谈到了UE的3D游戏世界是由Object-&gt;<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1514500&content_type=Article&match_order=1&q=Actor&zhida_source=entity">Actor</a>+<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1514500&content_type=Article&match_order=1&q=Component&zhida_source=entity">Component</a>-&gt;Level-&gt;World-&gt;WorldContext-&gt;GameInstance-&gt;Engine来逐渐层层构建而成的。那么从这下半章节开始，我们就将要开始逐一分析，UE是如何在每一个对象层次上表达游戏逻辑的。和分析对象节点树一样，我们也将采用自底向上的方法，从最原始简单的对象开始。</p>
-<h3 id="代码逻辑"><a href="#代码逻辑" class="headerlink" title="代码逻辑"></a>代码逻辑</h3><p>其实所有的游戏引擎在构建完节点树之后，都会面临这么一个问题，<strong>我的游戏逻辑写在哪里？</strong><br>有的原始的如Cocos2dx懒得想那么多，干脆就直接码在Node里面得了，所以你翻看Cocos2dx的源码你就会经常发现它的逻辑和表现往往是交杂在一起的，简单直接暴力美学，面向对象继承玩得溜。而面向组合阵营的领军Unity则干脆就把Component思想再应用极致一点，我的逻辑为什么不能也是一个组件？所以Unity里的ScriptComponent也是这种组合思想的体现，模型统一架构优雅，MonoBehavior立大功了！但是在一个Component（ScriptComponent）里去操作管理其他的Components，本身却其实并不是那么优雅，因为有些Component之上的协调管理的事务，从层次上来说，应该放在更高的一个概念上实现。UE在思考这个问题时，却是感觉有些理想主义，颇有些C++的理念，力求不为你不需要的东西付代价，宁愿有时候折衷，也想保住最优性能。UE的架构中也大量应用了各种继承，有些继承链也能拉得很长，同时一方面也吸纳了组合的优点，我们也能见到UE的源码中类的成员变量也是组合了好多其他对象。所以接下来的该介绍的就是UE综合应用这两种思想的设计产物。面向对象派生下来的Pawn和Character，支持组合的Controller们。</p>
-<h2 id="Pawn-1"><a href="#Pawn-1" class="headerlink" title="Pawn"></a>Pawn</h2><p><img src="https://pic4.zhimg.com/v2-12b8b0034f3068f8d7c2739cb1f654a5_1440w.png" alt="img"></p>
-<p>能够被添加逻辑的Actor</p>
+<h1 id="Pawn"><a href="#Pawn" class="headerlink" title="Pawn"></a>Pawn</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23321666?refer=insideue4">https://zhuanlan.zhihu.com/p/23321666?refer=insideue4</a></p>
+<p>在上一篇的内容里，我们谈到了UE的3D游戏世界是由Object-&gt;<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1514500&content_type=Article&match_order=1&q=Actor&zhida_source=entity">Actor</a>+<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1514500&content_type=Article&match_order=1&q=Component&zhida_source=entity">Component</a>-&gt;Level-&gt;World-&gt;WorldContext-&gt;GameInstance-&gt;Engine来逐渐层层构建而成的。那么从这下半章节开始，我们就将要开始逐一分析，UE是如何在每一个对象层次上表达游戏逻辑的。和分析对象节点树一样，我们也将采用自底向上的方法，从最原始简单的对象开始。</p>
+<h2 id="代码逻辑"><a href="#代码逻辑" class="headerlink" title="代码逻辑"></a>代码逻辑</h2><p>其实所有的游戏引擎在构建完节点树之后，都会面临这么一个问题，<strong>我的游戏逻辑写在哪里？</strong> 有的原始的如Cocos2dx懒得想那么多，干脆就直接码在Node里面得了，所以你翻看Cocos2dx的源码你就会经常发现它的逻辑和表现往往是交杂在一起的，简单直接暴力美学，面向对象继承玩得溜。而面向组合阵营的领军Unity则干脆就把Component思想再应用极致一点，我的逻辑为什么不能也是一个组件？所以Unity里的ScriptComponent也是这种组合思想的体现，模型统一架构优雅，MonoBehavior立大功了！但是在一个Component（ScriptComponent）里去操作管理其他的Components，本身却其实并不是那么优雅，因为有些Component之上的协调管理的事务，从层次上来说，应该放在更高的一个概念上实现。UE在思考这个问题时，却是感觉有些理想主义，颇有些C++的理念，力求不为你不需要的东西付代价，宁愿有时候折衷，也想保住最优性能。UE的架构中也大量应用了各种继承，有些继承链也能拉得很长，同时一方面也吸纳了组合的优点，我们也能见到UE的源码中类的成员变量也是组合了好多其他对象。所以接下来的该介绍的就是UE综合应用这两种思想的设计产物。面向对象派生下来的Pawn和Character，支持组合的Controller们。</p>
+<h2 id="Pawn-1"><a href="#Pawn-1" class="headerlink" title="Pawn"></a>Pawn</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NjNiYzE3MWNkMGNlYTQ0MDdkYTc2ZTBiZTJiZjkzOGNfWnVPSk82S0ZLOUZnb3VSMWMzeVdDdWhaZU9RYzRuSWpfVG9rZW46TThHNmJWT2VRb0NLcFh4cTZoMGNZbnFFbm5oXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>同其他AInfo一样，UE也是从Actor中再派生出了APawn，并定义了3块基本的模板方法接口： 1. 可被Controller控制 2. PhysicsCollision表示 3. MovementInput的基本响应接口</p>
 <p><strong>思考：为何Actor也能接受Input事件？</strong></p>
-<p><img src="https://pic2.zhimg.com/v2-946016fa72e615e36bfa0a94590a4359_1440w.jpg" alt="img"></p>
-<h2 id="DefaultPawn，SpectatorPawn，Character"><a href="#DefaultPawn，SpectatorPawn，Character" class="headerlink" title="DefaultPawn，SpectatorPawn，Character"></a>DefaultPawn，SpectatorPawn，Character</h2><p><img src="https://pic2.zhimg.com/v2-e3e8606aa67344bf178fd9097d249693_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OTAwMzM5N2I0M2Y0YzI3N2QwODM4ZWNmYTVkODVkNWZfb0ZtTjROOWJUdElCcmc5VTZWbkthNHd4UnBZaWFhdVFfVG9rZW46VllDcmJsRHphb3Q4Zkt4VjZNWWNTZ2xUbkhnXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>对于输入的处理功能是由InputComponent处理的，我们应该在里面处理不同输入种类应对不同结果。还不如泛泛的在Actor的基类里提供InputComponent的集成，这样反而保证了灵活性。</p>
+<p>Pawn就定义了一个基本的MovementInput套路，相当于把WASD的输入响应再往前包装处理了一步。而“逻辑控制”指的是更高层上的比如寻路或自动巡逻等行为。Pawn实现的是“可被控制”的概念。</p>
+<p>所以Pawn就索性把移动的接口也定义了一下，为了灵活性，内部转交给MovementComponent再处理。</p>
+<h2 id="DefaultPawn，SpectatorPawn，Character"><a href="#DefaultPawn，SpectatorPawn，Character" class="headerlink" title="DefaultPawn，SpectatorPawn，Character"></a>DefaultPawn，SpectatorPawn，Character</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MmZlYzdlZWYyNTZmODE5ZjEzZjkwYWNjOTlkYWJkZTZfUXlmOVBrWmZRSG9DVTlaU3FZOE5OZmZCb21Hd3BjeFZfVG9rZW46SmVNemI4OVFxb2w4ZVh4ajNvSGNrOEVOblBlXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h3 id="DefaultPawn"><a href="#DefaultPawn" class="headerlink" title="DefaultPawn"></a>DefaultPawn</h3><p>因为我们每次想自己搞Pawn都得从Pawn派生过来，然后再一个个添加组件。UE知道我们大家都很懒，所以提供了一个默认的Pawn：DefaultPawn，默认带了一个DefaultPawnMovementComponent、spherical CollisionComponent和StaticMeshComponent。也是上述Pawn阐述过的三件套，只不过都是默认套餐。</p>
 <h3 id="SpectatorPawn"><a href="#SpectatorPawn" class="headerlink" title="SpectatorPawn"></a>SpectatorPawn</h3><p>UE的FPS做的太好了，就会有一些观众想要观战。观战的玩家们虽然也在当前地图里，但是我们并不需要真正的去表示它们，只要给他们一些摄像机“漫游”的能力。所以派生于DefaultPawn的SpectatorPawn提供了一个基本的USpectatorPawnMovement（不带重力漫游），并关闭了StaticMesh的显示，碰撞也设置到了“Spectator”通道。</p>
 <h3 id="Character"><a href="#Character" class="headerlink" title="Character"></a>Character</h3><p>因为我们是人，所以在游戏中，代入的角色大部分也都是人。大部分游戏中都会有用到人形的角色，既然如此，UE就为我们直接提供了一个人形的Pawn来让我们操纵。</p>
-<h1 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h1><p>如上文所述，UE从Actor中分化了一些专门可供玩家“控制”的Pawn，那我们这篇就专门来谈谈该怎么个控制法！<br>所谓的控制，本质指的就是我们游戏的业务逻辑。比如说玩家按A键，角色自动找一个最近的敌人并攻击，这个自动寻找目标并攻击的逻辑过程，就是我们所谈的控制。<br>Note1：重申一下，Controller特别是PlayerController，跟网络，AI和Input的关系都非常的紧密，目前都暂且不讨论，留待各自模块章节再叙述。</p>
+<p>像人一样行走的CharacterMovementComponent， 尽量贴合的CapsuleComponent，再加上骨骼上蒙皮的网格。</p>
+<h1 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23480071">https://zhuanlan.zhihu.com/p/23480071</a></p>
+<p>如上文所述，UE从Actor中分化了一些专门可供玩家“控制”的Pawn，那我们这篇就专门来谈谈该怎么个控制法！</p>
 <h2 id="AController"><a href="#AController" class="headerlink" title="AController"></a>AController</h2><p>AController是继承自AActor的一个子类</p>
-<p>，问自己一个问题：如果我想实现一种机制去控制游戏里的Actor，该怎么设计？<br>巧妇难为无米之炊，咱们先来看看当前手上都有些什么：</p>
+<p>问自己一个问题：如果我想实现一种机制去控制游戏里的Actor，该怎么设计？ 巧妇难为无米之炊，咱们先来看看当前手上都有些什么：</p>
 <ol>
 <li><strong>UObject</strong>，反射序列化等机制</li>
 <li><strong>UActorComponent</strong>，功能的载体，一定程度的嵌套组装能力（SceneComponent）</li>
@@ -346,36 +488,89 @@
 <li><strong>APawn</strong>，分化出来的AActor，物理表示和基本的移动能力，当前正翘首以待。</li>
 <li><strong>没了</strong>，在控制Actor这个层级，我们还暂时不需要去考虑Level等更高层次的对象</li>
 </ol>
+<ul>
+<li>Controller应该做的事情</li>
+</ul>
+<ol>
+<li><strong>能够和Pawn对应起来</strong></li>
+<li><strong>多个控制实例</strong></li>
+<li><strong>可挂载释放</strong></li>
+<li><strong>能够脱离Pawn存在</strong></li>
+<li><strong>操纵Pawn生死的能力</strong></li>
+<li><strong>根据配置自动生成</strong></li>
+<li><strong>事件响应</strong></li>
+<li><strong>持续的运行</strong></li>
+<li><strong>自身有状态</strong></li>
+<li><strong>拥有一定的扩展继承组合能力</strong></li>
+<li><strong>保存数据状态</strong></li>
+<li><strong>可在世界里移动</strong></li>
+<li><strong>可探查世界的对象</strong></li>
+<li><strong>可同步</strong></li>
+</ol>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWE4ZjVmZDk4M2ZkYTViYjY1M2E1OTEyNzMzMDEyNTRfWHlSV0FFQ2lmMmlGZ0o0cnhEa0FLNW1mUHdJaEcxR0VfVG9rZW46SVhHUmI2VnZXb3pNU2R4b1pBSmN0ZWFZblBlXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>关联Pawn的能力，有Possess和UnPossess，源码里也有PawnPendingDestroy等这些函数（未一一列出）；GameMode中也保存着AIControllerClass和PlayerControllerClass的配置，用于在适当的时候Spawn出Controller；继承于Actor也就有了EnableInput和Tick；Controller本身还可以继续派生下去（如AIController和PlayerController），也可以容纳Components；也带着一个SceneComponent所以可以摆放在世界中；自身也可以添加成员变量来记忆存储游戏状态；自身也有一个FName StateName（Playing、Spectating、Inactive），切换自身的状态（运行，观察，非激活）；因为跟Pawn是平级的关系，只在运行的时候引用关联，所以对彼此独立存在不做强制约束，提高了灵活性。</p>
 <p><strong>思考：Controller和Pawn必须1:1吗？</strong></p>
 <p><strong>思考：为何Controller不能像Actor层级嵌套？</strong></p>
+<p>你实际上想要表达的是一种“控制”互相嵌套的概念，感觉又给“控制”给分了层，有“大控制”，也有“小控制”，但是“控制”的“大小”又是个什么概念呢？没意义。</p>
+<p>而针对游戏逻辑的复杂，怎么更好的管理组织逻辑代码，我们有状态机，分层状态机，行为树，GOAL（目标导向），甚至你还能搞些神经网络遗传算法机器学习啥的。</p>
 <p><strong>思考：Controller可以显示吗？</strong></p>
+<p>因为继承与Actor的话，是可以渲染的，但是没有意义就直接在构造函数自己隐藏了。</p>
 <p><strong>思考：Controller的位置有什么意义？</strong></p>
+<p>想象成一种是上帝视角在千里之外心电感应控制Pawn，另一种是骑在Pawn肩上来指挥。</p>
 <p><strong>思考：哪些逻辑应该写在Controller中？</strong></p>
-<h2 id="APlayerState"><a href="#APlayerState" class="headerlink" title="APlayerState"></a>APlayerState</h2><p><img src="https://pic3.zhimg.com/v2-ba203b15c1e9356d5aa7fe6bf2fd556c_1440w.jpg" alt="img"></p>
-<p>在游戏里，如果要评劳模，那Controller们无疑是最兢兢业业的，虽然有时候蛮横霸道了一些，但是经常工作在第一线，下面的Pawn们常常智商太低，上面的Level，GameMode们又有点高高在上，让他们直接管理数量繁多的Pawn们又有点太折腾，于是事无巨细的真正干那些脏活累活的还得靠Controller们。本文虽然没有在网络一块留太多笔墨，但是Controller也是同时作为联机环境中最重要的沟通渠道，身兼要职。<br>回顾总结一下本文要点，UE在Pawn这个层级演化构成了一个最基本和非常完善的Component-Actor-Pawn-Controller的结构：</p>
-<p><img src="https://pic3.zhimg.com/v2-117fa2fe09c46ed2dac388278f028df0_1440w.jpg" alt="img"></p>
-<h1 id="PlayerController和AIController"><a href="#PlayerController和AIController" class="headerlink" title="PlayerController和AIController"></a>PlayerController和AIController</h1><h2 id="APlayerController"><a href="#APlayerController" class="headerlink" title="APlayerController"></a>APlayerController</h2><p><img src="https://pic3.zhimg.com/v2-88131e55febd8886e0f3c87b92c526e8_1440w.png" alt="img"></p>
+<h2 id="APlayerState"><a href="#APlayerState" class="headerlink" title="APlayerState"></a>APlayerState</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MDk0MGZkYzUzNDM4YjJjMDZiMDMzNmFmNGNlYmIzYTZfYXo4aWhQOEtGSDFvaEZKQTdXRWhvMTVkQVloOW9pNEFfVG9rZW46UEt1cGJwYWVUb3VCWEp4Z2lhdmNCVjVPbldkXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>至于为啥APlayerState是从AActor派生的AInfo继承下来的，我们聪明的读者相信也能猜得到了，所以也就不费口舌论证了。无非就是贪图AActor本身的那些特性以网络复制等。而AInfo们正是这种不爱表现的纯数据书呆子们的大本营。而这个PlayerState我们可以通过在GameMode中配置的PlayerStateClass来自动生成。</p>
+<p>注意，这个APlayerState也理所当然是生成在Level中的，跟Pawn和Controller是平级的关系，Controller里只不过保存了一个指针引用罢了。注释里说的PlayerState只为players存在，不为NPC生成，指的是PlayerState是跟UPlayer对应的，换句话说当前游戏有多少个真正的玩家，才会有多少个PlayerState，而那些AI控制的NPC因为不是真正的玩家，所以也不需要创建生成PlayerState。但是UE把PlayerState的引用变量放在了Controller一级，而不是PlayerController之中，说明了其实AIController也是可以设置读取该变量的。一个AI智能能够读取玩家的比分等状态，有了更多的信息来作决策，想来也没有什么不对嘛。</p>
+<p>Controller和网络的结合很紧密，很多机制和网络也非常强关联，但是在这里并不详细叙述，这里先可以单纯理解成Controller也可以当作玩家在服务器上的代理对象。把PlayerState独立构成一个Actor还有一个好处，当玩家偶尔因网络波动断线，因为这个连接不在了，所以该Controller也失效了被释放了，服务器可以把对应的该PlayerState先暂存起来，等玩家再紧接着重连上了，可以利用该PlayerState重新挂接上Controller，以此提供一个比较顺畅无缝的体验。至于AIController，因为都是运行在Server上的，Client上并没有，所以也就无所谓了。</p>
+<p><strong>思考：哪些数据应该放在PlayerState中？</strong></p>
+<ul>
+<li>总结</li>
+</ul>
+<p>在游戏里，如果要评劳模，那Controller们无疑是最兢兢业业的，虽然有时候蛮横霸道了一些，但是经常工作在第一线，下面的Pawn们常常智商太低，上面的Level，GameMode们又有点高高在上，让他们直接管理数量繁多的Pawn们又有点太折腾，于是事无巨细的真正干那些脏活累活的还得靠Controller们。本文虽然没有在网络一块留太多笔墨，但是Controller也是同时作为联机环境中最重要的沟通渠道，身兼要职。 回顾总结一下本文要点，UE在Pawn这个层级演化构成了一个最基本和非常完善的Component-Actor-Pawn-Controller的结构：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MWFjNGI5NWQ2NTFjM2JhNzkyNDYzODg4ZWUxNDUyNGJfV2xta3Nkb0JKQ0Z3cmdzaDFmWEp3WGZpenN2TGRoa2VfVG9rZW46QlJnZGI0TnUzb1dVMlN4ZFlpY2MxeGV3bjFkXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<h1 id="PlayerController和AIController"><a href="#PlayerController和AIController" class="headerlink" title="PlayerController和AIController"></a>PlayerController和AIController</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23649987">https://zhuanlan.zhihu.com/p/23649987</a></p>
+<h2 id="APlayerController"><a href="#APlayerController" class="headerlink" title="APlayerController"></a>APlayerController</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MTg4YjRmOTM0YzY0NTc5NWNkZjhjMzA5NjQ1YzJkZmRfS1EyQ09lS01heFlWRjRWTVZtcG96elRvbnJmVkI4UFNfVG9rZW46VkNBU2JxeGNYb1ltOHp4dGhveGN1b1loblU3XzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<ul>
+<li>Camera，对于PlayerCameraManager来进行管理摄像机。</li>
+<li>Input，有UPlayerInput 来委托管理。</li>
+<li>UPlayer关联，在SetPlayer后才可以正常工作，下面Player文章有简述。</li>
+<li>HUD，现在UMG比较多HUD是UE3迁移的组件。</li>
+<li>Level切换，在Level Travelling的时候会通过PlayerController进行RPC调用，从而转发到自己的World中进行</li>
+<li>Voice，服务于网络中语音聊天</li>
+</ul>
 <p><strong>思考：哪些逻辑应该放在PlayerController中？</strong></p>
-<h2 id="AAIController"><a href="#AAIController" class="headerlink" title="AAIController"></a>AAIController</h2><p><img src="https://pic1.zhimg.com/v2-a0c2148ff8331da1b70ab4157e19f1c2_1440w.png" alt="img"></p>
+<p>对实现游戏逻辑来说，如果是按照MVC的视角，那么View对应的是Pawn的表现，而PlayerController对应的是Controller的部分，那Model就是游戏业务逻辑的数据了（PlayerState）。</p>
+<h2 id="AAIController"><a href="#AAIController" class="headerlink" title="AAIController"></a>AAIController</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NjcyNmUzM2JmOTI3NDdlNjE3NGZmMTYxZWEzODZmNTlfcTc0WnBucWl4MXk3VjdIcFhsM2tDbFFqckc3T3MxeWVfVG9rZW46SmJyZ2I5V3NWb2d0akd4RjdVbmNlaXY2bmlkXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>同PlayerController对比，少了Camera、Input、UPlayer关联，HUD显示，Voice、Level切换接口，但也增加了一些AI需要的组件：</p>
 <ul>
 <li>Navigation，用于智能根据导航寻路，其中我们常用的MoveTo接口就是做这件事情的。而在移动的过程中，因为少了玩家控制的来转向，所以多了一个SetFocus来控制当前的Pawn视角朝向哪个位置。</li>
 <li>AI组件，运行启动行为树，使用黑板数据，探索周围环境，以后如果有别的AI算法方法实现成组件，也应该在本组件内组合启动。</li>
-<li>Task系统，让AI去完成一些任务，也是实现<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1646070&content_type=Article&match_order=1&q=GameplayAbilities&zhida_source=entity">GameplayAbilities</a>系统的一个接口。目前简单来说GameplayAbilities是为Actor添加额外能力属性集合的一个模块，比如HP，MP等。其中的GamePlayEffect也是用来实现Buffer的工具。另外GamePlayTags也是用来给Actor添加标签标记来表明状态的一种机制。目前来说该两个模块似乎都是由Epic的Game Team在维护，所以完成度不是非常的高，用的时候也往往需要根据自己情况去重构调整</li>
+<li>Task系统，让AI去完成一些任务，也是实现GameplayAbilities系统的一个接口。具体去查询GAS系统。</li>
 </ul>
 <p><strong>思考：哪些逻辑应该放在AIController中？</strong></p>
-<h1 id="GameMode和GameState"><a href="#GameMode和GameState" class="headerlink" title="GameMode和GameState"></a>GameMode和GameState</h1><h2 id="GameMode"><a href="#GameMode" class="headerlink" title="GameMode"></a>GameMode</h2><p><img src="https://pic4.zhimg.com/v2-df7c0a12f2b806dbb60e84a95ae9758d_1440w.png" alt="img"></p>
+<p>我们推荐尽量利用UE提供的行为树黑板等组件实现。</p>
+<p>AIController都是在关卡内比较短暂存在的，一般不太有跨Level的数据保存，所以你可以用AIController的成员变量来保存状态。</p>
+<ul>
+<li>总结</li>
+</ul>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NDUzZTUxYTg2ZTRjZWI2M2E3OWZlNzc4NGIzNzI4ZDRfa1VZSU1MYXJCdGpaNEIxdzlZYjR0cTE3c3VBV2sxNTZfVG9rZW46U0E0dGJEdjlFb3VuaEt4RTE0cGN2U3l0blNoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<h1 id="GameMode和GameState"><a href="#GameMode和GameState" class="headerlink" title="GameMode和GameState"></a>GameMode和GameState</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23707588">https://zhuanlan.zhihu.com/p/23707588</a></p>
+<h2 id="GameMode"><a href="#GameMode" class="headerlink" title="GameMode"></a>GameMode</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU3ZGU1OGU0MDczZTllNjdjYTNmMmMzMTY3NDM5Y2NfNUpQbFFnWWExMFJoQTZSUmE1UVRmaHQ0bk1LbUwzQkdfVG9rZW46UzNvd2JTSTVkb2oya3V4OEVIZmM0Z016bm1kXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>既然勇敢的承担了游戏逻辑的职责，说他是AInfo家族里的扛把子也不为过，因此GameMode身为一场游戏的唯一逻辑操纵者身兼重任，在功能实现上有许多的接口，但主要可以分为以下几大块：</p>
 <ol>
-<li><strong>Class登记</strong>，GameMode里登记了游戏里基本需要的类型信息，在需要的时候通过UClass的反射可以自动Spawn出相应的对象来添加进关卡中。前文说过的Controller的类型登记也是在此，GameMode就是比Controller更高一级的领导</li>
-<li><strong>游戏内实体的Spawn</strong>，不光登记，GameMode既然作为一场游戏的主要负责人，那么游戏的加载释放过程中涉及到的实体的产生，包括玩家Pawn和PlayerController，AIController也都是由GameMode负责。最主要的SpawnDefaultPawnFor、SpawnPlayerController、ShouldSpawnAtStartSpot这一系列函数都是在接管玩家实体的生成和释放，玩家进入该游戏的过程叫做Login（和服务器统一），也控制进来后在什么位置，等等这些实体管理的工作。GameMode也控制着本场游戏支持的玩家、旁观者和AI实体的数目。</li>
-<li><strong>游戏的进度</strong>，一个游戏支不支持暂停，怎么重启等这些涉及到游戏内状态的操作也都是GameMode的工作之一，SetPause、ResartPlayer等函数可以控制相应逻辑。</li>
-<li><strong>Level的切换</strong>，或者说World的切换更加合适，GameMode也决定了刚进入一场游戏的时候是否应该开始播放开场动画（cinematic），也决定了当要切换到下一个关卡时是否要bUseSeamlessTravel，一旦开启后，你可以重载GameMode和PlayerController的GetSeamlessTravelActorList方法和GetSeamlessTravelActorList来指定哪些Actors不被释放而进入下一个World的Level。</li>
-<li><strong>多人游戏的步调同步</strong>，在多人游戏的时候，我们常常需要等所有加入的玩家连上之后，载入地图完毕后才能一起开始逻辑。因此UE提供了一个<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1669170&content_type=Article&match_order=1&q=MatchState&zhida_source=entity">MatchState</a>来指定一场游戏运行的状态，意义看名称也是不言自明的，就是用了一个状态机来标记开始和结束的状态，并触发各种回调。</li>
+<li><strong>Class登记</strong></li>
+<li><strong>游戏内实体的Spawn</strong></li>
+<li><strong>游戏的进度</strong></li>
+<li><strong>Level的切换</strong>，或者说World的切换更加合适</li>
+<li><strong>多人游戏的步调同步</strong>，UE提供了一个<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1669170&content_type=Article&match_order=1&q=MatchState&zhida_source=entity">MatchState</a>来指定一场游戏运行的状态，就是用了一个状态机来标记开始和结束的状态，并触发各种回调。</li>
 </ol>
 <p><strong>思考：多个Level配置不同的GameMode时采用的是哪一个GameMode？</strong></p>
+<p>一个World里只会有一个GameMode实例，在后续的LoadStreamingLevel时候，并不会再动态创建出别的GameMode，所以GameMode从始至终只有一个，PersistentLevel的那个。</p>
 <p><strong>思考：Level迁移时GameMode是否保持一致？</strong></p>
+<p>UE的流程travelling，GameMode在新的World里是会新生成一个的，即使Class类型一致，即使bUseSeamlessTravel，因此在travelling的时候要小心GameMode里保存的状态丢失。不过Pawn和Controller默认是一致的。</p>
 <p><strong>思考：哪些逻辑应该写在GameMode里？哪些应该写在Level Blueprint里？</strong></p>
+<p>同Controller应用到Pawn一样道理，因为GameMode是可以应用在不同的Level的，所以通用的玩法应该放在GameMode里</p>
+<p>GameMode只在Server存在（单机游戏也是Server），所以GameMode里不要写Client特定相关的逻辑</p>
 <h2 id="AGameModeBase-生命周期"><a href="#AGameModeBase-生命周期" class="headerlink" title="AGameModeBase 生命周期"></a>AGameModeBase 生命周期</h2><p>AGameModeBase 在UE5中作为之前UE4的AGameMode的基类</p>
 <p>所有 Game Mode 均为 <code>AGameModeBase</code> 的子类。而 <code>AGameModeBase</code> 包含大量可覆盖的基础功能。部分常见函数包括：</p>
 <table>
@@ -387,7 +582,7 @@
 </thead>
 <tbody><tr>
 <td><code>InitGame</code></td>
-<td><code>InitGame</code> 事件在其他脚本之前调用（包括 <code>PreInitializeComponents</code>），由 <code>AGameModeBase</code> 使用，初始化参数并生成其助手类。<br />它在任意 Actor 运行 <code>PreInitializeComponents</code> 前调用（包括 Game Mode 实例自身）。</td>
+<td><code>InitGame</code> 事件在其他脚本之前调用（包括 <code>PreInitializeComponents</code>），由 <code>AGameModeBase</code> 使用，初始化参数并生成其助手类。 它在任意 Actor 运行 <code>PreInitializeComponents</code> 前调用（包括 Game Mode 实例自身）。</td>
 </tr>
 <tr>
 <td><code>PreLogin</code></td>
@@ -417,7 +612,7 @@
 <h2 id="GameState"><a href="#GameState" class="headerlink" title="GameState"></a>GameState</h2><p>UE5.6 文档是这么介绍的</p>
 <p><strong>Game State</strong> 负责启用客户端监控游戏状态。从概念上而言，Game State 应该管理所有已连接客户端已知的信息（特定于 Game Mode 但不特定于任何个体玩家）。它能够追踪游戏层面的属性，如已连接玩家的列表、夺旗游戏中的团队得分、开放世界游戏中已完成的任务，等等。</p>
 <p>Game State 并非追踪玩家特有内容（如夺旗比赛中特定玩家为团队获得的分数）的最佳之处，因为它们由 <strong>Player State</strong> 更清晰地处理。整体而言，GameState 应该追踪游戏进程中变化的属性。这些属性与所有人皆相关，且所有人可见。Game mode 只存在于服务器上，而 Game State 存在于服务器上且会被复制到所有客户端，保持所有已连接机器的游戏进程更新。</p>
-<p><img src="https://picx.zhimg.com/v2-336fd667fb674bf176fa198741eec129_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NWJmMDdiMWI3ZWMxMDI4ODZmMTE2MTMyZWZkODQzOTJfTVh2MWdZWnRIaXlJaDNFSTJxSTNoYThwRWhXNzdmRXdfVG9rZW46UHhtY2JkWGhzb0V4Tnd4bDFDcGNhTkFQbmljXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h3 id="AGameStateBase"><a href="#AGameStateBase" class="headerlink" title="AGameStateBase"></a>AGameStateBase</h3><p><code>AGameStateBase</code> 是基础实现，其部分默认功能包括：</p>
 <table>
 <thead>
@@ -445,44 +640,64 @@
 <table>
 <thead>
 <tr>
-<th align="center"><strong>特性</strong></th>
-<th align="center"><strong>GameMode</strong></th>
-<th align="center"><strong>GameState</strong></th>
+<th><strong>特性</strong></th>
+<th><strong>GameMode</strong></th>
+<th><strong>GameState</strong></th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="center"><strong>存在范围</strong></td>
-<td align="center">仅服务器</td>
-<td align="center">服务器 + 所有客户端（同步）</td>
+<td><strong>存在范围</strong></td>
+<td>仅服务器</td>
+<td>服务器 + 所有客户端（同步）</td>
 </tr>
 <tr>
-<td align="center"><strong>数据权限</strong></td>
-<td align="center">可读写</td>
-<td align="center">服务器可写，客户端只读</td>
+<td><strong>数据权限</strong></td>
+<td>可读写</td>
+<td>服务器可写，客户端只读</td>
 </tr>
 <tr>
-<td align="center"><strong>核心职责</strong></td>
-<td align="center">规则执行</td>
-<td align="center">状态同步（如分数、时间、玩家列表）</td>
+<td><strong>核心职责</strong></td>
+<td>规则执行</td>
+<td>状态同步（如分数、时间、玩家列表）</td>
 </tr>
 <tr>
-<td align="center"><strong>网络复制</strong></td>
-<td align="center">不复制</td>
-<td align="center">自动同步至客户端</td>
+<td><strong>网络复制</strong></td>
+<td>不复制</td>
+<td>自动同步至客户端</td>
 </tr>
 </tbody></table>
-<h1 id="Player"><a href="#Player" class="headerlink" title="Player"></a>Player</h1><h2 id="UPlayer"><a href="#UPlayer" class="headerlink" title="UPlayer"></a>UPlayer</h2><p>让我们假装自己是UE，开始编写Player类吧。为了利用上UObject的那些现有特性，所以肯定是得从UObject继承了。那能否是AActor呢？Actor是必须在World中才能存在的，而Player却是比World更高一级的对象。玩游戏的过程中，LevelWorld在不停的切换，但是玩家的模式却是脱离不变的。另外，Player也不需要被摆放在Level中，也不需要各种Component组装，所以从AActor继承并不合适。那还是保持简单吧：</p>
-<p><img src="https://pica.zhimg.com/v2-f1fee0eaf2b5fea87085f71895f4e730_1440w.png" alt="img"></p>
+<ul>
+<li>总结</li>
+</ul>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTc0MDUxOTBkMzdiYThhYjNjZWZjOWQ4YzFiZGIzZjBfVEY2RlNtRWo4UXp1aFFOaWlocmhRMnBEZm1xZXlzSXNfVG9rZW46Q3NUdmJLZ1VUb3lqdm14dEJZbWNuOEI3bkdoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<h1 id="Player"><a href="#Player" class="headerlink" title="Player"></a>Player</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23826859">https://zhuanlan.zhihu.com/p/23826859</a></p>
+<h2 id="UPlayer"><a href="#UPlayer" class="headerlink" title="UPlayer"></a>UPlayer</h2><p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OTYzOThhYzg5MzkzMmFhZjE3NDcyNmI1MDQ5Y2Q1YjBfVGdDNXI1RWpFYmNqbUVlMXdOWjdkVktEOHJETjJYZjZfVG9rZW46WjIyTWJacDVCbzMyb0h4WXI3QWNZalZtbjNlXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>如图可见，Player和一个PlayerController关联起来，因此UE引擎就可以把输入和PlayerController关联起来。因为不管是本地玩家还是远程玩家，都是需要控制一个玩家Pawn的，所以自然也就需要为每个玩家分配一个PlayerController，所以把PlayerController放在UPlayer基类里是合理的。</p>
 <h2 id="ULocalPlayer"><a href="#ULocalPlayer" class="headerlink" title="ULocalPlayer"></a>ULocalPlayer</h2><p>然后是本地玩家，从Player中派生下来LocalPlayer类。对本地环境中，一个本地玩家关联着输入，也一般需要关联着输出（无输出的玩家毕竟还是非常少见）。玩家对象的上层就是引擎了，所以会在GameInstance里保存有LocalPlayer列表。</p>
-<p><img src="https://pic4.zhimg.com/v2-0cdc26e0b66ec808197a76cb8b09350d_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YzQ1NGQ2MzNhNWU3N2Y4MmJjOGZjMGRhMDc2NzgzNzhfSEppc2dLcVpIbk5jUTMwNTE5Nm1obUZ5NjJadWZXd2pfVG9rZW46TERscWJIbDRDb3BwVWx4Q1ByS2NQZldYbmdmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>UE4里的ULocalPlayer也如图所见，ULocalPlayer比UPlayer多了Viewport相关的配置（Viewport相关的内容在渲染章节讲述），也终于用SpawnPlayerActor实现了创建出PlayerController的功能。GameInstance里有LocalPlayers的信息之后，就可以方便的遍历访问，来实现跟本地玩家相关操作。</p>
+<ul>
+<li>网络下的ULocalPlayer<ul>
+<li>在Server模式，会直接创建出ULocalPlayer，然后创建出相应的PlayerController。</li>
+<li>Client（比如Play的时候选择NumberPlayer=2,则有一个为Client），则会先发送JoinSplit消息到服务器，在载入服务器上的Map之后，再为LocalPlayer创建出PlayerController。</li>
+<li>而在每个PlayerController创建的过程中，在其内部会调用Init<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1717004&content_type=Article&match_order=1&q=PlayerState&zhida_source=entity">PlayerState</a></li>
+<li>这样LocalPlayer最终就和PlayerState对应了起来。而网络联机时其他玩家的PlayerState是通过Replicated过来的。</li>
+</ul>
+</li>
+</ul>
+<p>我们谈了那么久的玩家就是输入，体现在在每个PlayerController接受Player的时候</p>
+<p>可见，对于ULocalPlayer，APlayerController内部会开始InitInputSystem()，接着会创建相应的UPlayerInput，BuildInputStack等初始化出和Input相关的组件对象。现在先明白到LocalPlayer才是PlayerController产生的源头，也因此才有了Input就够了，特定的Input事件流程分析在后续章节再细述。</p>
 <p><strong>思考：为何不在LocalPlayer里编写逻辑？</strong></p>
+<p>在Pawn-PlayerController和PlayerState组合已经为表示逻辑数据已经处理好了，就没必要处理在Level处理其他事情了。PlayerController就是Player在Level中的话事人。</p>
 <h2 id="UNetConnection"><a href="#UNetConnection" class="headerlink" title="UNetConnection"></a>UNetConnection</h2><p>非常耐人寻味的是，在UE里，一个网络连接也是个Player：</p>
-<p><img src="https://pic2.zhimg.com/v2-4bc20d50aa7c95755bf4d4c4b2b60ed7_1440w.png" alt="img"></p>
-<p>包含Socket的IpConnection也是玩家，甚至对于一些平台的特定实现如OculusNet的连接也可以当作玩家，因为对于玩家，只要能提供输入信号，就可以当作一个玩家。<br>追根溯源，UNetConnection的列表保存在UNetDriver，再到FWorldContext，最后也依然是UGameInstance，所以和LocalPlayer的列表一样，是在World上层的对象。<br>本篇先前瞻一下结构，对于网络部分不再细述。</p>
-<h1 id="GameInstance-1"><a href="#GameInstance-1" class="headerlink" title="GameInstance"></a>GameInstance</h1><p>可持续化单例GameManager</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTU0ODFiNzhmNWEyZjFlNzE3YWMyNDE3M2U5NDUzZmFfUmw3cGJpSnlzQThGYkJidnp0TTR3UlRTMWxwb2NRZW1fVG9rZW46UmRCb2JqMjBkb0wwbW54QU5jV2NYS3FsbjllXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>包含Socket的IpConnection也是玩家，甚至对于一些平台的特定实现如OculusNet的连接也可以当作玩家，因为对于玩家，只要能提供输入信号，就可以当作一个玩家。</p>
+<p>追根溯源，UNetConnection的列表保存在UNetDriver，再到FWorldContext，最后也依然是UGameInstance，所以和LocalPlayer的列表一样，是在World上层的对象。</p>
+<h1 id="GameInstance-1"><a href="#GameInstance-1" class="headerlink" title="GameInstance"></a>GameInstance</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24005952">https://zhuanlan.zhihu.com/p/24005952</a></p>
+<p>可持续化单例GameManager</p>
 <p>一人之下，万人之上</p>
 <p>UE提供的方案是一以贯之的，为我们提供了一个GameInstance类。为了受益于UObject的反射创建能力，直接继承于UObject，这样就可以依据一个Class直接动态创建出来具体的GameInstance子类。</p>
-<p><img src="https://pica.zhimg.com/v2-e3572a2d46608304109104e6174688d8_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZThmODBjM2Q4NjgzNWM3NjlmZjUxZGRlMTkxZWE2ZDFfcTNUZU50ZldBc0xvZnBEYnFtNHZUWUFqWEdIaXRXM2RfVG9rZW46RE9DcGI0WEhob1lCdVR4UXFlVWNpOVVvbmNoXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>我并不想罗列所有的接口，UGameInstance里的接口大概有4类：</p>
 <ol>
 <li>引擎的初始化加载，Init和ShutDown等（在引擎流程章节会详细叙述）</li>
@@ -490,27 +705,40 @@
 <li>GameMode的重载修改，这是从4.14新增加进来改进，本来你只能为特定的某个Map配置好GameModeClass，但是现在GameInstance允许你重载它的PreloadContentForURL、CreateGameModeForURL和OverrideGameModeClass方法来hook改变这一流程。</li>
 <li>OnlineSession的管理，这部分逻辑跟网络的机制有关（到时候再详细介绍），目前可以简单理解为有一个网络会话的管理辅助控制类。</li>
 </ol>
+<p>GameInstance是在GameEngine里创建的</p>
 <p><strong>思考：GameInstance只有一个吗？</strong></p>
+<p>一般而言，是的。</p>
+<p>因为UE的这套Editor自绘机制，还有PIE（PlayInEditor），进程里其实是可以同时有多个GameInstance的</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=MjUwMjJhNGJmMzU3YzVlY2M3NjhmMTQ4NTRhMzg2MmZfekxDOWRtdFBjaWE0RFZXcVpUc04yYllma21QZ0Z0Z1dfVG9rZW46STZ5d2JBTURCb3hmUmJ4WlphT2NvUm5xbjJmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p><strong>思考：哪些逻辑应该放在GameInstance？</strong></p>
+<p>作为游戏中全局唯一的长者，我们就应该给他全局的控制权。</p>
+<ol>
+<li> Worlds，Level 切换</li>
+<li>动态添加删除Players </li>
+<li>独立于Level的全局UI 切换</li>
+<li>全局配置</li>
+<li>第三方逻辑接入与管理</li>
+</ol>
+<p>自然的GameInstance就应该存储一些全局的状态数据。所以你可以在GameInstance的成员变量中添加一些全局的状态，或者是那些想要在Level之外持续存在的对象。</p>
 <h2 id="SaveGame"><a href="#SaveGame" class="headerlink" title="SaveGame"></a>SaveGame</h2><p>得益于UObject的序列化机制，现在你只需要继承于USaveGame，并添加你想要的那些属性字段，然后这个结构就可以序列化保存下来的。</p>
-<p><img src="https://pic4.zhimg.com/v2-5f9893415a3b89cb6ef4c2e217cbf391_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YzdmMWE4ZjE3NDk5ZTc3NGFlNmU1YTI2MDgwZDRiZWZfTmtPTm9Ia3pHb2JBRkNGTWRObnpxNmM0bGlTeEhIUkFfVG9rZW46Wk0yU2JTTHAyb1lsZkh4WmFJM2NMWjB3bnliXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h1 id="架构总结"><a href="#架构总结" class="headerlink" title="架构总结"></a>架构总结</h1><p>通过对前九篇的介绍，至此我们已经了解了UE里的游戏世界组织方式和游戏业务逻辑的控制。行百里者半九十，前述的篇章里我们的目光往往专注在于特定一个类或者对象，一方面固然可以让内容更有针对性，但另一方面也有了身在山中不见山的困惑。本文作为GamePlay章节的最终章，就是要回顾我们之前探讨过的内容，以一个更高层总览的眼光，把之前的所有内容有机组织起来，思考整体的结构和数据及逻辑的流向。</p>
 <h2 id="游戏世界"><a href="#游戏世界" class="headerlink" title="游戏世界"></a>游戏世界</h2><p>如我们在最初篇所问的，如果让你来制作一款3D游戏引擎，你会怎么设计其结构？已经知道，在UE的眼里，游戏世界的万物皆Actor，Actor再通过Component组装功能。Actor又通过UChildActorComponent实现Actor之间的父子嵌套。(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22833151">GamePlay架构（一）Actor和Component</a>)</p>
-<p><img src="https://pic1.zhimg.com/v2-91234c7d5bc32dd04c7221ac9dcc56d0_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NzdiNmI1NGM4MGYzMzk1Njg4NjMxOGQzODg3YmFmNTFfellLNGNOUGRxTU9Lbk96empxV1FRWFhmN1Y0d21GbmdfVG9rZW46UFJhaWI5MXpybzZ1dXJ4VDRJYWNNaEZObk5kXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>众多的各种Actor子类又组装成了Level(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22924838">GamePlay架构（二）Level和World</a>):</p>
-<p><img src="https://pica.zhimg.com/v2-14a202ba552576c2505073cb1543eeae_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZlNTcxZGNmYzM4MDE0NzQwY2UyOWNlNzBlZWY1ZTVfNHI3a1FSY0Y0bE5FejJ0TUdJS3JzV1M5R2FySnRYS1FfVG9rZW46SWFkT2JoRDI5b3ZadzZ4UjRwTWMyWU1QbjhlXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>如此每一个Level就拥有了一座Actor的森林，你可以根据自己的需要定制化Level，比如有些Level是临时Loading场景，有些只是保存光照，有些只是一块静态场景。UE用Level这种细一些粒度的对象为你的想象力提供了极大的自由度，同时也能方便团队内的平行协作。</p>
 <p>一个个的Level，又进一步组装成了World:</p>
-<p><img src="https://pic4.zhimg.com/v2-4b0a3d9cb6479a1c8efe736046c06dc5_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YjllNDNjMGU5OWNhNjAxYTY2YTdlYjg1YTcxYTlmMzZfcGljSEdKOEpzbEpuUmV3MWtyRmg3aWFPWTZzY3IzMVBfVG9rZW46T01UbmJ4ejBIb2tqZkF4ZGxPMmM2VkdrbktjXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>就像地球上的大陆板块一样，World允许多个Level静态的通过位置摆放在游戏世界中，也允许运行时动态的加载关卡。</p>
 <p>而World之间的切换，UE用了一个WorldContext来保存切换的过程信息。玩家在切换PersistentLevel的时候，实际上就相当于切换了一个World。而再往上，就是整个游戏唯一的GameInstance，由Engine对象管理着。(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23167068">GamePlay架构（三）WorldContext，GameInstance，Engine</a>)</p>
-<p><img src="https://pic2.zhimg.com/v2-19ce8ccbd2e444a8fb27459614aa602d_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NTgxYWRiMzhhZDRiOGMzODhkODc2Y2JkMDNlM2Q4YjdfQ2xjQXBOMWVjc2R6Nk1KRjhFc214aGYxV0N2OFJiS0dfVG9rZW46QWZ3QWJrdzFNb2ZleWF4UHJVQWM0azlTbjZmXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>到了World这一层，整个游戏的渲染对象就齐全了。但是游戏引擎并不只是渲染，因此为了让玩家也各种方式接入World中开始游戏。GameInstance下不光保存着World，同时也存储着Player，有着LocalPlayer用于表示本地的玩家，也有NetConnection当作远端的连接。（<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23826859">GamePlay架构（八）Player</a>）：</p>
-<p><img src="https://pic4.zhimg.com/v2-e7fc2230978792cb4ea8552337a11565_1440w.png" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=OWNjODA3OWVmNGMzMGY3YjVjNjQ0MDk1OGMxMWFiYzRfVWpNeElLVHk3WFpRUW9QM0s1Sm9ueEx1OVlLTGpEUElfVG9rZW46RjNzamJDTGJ1b25wNW94TTlmQmM5bzlwbkhkXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>玩家利用Player对象接入World之后，就可以开始控制Pawn和PlayerController的生成，有了附身的对象和摄像的眼睛。最后在Engine的Tick心跳脉搏驱动下开始一帧帧的逻辑更新和渲染。</p>
 <h2 id="数据和逻辑"><a href="#数据和逻辑" class="headerlink" title="数据和逻辑"></a>数据和逻辑</h2><p>说完了游戏世界的表现组成，那么对于一个GamePlay框架而言自然需要与其配套的业务逻辑架构。GamePlay架构的后半部分就自底向上的逐一分析了各个层次的逻辑载体，按照MVC的思想，我们可以把整个游戏的GamePlay分为三大部分：表现（View）、逻辑（Controller）、数据（Model）。一图胜千言：</p>
-<p><img src="https://pic1.zhimg.com/v2-b4e0dd15956ccb819fca93e73d1b8ed2_1440w.jpg" alt="img"></p>
-<p>(请点击看大图)<br>最左侧的是我们已经讨论过的游戏世界表现部分，从最最根源的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1854709&content_type=Article&match_order=1&q=UObject&zhida_source=entity">UObject</a>和Actor，一直到UGameEngine，不断的组合起来，形成丰富的游戏世界的各种对象。</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NDliNDFlMmNlNjAyY2FkOWQyY2U3NmM2M2IxYjFjYmRfbGRzaFR3NVJORkN2UlI4eTNUZ1JEa2Y4OFpXYVl3enJfVG9rZW46T05BeWJXaHp6b05Zcnd4emhnN2NCaVNubkliXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>(请点击看大图) 最左侧的是我们已经讨论过的游戏世界表现部分，从最最根源的<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=1854709&content_type=Article&match_order=1&q=UObject&zhida_source=entity">UObject</a>和Actor，一直到UGameEngine，不断的组合起来，形成丰富的游戏世界的各种对象。</p>
 <ol>
 <li>从UObject派生下来的AActor，拥有了UObject的反射序列化网络同步等功能，同时又通过各种Component来组装不同组件。UE在AActor身上同时利用了继承和组合的各自优点，同时也规避了彼此的一些缺点，我不得不说，UE在这一方面度把握得非常的平衡优雅，既不像cocos2dx那样继承爆炸，也不像Unity那样走极端全部组件组合。</li>
 <li>AActor中一些需要逻辑控制的成员分化出了APawn。Pawn就像是棋盘上的棋子，或者是战场中的兵卒。有3个基本的功能：可被Controller控制、PhysicsCollision表示和MovementInput的基本响应接口。代表了基本的逻辑控制物理表示和行走功能。根据这3个功能的定制化不同，可以派生出不同功能的的DefaultPawn、SpectatorPawn和Character。(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23321666">GamePlay架构（四）Pawn</a>)</li>
@@ -519,7 +747,6 @@
 <li>World构建好了，该派玩家进来了。但游戏的方式多样，玩家的接入方式也多样。UE为了支持各种不同的玩家模式，抽象出了UPlayer实体来实际上控制游戏中的玩家PlayerController的生成数量和方式。(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/23826859">GamePlay架构（八）Player</a>)</li>
 <li>所有的表示和逻辑汇集到一起，形成了全局唯一的UGameInstance对象，代表着整个游戏的开始和结束。同时为了方便开发者进行玩家存档，提供了USaveGame进行全局的数据配套。(<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24005952">GamePlay架构（九）GameInstance</a>)</li>
 </ol>
-<hr>
 <p>UE为我们提供了这些GamePlay的对象，说多其实也不多，而且其实也是这么优雅有机的结合在一起。但是仍然会把一些朋友给迷惑住了，常常就会问哪些逻辑该写在哪里，哪些数据该放在哪里，这么多个对象，好像哪个都可以。比如Pawn，有些人就会说我就是直接在Pawn里写逻辑和数据，游戏也运行的好好的，也没什么不对。</p>
 <p>如果你是一个已经对设计架构了然于心，也预见到了游戏未来发展变化，那么这么直接干也确实比较快速方便。但是这么做其实隐含了两个前提，一是这个Pawn的逻辑足够简单，把MVC的三者混合在一起依然不超过你的心智负担；二是已经断绝了逻辑和数据的分离，如果以后本地想复用一些逻辑创建另一个Pawn就会很麻烦，而且未来联机多玩家的状态复制也不支持。但说回来，人类的一个最常见的问题就是自大，对自己能力的过度自信，对未来变化的虚假掌控感。程序员在自己的编程世界里，呼风唤雨操作内存设备惯了，这种强大的掌控感非常容易地就外延到其他方面去了。你现在写的代码，过几个月后再回头看，是不是经常觉得非常糟糕？那奇怪了，当初写的时候怎么就感觉信心满满呢？所以踩坑多了的人就会自然的保守一些。另一方面，作为团队里的技术高手或老人，我个人觉得也有支持同行和提携后辈的责任，对自己而言只是多花一点点力气，却为别人树立一个清晰的程序结构典范，也传播了设计思想。程序员何苦为难程序员。</p>
 <p>但还有一些人喜欢那么硬怼着干的原因要嘛是对未来的可预见性不足（经验不足），要嘛是对程序设计的基本原则不够了解（程序能力不够），比如最简单的“单一职责”。在新手期，面对着UE的程序世界，虽然在已经懂的人眼里就那么几个对象，但是在新手眼里，往往就感觉复杂无比，面对未知，我们本能的反应是逃避，往往就倾向于哪些看起来这么用能工作，就像玩游戏一样，形成了你的“专属套路”。跟穷人忙于工作而没力气提高自己是一个道理。相信我，所有的高手都是从小白过来的，我敢保证，他出生的时候脑袋也肯定是一片空白！区别是有些人后来不怕麻烦的勤能补拙，他努力的去理解这种设计模式的优劣，不局限于自己已经掌握的一片舒适区内，努力去设想未来的各种变化和应对之法，最终形成自己的独立思考。高手只是比新手懂得更多想得更多一些而已。</p>
@@ -531,8 +758,6 @@
 <li>右侧的数据，同样的保持简单。我们把它们分离出来的目的就是为了独立变化和在网络间同步，注意一下别走回头路了就好。我们应该只在此放置纯数据。</li>
 </ul>
 </li>
-</ul>
-<ul>
 <li>从水平的切面上看，依次自底向上，记住一个原则，哪个层次的应该尽量只负责哪个层次的东西，不要对上层或下层的细节知道得太多，也尽量不要逾矩越权去指手画脚别的对象里的内务事。大家通力协作，注重隐私，保持安全距离，不就社会和谐了嘛。<ul>
 <li>最底层的Component，应该只是实现一些与游戏逻辑无关的功能。理解这个“无关”是关键。换个游戏，你这些Component依然可以用，就是所谓的游戏无关。</li>
 <li>Actor层，通过Pawn、Controller和PlayerState的合作，根据需要旗下再派生出特定的Character，或PlayerController，AIController，但它们的合作模式，三大家族的长老们已经定下了，后辈们应该尽量遵守。这一层，关键的地方在于分清楚哪些是操作Actor的，别向下把Actor内部的功能给抽了出来，也别大包大揽把整个游戏的玩法也管了过来。脑袋保持清醒，这一层所做的事，就是为了让Actor们显得更加的智能。换句话说，这些智能的Actor组合，理论上是可以在随便哪个Level里用的。</li>
@@ -543,38 +768,31 @@
 </ul>
 <p>自始至终，回顾一下每个类的本身的职责，该是他的就是他的，别人的不要抢。读者朋友们，如果到此觉得似乎懂了一些，但还是觉得不够深刻理解的话，也没关系，凡事不能一蹴而就，在开发过程中多想多琢磨自然而然就会慢慢领悟了。</p>
 <h2 id="整体类图"><a href="#整体类图" class="headerlink" title="整体类图"></a>整体类图</h2><p>从类的继承层次上，咱们再加深一下理解。下图只列出了GamePlay架构里一些相关的重要的类：</p>
-<p><img src="https://pic1.zhimg.com/v2-c0cd2e5121f63c37615f78476e2a425c_1440w.jpg" alt="img"></p>
-<p>(请点击看大图)<br>由此也可以看出来，UE基于UObject的机制出发，构建出了纷繁复杂的游戏世界，几乎所有的重要的类都直接或间接的继承于UObject，都能充分利用到UObject的反射等功能，大大加强了整体框架的灵活度和表达能力。比如GamePlay中最常用到根据某个Class配置在运行时创建出特定的对象的行为就是利用了反射功能；而网络里的属性同步也是利用了UObject的网络同步RPC调用；一个Level想保存成uasset文件，或者USaveGame想存档，也都是利用了UObject的序列化；而利用了UObject的CDO（Class Default Object），在保存时候也大大节省了内存；这么多Actor对象能在编辑器里方便的编辑，也得益于UObject的属性编辑器集成；对象互相引用的从属关系有了UObject的垃圾回收之后我们就不用担心会释放问题了。想象一下如果一开始没有设计出UObject，那么这个GamePlay框架肯定是另一番模样了。</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDY2OWYyNTZlMTkxOTBjNzNmMDM1N2NmYjEzYjcyODNfZXNiUWhvcG42akQxSk9QY0daMjB5aUcxWG5Zck5leVVfVG9rZW46SlptZmI4eHlYbzI3MkZ4Yk9zTWNyRHdRbmRjXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>(请点击看大图) 由此也可以看出来，UE基于UObject的机制出发，构建出了纷繁复杂的游戏世界，几乎所有的重要的类都直接或间接的继承于UObject，都能充分利用到UObject的反射等功能，大大加强了整体框架的灵活度和表达能力。比如GamePlay中最常用到根据某个Class配置在运行时创建出特定的对象的行为就是利用了反射功能；而网络里的属性同步也是利用了UObject的网络同步RPC调用；一个Level想保存成uasset文件，或者USaveGame想存档，也都是利用了UObject的序列化；而利用了UObject的CDO（Class Default Object），在保存时候也大大节省了内存；这么多Actor对象能在编辑器里方便的编辑，也得益于UObject的属性编辑器集成；对象互相引用的从属关系有了UObject的垃圾回收之后我们就不用担心会释放问题了。想象一下如果一开始没有设计出UObject，那么这个GamePlay框架肯定是另一番模样了。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于GamePlay我们从构建游戏世界开始，再到一层层的逻辑控制，本篇也从各个切面上总结归纳了整体架构。希望读者们好好领会UE的GamePlay架构思想，别贪快，整体上慢慢琢磨以上的架构图，细节上可以回顾过往的单篇来了解。</p>
 <p>对于这一套UE提供的GamePlay框架，我们既然选择了用UE引擎，那么自然就应该想着怎么充分利用好它。框架就是你如果在它的规则下办事，那它就是事半功倍的助力器，你会常常发现UE怎么连这个也帮你做完了；而如果你在不了解的情况下想逆着它行事，就常常感受到怎么哪里都受到束缚。我们对于框架的理念应该就像是对待一辆汽车一般，我们关心的是怎么驾驶它到达想要的目的地，而不是折腾着怪它四个轮子不能按照你的心意朝不同方向乱转。对比隔壁的Cocos2dx、或Unity、或CryEngine，UE能够提供这么一个完善的GamePlay框架，对我们开发者而言，是一件幸福的事，不是吗？</p>
 <h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>完结撒花！GamePlay大章节也终于结束了，最开始是本着怎么尽早尽大的能帮助到读者朋友们，所以选择了GamePlay作为起始章节。相信GamePlay也是开发者们日常开发过程中接触最多，也是有可能混淆最多，概念不清，很容易用错的一块主题。在介绍GamePlay的时候，更多的重点是在于介绍各对象的职责和关联，所以更多是用类图来描述结构，反而对源码进行剖析的机会不多，但读者们可以自己去阅读验证。希望GamePlay架构的一系列十篇文章能切实地帮助到你们。</p>
 <h1 id="Subsystems"><a href="#Subsystems" class="headerlink" title="Subsystems"></a>Subsystems</h1><h2 id="专业术语"><a href="#专业术语" class="headerlink" title="专业术语"></a>专业术语</h2><ul>
 <li><strong>Subsystems</strong>：指的是这整套“子系统”框架，包含了定义的类以及运作机制。</li>
-<li><strong><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=123403829&content_type=Article&match_order=1&q=SubsystemType&zhida_source=entity">SubsystemType</a>/SubsystemClass</strong>：指向的是Subsystem的类型，比如TSubclassOf<USubsystem>。</li>
+<li><strong><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=123403829&content_type=Article&match_order=1&q=SubsystemType&zhida_source=entity">SubsystemType</a>****/SubsystemClass</strong>：指向的是Subsystem的类型，比如TSubclassOf。</li>
 <li><strong>Subsystem对象</strong>：指的是真正创建生成实例化出来的Subsystem对象。</li>
 <li><strong>UMyXXXSubsystem</strong>: 用户定义的类，我会以My为前缀来区分。</li>
 <li><strong>5类Outer对象</strong>：Subsystem对象依存属于的5类Outer对象。</li>
 </ul>
 <h2 id="Subsystems是什么？"><a href="#Subsystems是什么？" class="headerlink" title="Subsystems是什么？"></a><strong>Subsystems是什么？</strong></h2><p>一句话：<strong>Subsystems是一套可以定义自动实例化和释放的类的框架。</strong>这个框架允许你从5类里选择一个来定义子类(只能在C++定义)：</p>
-<p><img src="https://pic1.zhimg.com/v2-1a596ce3195ccaf4275b0aa88dedf33e_1440w.jpg" alt="img"> </p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YTBjZWZlZjNhYmI0N2QyM2JjZjMxZGVjNWQ3YzJkNTZfWGFGbTc1VGk5NWxPM0NvRFdDUU5iWUhucWdpMTlnS1dfVG9rZW46SU9pamJNQ1JqbzdUYml4QndWbWNOYUh0bmRjXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <ol>
 <li>自动实例化</li>
 </ol>
 <p>这些的UMyXXXSubsystem类，会在合适的时机被创建出对象，然后在合适的时机释放，这个过程是自动化的。不需要自己手写创建代码。也不需要自己显式的定义变量，Subsystems已经定义好方便友好的访问接口了。</p>
-<ol start="2">
+<ol>
 <li>托管生命周期</li>
 </ol>
 <p>根据你选择的父类不同，引擎会为创建出来的Subsystem实现出不同的生命周期。因此官方文档里会称这5个父类为5个不同的生命周期。根据你选择的生命周期不同，Initialize()和Deinitialize()会自动的在合适的时机被调用。一个Subystem类型也有可能根据需要被自动的被创建出多个实例。这些里面的繁琐逻辑自己都不用操心。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HELLO_API</span> UMyUISubsystem : <span class="keyword">public</span> UGameInstanceSubsystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"><span class="keyword">public</span>:<span class="comment">//UI系统</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable)</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">PushUI</span><span class="params">(TSubclassOf&lt;UUserWidget&gt; widgetClass)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HELLO_API</span> UMyTaskSubsystem : <span class="keyword">public</span> UGameInstanceSubsystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"><span class="keyword">public</span>:<span class="comment">//任务系统</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable)</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">CompleteTask</span><span class="params">(FString taskName)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HELLO_API</span> UMyScoreSubsystem : <span class="keyword">public</span> UGameInstanceSubsystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line"><span class="keyword">public</span>:<span class="comment">//计分系统</span></span><br><span class="line">    <span class="built_in">UFUNCTION</span>(BlueprintCallable)</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">AddScore</span><span class="params">(<span class="type">float</span> delta)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p><img src="https://pic2.zhimg.com/v2-69546312c4c3c05093f94f12b60904cf_1440w.jpg" alt="img"></p>
 <h1 id="简易版本"><a href="#简易版本" class="headerlink" title="简易版本"></a>简易版本</h1><p>这边是放牛的星星大佬的版本</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/612837045">Unreal Engine的Gameplay框架和重点 - 知乎</a></p>
-<p><img src="https://pic2.zhimg.com/v2-7a4d02470df2b433e0a0f5f3cb5701d1_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=YzVjOTgyOWE2MDhkYmM2OGUxZmY3NTk0ODJlOGE3ZjZfWnVTWGJ2czVwZVBnMWJsSTE5bjFCT3ZiQTFxdDhlZW9fVG9rZW46SzhoRWJJSnJzb0llNnR4bHIwS2N1U3FXbnVjXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <p>我们先就只讨论一下Unreal在文档中标记的GamePlay框架的内容，即：</p>
 <ul>
 <li>游戏规则</li>
@@ -585,7 +803,7 @@
 </ul>
 <p>拿官方的一个示例举例来说明Gameplay的工作方式：</p>
 <blockquote>
-<p>兔子与蜗牛赛跑。<br>游戏框架的基础是GameMode。<strong>GameMode</strong> 设置的是游戏规则，如首个跨过终点线的玩家即是冠军。其同时可生成玩家。<br>在 <strong>PlayerController</strong> 中设置一名玩家，其同时会产生一个Pawn。<strong>Pawn</strong> 是玩家在游戏中的物理代表，控制器则拥有Pawn并设置其行为规则。本范例中共有2个Pawn，一个用于蜗牛而另一个用于兔子。兔子实际为 <strong>角色（Character）</strong>，是pawn的一个特殊子类，拥有跑跳等内置移动功能。另一方面，蜗牛拥有不同的移动风格，可从Pawn类处直接延展。<br>Pawn可包含自身的移动规则和其他游戏逻辑，但控制器也可拥有该功能。控制器可以是获取真人玩家输入的PlayerController或是电脑自动控制的AIController。在本范例中，玩家控制的是蜗牛，因此PlayerController拥有的是蜗牛Pawn。而AI则控制兔子，AIController则拥有兔子角色，其中已设有停止、冲刺或打盹等行为。<br><strong>相机（Camera）</strong>提供的视角仅对真人玩家有效，因此PlayerCamera仅会使用蜗牛Pawn的其中一个CameraComponent。<br>进行游戏时，玩家的输出将使蜗牛在地图中四处移动，同时<strong>HUD</strong>将覆盖在相机提供的视角上，显示目前游戏中的第一名和已进行的游戏时间。</p>
+<p>兔子与蜗牛赛跑。 游戏框架的基础是GameMode。<strong>GameMode</strong> 设置的是游戏规则，如首个跨过终点线的玩家即是冠军。其同时可生成玩家。 在 <strong>PlayerController</strong> 中设置一名玩家，其同时会产生一个Pawn。<strong>Pawn</strong> 是玩家在游戏中的物理代表，控制器则拥有Pawn并设置其行为规则。本范例中共有2个Pawn，一个用于蜗牛而另一个用于兔子。兔子实际为 <strong>角色（Character）</strong>，是pawn的一个特殊子类，拥有跑跳等内置移动功能。另一方面，蜗牛拥有不同的移动风格，可从Pawn类处直接延展。 Pawn可包含自身的移动规则和其他游戏逻辑，但控制器也可拥有该功能。控制器可以是获取真人玩家输入的PlayerController或是电脑自动控制的AIController。在本范例中，玩家控制的是蜗牛，因此PlayerController拥有的是蜗牛Pawn。而AI则控制兔子，AIController则拥有兔子角色，其中已设有停止、冲刺或打盹等行为。 <strong>相机（Camera）提供的视角仅对真人玩家有效，因此PlayerCamera仅会使用蜗牛Pawn的其中一个CameraComponent。</strong> <strong>进行游戏时，玩家的输出将使蜗牛在地图中四处移动，同时HUD</strong>将覆盖在相机提供的视角上，显示目前游戏中的第一名和已进行的游戏时间。</p>
 </blockquote>
 <h2 id="GameMode-1"><a href="#GameMode-1" class="headerlink" title="GameMode"></a>GameMode</h2><p>在上面这个例子中，<strong>GameMode</strong> 决定的是<strong>游戏规则</strong>，即拥有两个角色，先跨过终点线的玩家为冠军。衍生的部分还有比如是否允许观战以及观战的人数最多为多少？玩家如何进入游戏，以及使用哪张比赛地图？游戏是否可以暂停，以及暂停之后如何恢复？游戏是否允许使用道具，又或者是否可以在游戏中作弊等，这些规则都是跑在<strong>服务器</strong>上的，确保规则的权威性和安全性。</p>
 <p>GameMode在Unreal里的实现是AGameModeBase类（用A开头是因为它继承于Unreal的AActor，这是Unreal的类命名规则，可以查看<a href="https://link.zhihu.com/?target=https://docs.unrealengine.com/5.1/zh-CN/epic-cplusplus-coding-standard-for-unreal-engine/">代码规范</a>）</p>
@@ -632,31 +850,29 @@
 </ul>
 <p>回到角色上来，一个Character就是一个特殊的，可以行走的Pawn，一般代表垂直站立的玩家。也就是说它比Pawn多了 <strong>CharacterMovementComponent</strong>，同时，因为一个可行走的模型需要提供一些行走动画，所以还需要SkeletalMeshComponent 组件来提供骨骼框架，由于人的形状和盒子差别很大，所以在物理碰撞上用胶囊体<strong>CapsuleComponent</strong>来替换碰撞盒。</p>
 <p>角色组件是一个Avatar，代表玩家在和游戏场景交互。并且可以在场景中行走、跑动、跳跃、飞行和游泳等，同样作为一个Actor，它也包含基础的网络功能，并接受玩家的输入控制。当然可以可以任意扩展和使用<strong>Character</strong>。</p>
-<h2 id="Controller-1"><a href="#Controller-1" class="headerlink" title="Controller"></a>Controller</h2><p>那么到Gameplay框架中，我们仍然能找到一个比较合适的部分来套用这套MVC。比如我们现在的M就是Player State，我们的V就是Character，那么C自然就是马上要介绍的Controller了。<br>AController继承自AActor，也就是说它并没有场景实体，是一个场景不可见的对象。它拥有一个PlayerState，一个Pawn，如果这个Pawn同样是Character的话，那么它还有一个不为空的Character对象。</p>
+<h2 id="Controller-1"><a href="#Controller-1" class="headerlink" title="Controller"></a>Controller</h2><p>那么到Gameplay框架中，我们仍然能找到一个比较合适的部分来套用这套MVC。比如我们现在的M就是Player State，我们的V就是Character，那么C自然就是马上要介绍的Controller了。 AController继承自AActor，也就是说它并没有场景实体，是一个场景不可见的对象。它拥有一个PlayerState，一个Pawn，如果这个Pawn同样是Character的话，那么它还有一个不为空的Character对象。</p>
 <p>默认情况下，一个控制器只对应一个Pawn，二者之间也非强绑定关系而是组合关系。如果需要更改默认的控制器逻辑，可以自定义继承实现。</p>
-<p>控制器会接收其控制的Pawn所发生诸多事件的通知。因此控制器可借机实现响应该事件的行为，拦截事件并接替Pawn的默认行为。 控制器又分为两种不同的类型 </p>
+<p>控制器会接收其控制的Pawn所发生诸多事件的通知。因此控制器可借机实现响应该事件的行为，拦截事件并接替Pawn的默认行为。 控制器又分为两种不同的类型</p>
 <ul>
 <li>Player Controller 。代表玩家的输入和控制。</li>
 <li>AI Controller 。代表AI或者远程玩家在本地的镜像。</li>
 </ul>
 <p>其中Player Controller是玩家直接操控角色的逻辑类，因此非常复杂。大体可以分为Camera管理，Input响应，UPlayer关联和操控，HUD显示，关卡切换的逻辑处理，音效部分等等。而AI Controller因为不需要接受玩家操控，因此对Camera、Input、UPlayer关联，HUD显示，Voice、Level切换等部分都不是必须的，但对应的它增加了一些额外的模块，比如Navigation（导航）,行为树,Task系统等实现。</p>
-<p><img src="https://pica.zhimg.com/v2-0eeb5721b185d1eac183d712a91c256c_1440w.jpg" alt="img"></p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=NDkwZjc2YWU1NjMxYWVmOGM4OTIyNDZkZmEzNDEyYzZfV2hzWlcyMDNKM05ibzJiSVZka3ExN2cwcml6SlVTVjdfVG9rZW46SFdnWGJyZjI5b1oxbTN4ZkVXQ2NWQnlQbm5lXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
 <h2 id="HUD-和UI"><a href="#HUD-和UI" class="headerlink" title="HUD 和UI"></a>HUD 和UI</h2><p>HUD可以理解为对部分Player State的场景可视化。比如怪物或者人物头顶的血条，名字等等。而UI则是覆盖在场景渲染之上，提供更多玩家交互和查看的信息。二者的主要区别是在交互上，HUD一般来说是不能交互的，简略的信息；而UI则指的是菜单和其他互动元素。这部分不展开细说，可以参考 <a href="https://link.zhihu.com/?target=https://docs.unrealengine.com/5.1/zh-CN/slate-user-interface-programming-framework-for-unreal-engine/">Slate UI编程</a></p>
 <h2 id="Actors"><a href="#Actors" class="headerlink" title="Actors"></a>Actors</h2><p>Actors。Actor除了继承自UObject的序列化、反射、内存管理等能力之外，额外实现的是组件的组合能力，Tick能力，网络复制能力和对生命周期的管控<a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/zh-cn/unreal-engine/unreal-engine-actor-lifecycle?application_version=5.1">Actor 生命周期</a>)。</p>
-<p><img src="https://pic2.zhimg.com/v2-0b4bfdede46c1aa934dd03f447398707_1440w.jpg" alt="img"></p>
-<p>简单介绍一下上面这张图，它展示了Actor的三种实例化方式，但无论它是怎么“来”的，它“走”的流程是一样的。<br>三种模式是：</p>
+<p><img src="https://bcnn75axgqdf.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjA2MGE2M2M2ZGMyOGU2ZmQyNDY4NzIwMDE2NzY1OWNfN0ZhSHBhY3dtcWd0UUZxWlo2Nkx3SHRYdWxvUEh1THhfVG9rZW46RVI5WmJDM2VTbzA4NW14U0g4OGMzaDc5bmNKXzE3NjExODgyMjI6MTc2MTE5MTgyMl9WNA" alt="img"></p>
+<p>简单介绍一下上面这张图，它展示了Actor的三种实例化方式，但无论它是怎么“来”的，它“走”的流程是一样的。 三种模式是：</p>
 <ol>
 <li>从磁盘加载</li>
 <li>Play in Editor</li>
 <li>Spawn</li>
 </ol>
-<p>其中1和2十分相似，1是从磁盘里加载，2是从编辑器中复制。当实例化之后都会执行<strong>Post（Load || Duplicate）</strong>逻辑**,InitializeActorsForPlay<strong>（UWorld 调用），再到</strong>RouteActorInitialize<strong>（Actor自己的组件初始化），再到关卡开始的逻辑调用</strong>BeginPlay**。</p>
+<p>其中1和2十分相似，1是从磁盘里加载，2是从编辑器中复制。当实例化之后都会执行<strong>Post（Load || Duplicate）逻辑,InitializeActorsForPlay</strong>（UWorld 调用），再到<strong>RouteActorInitialize</strong>（Actor自己的组件初始化），再到关卡开始的逻辑调用<strong>BeginPlay</strong>。</p>
 <p>3的逻辑不同，它是通过运行时生成的，所以执行的是PostCreate，然后需要执行对应的构造逻辑<strong>ExecuteConstruction</strong>来创建蓝图变量，然后用<strong>PostActorConstruction</strong>来执行Actor自身的组件初始化（其实和<strong>RouteActorInitialize</strong> 的主要一样），然后就是一样的<strong>BeginPlay。</strong></p>
-<p>虽然创建逻辑有差异，但销毁逻辑一致，执行了<strong>EndPlay</strong>之后，Actor就会被标记为<strong>RF_PendingKill,<strong>并在下个垃圾回收周期中被解除分配，然后有垃圾回收器将其回收</strong>。</strong></p>
+<p>虽然创建逻辑有差异，但销毁逻辑一致，执行了<strong>EndPlay</strong>之后，Actor就会被标记为<strong>RF_PendingKill,并在下个垃圾回收周期中被解除分配，然后有垃圾回收器将其回收。</strong></p>
 <ul>
 <li>Timer 。不是很明白，为什么要把定时器单独归类到Gameplay框架中来。可能是因为AActor中提供了GetWorldTimerManager函数来获取FTimerManager的实例？定时器可以设置使用指定时间，或者指定帧来作为触发器。</li>
-</ul>
-<ul>
 <li>Movement Components <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/368613242">【图解UE4源码】其一 UCharacterMovementComponent的移动逻辑</a>。除了人物移动之外，还有表示发射物/子弹移动的组件 <strong>ProjectileMovementComponent</strong>，以及一些特定的运动组件，比如<strong>RotatingMovementComponent</strong> 用来展示飞机螺旋桨，风车或者任何可以旋转的东西。</li>
 </ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/06/16/0068-UeGP/">http://example.com/2025/06/16/0068-UeGP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/UE/">UE</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/06/17/0069-UeUMG/" title="UMG"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UMG</div></div></a></div><div class="next-post pull-right"><a href="/2025/05/25/0067-ECS/" title="ECS"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ECS</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/06/17/0069-UeUMG/" title="UMG"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-17</div><div class="title">UMG</div></div></a></div><div><a href="/2025/05/25/0067-ECS/" title="ECS"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-25</div><div class="title">ECS</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E7%AF%87"><span class="toc-number">2.</span> <span class="toc-text">开篇</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">文件结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">编译类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5-1"><span class="toc-number">3.3.</span> <span class="toc-text">基础概念</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Actor%E5%92%8CComponent"><span class="toc-number">4.</span> <span class="toc-text">Actor和Component</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UObject"><span class="toc-number">4.1.</span> <span class="toc-text">UObject</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Actor"><span class="toc-number">4.2.</span> <span class="toc-text">Actor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component"><span class="toc-number">4.3.</span> <span class="toc-text">Component</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UActorComponent"><span class="toc-number">4.3.1.</span> <span class="toc-text">UActorComponent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SceneComponent"><span class="toc-number">4.3.2.</span> <span class="toc-text">SceneComponent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChildActorComponent"><span class="toc-number">4.3.3.</span> <span class="toc-text">ChildActorComponent</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Level%E5%92%8CWorld"><span class="toc-number">5.</span> <span class="toc-text">Level和World</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">5.1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level"><span class="toc-number">5.2.</span> <span class="toc-text">Level</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#World"><span class="toc-number">5.3.</span> <span class="toc-text">World</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WorldContext%EF%BC%8CGameInstance%EF%BC%8CEngine"><span class="toc-number">6.</span> <span class="toc-text">WorldContext，GameInstance，Engine</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WorldContext"><span class="toc-number">6.1.</span> <span class="toc-text">WorldContext</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameInstance"><span class="toc-number">6.2.</span> <span class="toc-text">GameInstance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine"><span class="toc-number">6.3.</span> <span class="toc-text">Engine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine-1"><span class="toc-number">6.4.</span> <span class="toc-text">Engine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GamePlayStatics"><span class="toc-number">6.5.</span> <span class="toc-text">GamePlayStatics</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pawn"><span class="toc-number">7.</span> <span class="toc-text">Pawn</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91"><span class="toc-number">7.0.1.</span> <span class="toc-text">代码逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pawn-1"><span class="toc-number">7.1.</span> <span class="toc-text">Pawn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DefaultPawn%EF%BC%8CSpectatorPawn%EF%BC%8CCharacter"><span class="toc-number">7.2.</span> <span class="toc-text">DefaultPawn，SpectatorPawn，Character</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultPawn"><span class="toc-number">7.2.1.</span> <span class="toc-text">DefaultPawn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SpectatorPawn"><span class="toc-number">7.2.2.</span> <span class="toc-text">SpectatorPawn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Character"><span class="toc-number">7.2.3.</span> <span class="toc-text">Character</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller"><span class="toc-number">8.</span> <span class="toc-text">Controller</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AController"><span class="toc-number">8.1.</span> <span class="toc-text">AController</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#APlayerState"><span class="toc-number">8.2.</span> <span class="toc-text">APlayerState</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PlayerController%E5%92%8CAIController"><span class="toc-number">9.</span> <span class="toc-text">PlayerController和AIController</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#APlayerController"><span class="toc-number">9.1.</span> <span class="toc-text">APlayerController</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AAIController"><span class="toc-number">9.2.</span> <span class="toc-text">AAIController</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GameMode%E5%92%8CGameState"><span class="toc-number">10.</span> <span class="toc-text">GameMode和GameState</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GameMode"><span class="toc-number">10.1.</span> <span class="toc-text">GameMode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">10.1.1.</span> <span class="toc-text">作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AGameModeBase-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">10.2.</span> <span class="toc-text">AGameModeBase 生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameState"><span class="toc-number">10.3.</span> <span class="toc-text">GameState</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AGameStateBase"><span class="toc-number">10.3.1.</span> <span class="toc-text">AGameStateBase</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameSession"><span class="toc-number">10.4.</span> <span class="toc-text">GameSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UE5-6%E6%96%87%E6%A1%A3"><span class="toc-number">10.5.</span> <span class="toc-text">UE5.6文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A9%E8%80%85%E5%8C%BA%E5%88%AB"><span class="toc-number">10.6.</span> <span class="toc-text">俩者区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Player"><span class="toc-number">11.</span> <span class="toc-text">Player</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UPlayer"><span class="toc-number">11.1.</span> <span class="toc-text">UPlayer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ULocalPlayer"><span class="toc-number">11.2.</span> <span class="toc-text">ULocalPlayer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UNetConnection"><span class="toc-number">11.3.</span> <span class="toc-text">UNetConnection</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GameInstance-1"><span class="toc-number">12.</span> <span class="toc-text">GameInstance</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SaveGame"><span class="toc-number">12.1.</span> <span class="toc-text">SaveGame</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E6%80%BB%E7%BB%93"><span class="toc-number">13.</span> <span class="toc-text">架构总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E4%B8%96%E7%95%8C"><span class="toc-number">13.1.</span> <span class="toc-text">游戏世界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C%E9%80%BB%E8%BE%91"><span class="toc-number">13.2.</span> <span class="toc-text">数据和逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E7%B1%BB%E5%9B%BE"><span class="toc-number">13.3.</span> <span class="toc-text">整体类图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">13.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="toc-number">13.5.</span> <span class="toc-text">结束语</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Subsystems"><span class="toc-number">14.</span> <span class="toc-text">Subsystems</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E4%B8%9A%E6%9C%AF%E8%AF%AD"><span class="toc-number">14.1.</span> <span class="toc-text">专业术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Subsystems%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">14.2.</span> <span class="toc-text">Subsystems是什么？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC"><span class="toc-number">15.</span> <span class="toc-text">简易版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GameMode-1"><span class="toc-number">15.1.</span> <span class="toc-text">GameMode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Game-State"><span class="toc-number">15.2.</span> <span class="toc-text">Game State</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Camera"><span class="toc-number">15.3.</span> <span class="toc-text">Camera</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Character-1"><span class="toc-number">15.4.</span> <span class="toc-text">Character</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-1"><span class="toc-number">15.5.</span> <span class="toc-text">Controller</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HUD-%E5%92%8CUI"><span class="toc-number">15.6.</span> <span class="toc-text">HUD 和UI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Actors"><span class="toc-number">15.7.</span> <span class="toc-text">Actors</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/22/0076-UEPython/" title="UE Python"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE Python"/></a><div class="content"><a class="title" href="/2025/10/22/0076-UEPython/" title="UE Python">UE Python</a><time datetime="2025-10-22T14:26:54.893Z" title="发表于 2025-10-22 22:26:54">2025-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/08/0075-UEDs/" title="UE 联机"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 联机"/></a><div class="content"><a class="title" href="/2025/08/08/0075-UEDs/" title="UE 联机">UE 联机</a><time datetime="2025-08-07T16:00:00.000Z" title="发表于 2025-08-08 00:00:00">2025-08-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/03/0073-UEBase/" title="UE基础"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE基础"/></a><div class="content"><a class="title" href="/2025/08/03/0073-UEBase/" title="UE基础">UE基础</a><time datetime="2025-08-02T16:00:00.000Z" title="发表于 2025-08-03 00:00:00">2025-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/03/0074-UELyra/" title="UE Lyra"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE Lyra"/></a><div class="content"><a class="title" href="/2025/08/03/0074-UELyra/" title="UE Lyra">UE Lyra</a><time datetime="2025-08-02T16:00:00.000Z" title="发表于 2025-08-03 00:00:00">2025-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/27/0072-UEAPI/" title="UE常见API"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE常见API"/></a><div class="content"><a class="title" href="/2025/07/27/0072-UEAPI/" title="UE常见API">UE常见API</a><time datetime="2025-07-27T01:16:49.000Z" title="发表于 2025-07-27 09:16:49">2025-07-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/06/16/0068-UeGP/">http://example.com/2025/06/16/0068-UeGP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/UE/">UE</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/06/17/0069-UeUMG/" title="UMG"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">UMG</div></div></a></div><div class="next-post pull-right"><a href="/2025/05/25/0067-ECS/" title="ECS"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ECS</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/06/17/0069-UeUMG/" title="UMG"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-17</div><div class="title">UMG</div></div></a></div><div><a href="/2025/05/25/0067-ECS/" title="ECS"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-25</div><div class="title">ECS</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E7%AF%87"><span class="toc-number">2.</span> <span class="toc-text">开篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%AE%B5%E8%AF%9D%E8%A7%A3%E9%87%8AGP%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">一段话解释GP架构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">文件结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5-1"><span class="toc-number">3.2.</span> <span class="toc-text">基础概念</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Actor%E5%92%8CComponent"><span class="toc-number">4.</span> <span class="toc-text">Actor和Component</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UObject"><span class="toc-number">4.1.</span> <span class="toc-text">UObject</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Actor"><span class="toc-number">4.2.</span> <span class="toc-text">Actor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Component"><span class="toc-number">4.3.</span> <span class="toc-text">Component</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UActorComponent"><span class="toc-number">4.3.1.</span> <span class="toc-text">UActorComponent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SceneComponent"><span class="toc-number">4.3.2.</span> <span class="toc-text">SceneComponent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChildActorComponent"><span class="toc-number">4.3.3.</span> <span class="toc-text">ChildActorComponent</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Level%E5%92%8CWorld"><span class="toc-number">5.</span> <span class="toc-text">Level和World</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">5.1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level"><span class="toc-number">5.2.</span> <span class="toc-text">Level</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#World"><span class="toc-number">5.3.</span> <span class="toc-text">World</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WorldContext%EF%BC%8CGameInstance%EF%BC%8CEngine"><span class="toc-number">6.</span> <span class="toc-text">WorldContext，GameInstance，Engine</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WorldContext"><span class="toc-number">6.1.</span> <span class="toc-text">WorldContext</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameInstance"><span class="toc-number">6.2.</span> <span class="toc-text">GameInstance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine"><span class="toc-number">6.3.</span> <span class="toc-text">Engine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GamePlayStatics"><span class="toc-number">6.4.</span> <span class="toc-text">GamePlayStatics</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pawn"><span class="toc-number">7.</span> <span class="toc-text">Pawn</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%80%BB%E8%BE%91"><span class="toc-number">7.1.</span> <span class="toc-text">代码逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pawn-1"><span class="toc-number">7.2.</span> <span class="toc-text">Pawn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DefaultPawn%EF%BC%8CSpectatorPawn%EF%BC%8CCharacter"><span class="toc-number">7.3.</span> <span class="toc-text">DefaultPawn，SpectatorPawn，Character</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DefaultPawn"><span class="toc-number">7.3.1.</span> <span class="toc-text">DefaultPawn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SpectatorPawn"><span class="toc-number">7.3.2.</span> <span class="toc-text">SpectatorPawn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Character"><span class="toc-number">7.3.3.</span> <span class="toc-text">Character</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller"><span class="toc-number">8.</span> <span class="toc-text">Controller</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AController"><span class="toc-number">8.1.</span> <span class="toc-text">AController</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#APlayerState"><span class="toc-number">8.2.</span> <span class="toc-text">APlayerState</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PlayerController%E5%92%8CAIController"><span class="toc-number">9.</span> <span class="toc-text">PlayerController和AIController</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#APlayerController"><span class="toc-number">9.1.</span> <span class="toc-text">APlayerController</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AAIController"><span class="toc-number">9.2.</span> <span class="toc-text">AAIController</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GameMode%E5%92%8CGameState"><span class="toc-number">10.</span> <span class="toc-text">GameMode和GameState</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GameMode"><span class="toc-number">10.1.</span> <span class="toc-text">GameMode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">10.1.1.</span> <span class="toc-text">作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AGameModeBase-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">10.2.</span> <span class="toc-text">AGameModeBase 生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameState"><span class="toc-number">10.3.</span> <span class="toc-text">GameState</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AGameStateBase"><span class="toc-number">10.3.1.</span> <span class="toc-text">AGameStateBase</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GameSession"><span class="toc-number">10.4.</span> <span class="toc-text">GameSession</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UE5-6%E6%96%87%E6%A1%A3"><span class="toc-number">10.5.</span> <span class="toc-text">UE5.6文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A9%E8%80%85%E5%8C%BA%E5%88%AB"><span class="toc-number">10.6.</span> <span class="toc-text">俩者区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Player"><span class="toc-number">11.</span> <span class="toc-text">Player</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UPlayer"><span class="toc-number">11.1.</span> <span class="toc-text">UPlayer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ULocalPlayer"><span class="toc-number">11.2.</span> <span class="toc-text">ULocalPlayer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UNetConnection"><span class="toc-number">11.3.</span> <span class="toc-text">UNetConnection</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GameInstance-1"><span class="toc-number">12.</span> <span class="toc-text">GameInstance</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SaveGame"><span class="toc-number">12.1.</span> <span class="toc-text">SaveGame</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E6%80%BB%E7%BB%93"><span class="toc-number">13.</span> <span class="toc-text">架构总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E4%B8%96%E7%95%8C"><span class="toc-number">13.1.</span> <span class="toc-text">游戏世界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C%E9%80%BB%E8%BE%91"><span class="toc-number">13.2.</span> <span class="toc-text">数据和逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E7%B1%BB%E5%9B%BE"><span class="toc-number">13.3.</span> <span class="toc-text">整体类图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">13.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="toc-number">13.5.</span> <span class="toc-text">结束语</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Subsystems"><span class="toc-number">14.</span> <span class="toc-text">Subsystems</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E4%B8%9A%E6%9C%AF%E8%AF%AD"><span class="toc-number">14.1.</span> <span class="toc-text">专业术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Subsystems%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">14.2.</span> <span class="toc-text">Subsystems是什么？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC"><span class="toc-number">15.</span> <span class="toc-text">简易版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GameMode-1"><span class="toc-number">15.1.</span> <span class="toc-text">GameMode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Game-State"><span class="toc-number">15.2.</span> <span class="toc-text">Game State</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Camera"><span class="toc-number">15.3.</span> <span class="toc-text">Camera</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Character-1"><span class="toc-number">15.4.</span> <span class="toc-text">Character</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-1"><span class="toc-number">15.5.</span> <span class="toc-text">Controller</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HUD-%E5%92%8CUI"><span class="toc-number">15.6.</span> <span class="toc-text">HUD 和UI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Actors"><span class="toc-number">15.7.</span> <span class="toc-text">Actors</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate初探"/></a><div class="content"><a class="title" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探">ue Slate初探</a><time datetime="2025-11-05T16:00:00.000Z" title="发表于 2025-11-06 00:00:00">2025-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Als 使用(占坑)"/></a><div class="content"><a class="title" href="/2025/10/23/0000-UeAlsUse/" title="ue Als 使用(占坑)">ue Als 使用(占坑)</a><time datetime="2025-10-22T16:00:00.000Z" title="发表于 2025-10-23 00:00:00">2025-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 多线程与 Flush"/></a><div class="content"><a class="title" href="/2025/10/13/0081-UeAync/" title="ue 多线程与 Flush">ue 多线程与 Flush</a><time datetime="2025-10-12T16:00:00.000Z" title="发表于 2025-10-13 00:00:00">2025-10-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/11/0082-UeIA/" title="ue 增强输入"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 增强输入"/></a><div class="content"><a class="title" href="/2025/10/11/0082-UeIA/" title="ue 增强输入">ue 增强输入</a><time datetime="2025-10-10T16:00:00.000Z" title="发表于 2025-10-11 00:00:00">2025-10-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
