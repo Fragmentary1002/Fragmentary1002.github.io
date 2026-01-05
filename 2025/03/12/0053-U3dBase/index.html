@@ -175,8 +175,8 @@
 <li>OnDestroy 当对象被销毁时调用。</li>
 <li>OnApplicationQuit 当用户停止运行模式时在编辑器中调用。当web被关闭时在网络播放器中被调用。</li>
 </ul>
-<p><img src="/.com//image-20251022233055690.png" alt="image-20251022233055690"></p>
-<p><img src="/.com//image-20251022233101167.png" alt="image-20251022233101167"></p>
+<p><img src="/2025/03/12/0053-U3dBase/image-20251022233055690.png" alt="image-20251022233055690"></p>
+<p><img src="/2025/03/12/0053-U3dBase/image-20251022233101167.png" alt="image-20251022233101167"></p>
 <ul>
 <li><p>移动相机动作在哪个函数里，为什么在这个函数里？</p>
 <p><strong>LateUpdate</strong>，是在所有的Update结束后才调用，比较适合用于命令脚本的执行。<br>官网上例子是摄像机的跟随，都是所有的Update操作完才进行摄像机的跟进，不然就有可能出现摄像机已经推进了，但是视角里还未有角色的空帧出现。</p>

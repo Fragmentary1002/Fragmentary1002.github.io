@@ -227,7 +227,7 @@
 <h1 id="GA-Gameplay-Ability"><a href="#GA-Gameplay-Ability" class="headerlink" title="GA(Gameplay Ability)"></a>GA(Gameplay Ability)</h1><blockquote>
 <p>Gameplay Ability(GA)标识了游戏中一个对象（Actor）可以做的行为或技能。 能力（Ability）可以是普通攻击或者吟唱技能，可以是角色被击飞倒地，还可以是使用 某种道具，交互某个物件，甚至跳跃、飞行等角色行为也可以是Ability。<br>Ability可以被赋予对象或从对象的ASC中移除，对象同时可以激活多个GameplayAbility。 基本的移动输入、UI交互行为则不能或不建议通过GA来实现</p>
 </blockquote>
-<img src="/.com//v2-753b6cb16cb635af5275888c9911c576_1440w.jpg" alt="img" style="zoom:50%;">
+<img src="/2025/11/10/0085-UeGasUse/v2-753b6cb16cb635af5275888c9911c576_1440w.jpg" alt="img" style="zoom:50%;">
 
 <p>角色需要<strong>拥有</strong>GA后，才能<strong>使用</strong>GA。</p>
 <p>GA的<strong>使用</strong>分为<strong>实例化</strong>和<strong>释放</strong>两个过程，前者主要是生成一个<strong>FGameplayAbilitySpec</strong>对象，并为一部分非公有（非静态）属性赋值，如当前GA的等级。后者操作的实际对象则为Spec。</p>

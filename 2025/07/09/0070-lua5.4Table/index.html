@@ -171,7 +171,7 @@
 <p><em>优点：</em>对使用者来说方便阅读，不需要写许多类型相关的代码，变量不需要提前声明类型；</p>
 <p><em>缺点：</em>不方便调试，安全性比静态语言差。</p>
 <h2 id="TValue"><a href="#TValue" class="headerlink" title="TValue"></a>TValue</h2><p>TValue是所有数据结构的基础，这边可以看到Value的结构</p>
-<p><img src="/2025/07/09/0070-lua5/v2-026a51ad75e5ce6f8e8b42a3d991ac31_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-026a51ad75e5ce6f8e8b42a3d991ac31_720w.webp" alt="img"></p>
 <p><strong>TValue</strong>中引用了<strong>TValuefields</strong>，它是一个宏定义，我们把宏展开可以把TValue看作如下代码：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct <span class="title class_">TValue</span> &#123;</span><br><span class="line">  union <span class="title class_">Value</span> &#123;</span><br><span class="line">    struct <span class="title class_">GCObject</span> gc;    <span class="regexp">/ collectable objects */</span></span><br><span class="line">    <span class="keyword">void</span> p;         <span class="regexp">/ light userdata /</span></span><br><span class="line">      lua_CFunction f; <span class="regexp">/ light C functions /</span></span><br><span class="line">      lua_Integer i;   <span class="regexp">/ integer numbers /</span></span><br><span class="line">      lua_Number n;    <span class="regexp">/ float numbers */</span></span><br><span class="line">    &#125; value_;</span><br><span class="line">  lu_byte tt_;</span><br><span class="line">&#125; <span class="title class_">TValue</span>;</span><br></pre></td></tr></table></figure>
 
@@ -207,7 +207,7 @@
 
 <p>我们可以看得出来这里为布尔类型声明了两个<strong>类型变体</strong>，用第<strong>5</strong>位0代表false，1代表true。布尔的基本类型值为LUA_TBOOLEAN为1，看前4位，与第5位的值，看得出来tt_ 若为（高位在左） 0000 0001，即为false；若为 0001 0001，即为true。</p>
 <p>判断布尔变量的宏定义见源码<em>《lobject.h》</em>：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-a456f0bd4c8cec8c62da00d1d722841d_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-a456f0bd4c8cec8c62da00d1d722841d_720w.webp" alt="img"></p>
 <h2 id="TValue-1"><a href="#TValue-1" class="headerlink" title="TValue"></a>TValue</h2><p>因为存储的直接用变体形式 则TValue 不存在</p>
 <h1 id="数字类型-Int-and-Float"><a href="#数字类型-Int-and-Float" class="headerlink" title="数字类型 Int and Float"></a>数字类型 Int and Float</h1><h2 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h2><p>数字我们都知道是什么，在编程上面，数字分为<strong>整数</strong>和<strong>浮点数</strong>两种。</p>
 <p> int iValue = 1; //整数</p>
@@ -215,28 +215,28 @@
 <p>Lua在<strong>5.3</strong>版本之前，在底层实现中，所有数字都是<strong>浮点数</strong>，没有<strong>整数</strong>的概念，整数在通过浮点数（<strong>IEEE</strong>表示法）存储，会产生<strong>浮点误差</strong>。</p>
 <p>而在Lua5.3版本开始，Lua添加了对整数的支持，让整数从浮点中独立出来，不再使用浮点数进行表示，并支持了<strong>位运算</strong>这类整数运算的操作符。</p>
 <p>上文对布尔类型的讲解中我们提到Lua中每个基础对象会需要存储其类型标识 <strong>type tag</strong>(简称tt)，见源码*<strong>《lua.h》*<strong>，可以看到数字类型的tt枚举值为</strong>LUA_TNUMBER</strong>（对应数字3）。</p>
-<p><img src="/2025/07/09/0070-lua5/v2-5f4424dd74def671ccf1d73ec6fb17f3_720w-1767595338701-36.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-5f4424dd74def671ccf1d73ec6fb17f3_720w-1767595338701-36.webp" alt="img"></p>
 <p>我们说数字分为整型和浮点，他们都属于<strong>LUA_TNUMBER</strong>，像布尔值通过类型变体区分true和false的方式一样，数字类型也是通过<strong>类型变体</strong>来区分整型和浮点。</p>
 <p>见源码<em><strong>《lobject.h》*</strong>, 类型变体</em>*LUA_VNUMINT<strong>即为</strong>整型<strong>，而</strong>LUA_VNUMFLT<strong>即为</strong>浮点型**：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-72d3fe7c78717dca4ceb6195bd7a2eec_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-72d3fe7c78717dca4ceb6195bd7a2eec_720w.webp" alt="img"></p>
 <h2 id="tt-1"><a href="#tt-1" class="headerlink" title="tt_"></a>tt_</h2><p>我们再次复习一下，对象类型标识type tag(tt)字段共<strong>8</strong>位，前4位用于代表基本类型，此处即为LUA_TNUMBER（3, 二进制为11），第5位用于表达类型变体，而makevariant 函数即是用于修改前4位之后的数值：</p>
 <p>所以tt字段，整型LUA_VNUMINT的2进制8个位的具体值即为 <strong>0000 0011</strong> ；</p>
 <p>浮点型LUA_VNUMFLT则为：<strong>0001 0011</strong> 。</p>
 <h2 id="TValue-2"><a href="#TValue-2" class="headerlink" title="TValue"></a>TValue</h2><p>数字类型与布尔类型不同的是，数字类型除了要定义这个类型标识以外，还需要存储实际的数值。说到这里，我们再重新看一下TValue中Value字段的定义，可以看到里面有 <strong>i</strong> 和 <strong>n</strong> 两个字段：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-aeaaf36bfebf2ec431070bad940866e6_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-aeaaf36bfebf2ec431070bad940866e6_720w.webp" alt="img"></p>
 <p>图4</p>
 <p>如英文注释的字面意思，这个Union联合体Value中的 i 字段即是用来存储整型， n 用于存储浮点型。lua_Number这里不能按英文意思，<strong>单指浮点类型</strong>；而lua_Integer则单指整型。</p>
 <p>所以，用于设置整数或者浮点数的方法也呼之欲出了，见***《lobject.h》***：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-ec4a4d3637501f1c14fc4482917e5371_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-ec4a4d3637501f1c14fc4482917e5371_720w.webp" alt="img"></p>
 <p>图5</p>
 <p>val<em>宏的作用即为取Value的value</em>字段：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-440f82430d91afd779df7a1ca66d664d_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-440f82430d91afd779df7a1ca66d664d_720w.webp" alt="img"></p>
 <p>图6</p>
 <p>所以存储一个数字类型需要先设置 <strong>value_<strong>字段中的</strong>n</strong>字段（整型）或者 <strong>i</strong> 字段（浮点型），然后用settt_宏设置type tag(tt)字段为对应上面所说的值<strong>LUA_VNUMFLT</strong>或者<strong>LUA_VNUMINT</strong>。</p>
 <p>除了set函数，上图中的chg(代表change)开头的函数用于修改数值，用于相同类型操作，单纯改变数值，不改变tt。</p>
 <h2 id="默认数据类型"><a href="#默认数据类型" class="headerlink" title="默认数据类型"></a>默认数据类型</h2><p>接下来我们再看一下代表整数的lua_Integer 和 代表浮点数的lua_Number 在底层到底是什么样的数据类型。</p>
 <p>源码***《lua.h》***中声明lua_Number为LUA_NUMBER，而lua_Integer的为LUA_INTERGER。</p>
-<p><img src="/2025/07/09/0070-lua5/v2-a0860d0d97b468e55fe2e2ceeeeefc71_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-a0860d0d97b468e55fe2e2ceeeeefc71_720w.webp" alt="img"></p>
 <p>图7</p>
 <p>再继续深入学习它们的定义，这里我们先看源码***《luaconf.h》***这个地方：</p>
 <p>图8</p>
@@ -244,23 +244,23 @@
 <p>浮点型也有3种: float, double, long double。 默认double</p>
 <p>然后箭头所指表示当前使用的默认类型，看注释可见Lua5.4默认为<strong>64</strong>位，然后整型使用<strong>long long</strong>，浮点型使用的是<strong>double</strong>。</p>
 <p>还是源码***《luaconf.h》***下面部分则有真正的类型声明：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-47c5cf4905325af4fdba1f7b580aed85_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-47c5cf4905325af4fdba1f7b580aed85_720w.webp" alt="img"></p>
 <p>图9</p>
 <p>可见默认定义LUA_INT_LONGLONG最后就是对应long long类型。另外看另一个箭头可以看得出来在Windows平台上整型会使用__int64类型。</p>
 <p>浮点的定义也是类似，默认的LUA_FLOAT_DOUBLE会被定义为类型double，这里不再赘述：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-63614deb26cdd4876b6c471e74c52b29_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-63614deb26cdd4876b6c471e74c52b29_720w.webp" alt="img"></p>
 <p>图10</p>
 <h1 id="字符串-String"><a href="#字符串-String" class="headerlink" title="字符串 String"></a>字符串 String</h1><h2 id="tt-2"><a href="#tt-2" class="headerlink" title="tt_"></a>tt_</h2><p><em>《lua.h》</em>字符串的基础数据类型的枚举为<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=220522979&content_type=Article&match_order=1&q=LUA_TSTRING&zhida_source=entity">LUA_TSTRING</a>，对应数值4</p>
 <p>在LUA中，为了有更好的性能，在底层实现中字符串分为两种：一种为短字符串，一种为长字符串，对应两种类型变体<em>《lobject.h》</em>：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-01406dd4105a7b1021ffd61353046d4b_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-01406dd4105a7b1021ffd61353046d4b_720w.webp" alt="img"></p>
 <h2 id="TValue-3"><a href="#TValue-3" class="headerlink" title="TValue"></a>TValue</h2><p>用类型TString初始化创建一个TValue令其为字符串的函数如下：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-8c77dc9094e67ca2179af3048b5844cb_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-8c77dc9094e67ca2179af3048b5844cb_720w.webp" alt="img"></p>
 <p>图6</p>
 <p>上图的TValue* io即为需要返回的TValue，主要做两件事：</p>
 <p>1）设置io的value字段里面的gc字段指向这个TString字符串；</p>
 <p>2）标记type tag(tt)为IS_COLLECTABLE可回收。</p>
 <p>CommonHeader宏定义：</p>
-<p><img src="/2025/07/09/0070-lua5/v2-bdb27919bff99505be5b29970f247e68_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-bdb27919bff99505be5b29970f247e68_720w.webp" alt="img"></p>
 <p>图7</p>
 <p>所有可以被GC垃圾回收的对象结构都会有这个宏加在结构体头部，我们这里先不深入。也正是因为有这个GC对象头部，TValue中的GC指针才能指向同样有此GC头部的TStringcf对象。</p>
 <h2 id="类型字段含义"><a href="#类型字段含义" class="headerlink" title="类型字段含义"></a>类型字段含义</h2><p>短字符串会用到的字段，用到了下面括号（1~4）共4个变量</p>
@@ -274,21 +274,21 @@
 <p>（3）<strong>u</strong>：在长字符串中使用lnglen字段，代表长字符串的长度，类型为size_t，足以表示上亿的长度。</p>
 <p>（4）<strong>contents：</strong>跟短字符串一样，表示指向这个字符串char[]数组的第一个字符，用于访问该字符数组。</p>
 <h2 id="为什么要有短字符串"><a href="#为什么要有短字符串" class="headerlink" title="为什么要有短字符串"></a>为什么要有短字符串</h2><p>stringtable</p>
-<p><img src="/2025/07/09/0070-lua5/v2-30913ce58a907bc949807ac2dfaecd67_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-30913ce58a907bc949807ac2dfaecd67_720w.webp" alt="img"></p>
 <p>1）<em>hash</em>：指向一个TString链表的数组，即数组里面每一个元素为一个TString链表；</p>
 <p>2）<em>nuse</em>：代表hash中实际存储了多少个TString字符串；</p>
 <p>3）<em>size</em>：代表hash的容量。</p>
 <p>这个stringtable变量是在global_State中进行定义</p>
 <p>lua运行的时候全局会有且仅有一个global_State变量</p>
 <p>会调用下面luaS_init函数进行字符串相关数据的初始化，这里会初始化stringtable和strcache缓存</p>
-<p><img src="/2025/07/09/0070-lua5/v2-cc0f05ebae382fc5f03affe517db683d_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-cc0f05ebae382fc5f03affe517db683d_720w.webp" alt="img"></p>
 <p>tb-&gt;hash = luaM_newvector(L, MINSTRTABSIZE, TString*); </p>
 <p>初始化这个hash数组第一维的大小为MINSTRTABSIZE 128</p>
 <p>字符串TString通过size_t l长度进行创建的接口luaS_newlstr</p>
-<p><img src="/2025/07/09/0070-lua5/v2-a8c2838ad69b73b51963ce917ab09957_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-a8c2838ad69b73b51963ce917ab09957_720w.webp" alt="img"></p>
 <p>若要创建的字符串长度小于等于LUAI_MAXSHORTLEN（40），即视作创建短字符串</p>
 <p>调用的创建短字符的接口internshrstr如下</p>
-<p><img src="/2025/07/09/0070-lua5/v2-251fd10266909e1b095b41b48c3484b0_720w.webp" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-251fd10266909e1b095b41b48c3484b0_720w.webp" alt="img"></p>
 <p>（1）char* str是我们用来创建TString的字符数组，首先计算它的哈希值，并根据hash的size进行模运算使其在合理数组长度范围内</p>
 <p>（2）遍历这个TString列表list，根据长度和逐字符判断要创建的值是否已经在list中存在，如果是的话则直接返回进行复用</p>
 <p>（3）观察hash中num是否达到size，hash冲突使用链表展开，growstrtab会进行双倍扩容。</p>
@@ -363,7 +363,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2025/07/09/0070-lua5/v2-a8ce33479a3cb8d136c666a41649e9a7_1440w.jpg" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-a8ce33479a3cb8d136c666a41649e9a7_1440w.jpg" alt="img"></p>
 <h2 id="扩容Rehash"><a href="#扩容Rehash" class="headerlink" title="扩容Rehash"></a>扩容Rehash</h2><h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组需要满足：2 的幂次方扩容”和“使用率超过 50%</p>
 <p>满足：<strong>数组部分的结点数量必须要大于数组长度的一半。</strong></p>
 <p>则迭代</p>
@@ -487,8 +487,8 @@
 <p>union GCUnion 中有 struct Udata u； </p>
 <p>Udata 结构：</p>
 <p>luaS_newudata在C语言中创建一个userdata后，bindata这部分数据在栈顶（栈顶指针）</p>
-<p><img src="/2025/07/09/0070-lua5/v2-f523abf763916a43410666e03aa24fbc_1440w.jpg" alt="img"></p>
-<p><img src="/2025/07/09/0070-lua5/v2-2e788ebc6d65f6743d288ee22ed961df_1440w.jpg" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-f523abf763916a43410666e03aa24fbc_1440w.jpg" alt="img"></p>
+<p><img src="/2025/07/09/0070-lua5.4Table/v2-2e788ebc6d65f6743d288ee22ed961df_1440w.jpg" alt="img"></p>
 <p>New:《<em>lstring.c》luaS_newudata</em></p>
 <p>Set: <em>《lapi.c》lua_setiuservalue</em></p>
 <p>Get:《lapi.c》lua_getiuservalue</p>

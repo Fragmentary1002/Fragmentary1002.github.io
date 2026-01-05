@@ -275,7 +275,7 @@
 </ul>
 </blockquote>
 <h1 id="Actor生命周期"><a href="#Actor生命周期" class="headerlink" title="Actor生命周期"></a>Actor生命周期</h1><p><a target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/zh-cn/unreal-engine/unreal-engine-actor-lifecycle">https://dev.epicgames.com/documentation/zh-cn/unreal-engine/unreal-engine-actor-lifecycle</a></p>
-<p><img src="/.com//1761188735788-3.png" alt="img"></p>
+<p><img src="/2025/08/03/0073-UEBase/1761188735788-3.png" alt="img"></p>
 <p>Unreal Engine 中 Actor 的生命周期管理是其游戏对象系统的核心。下面我将 Actor 的几种主要生成路径及其生命周期阶段用表格形式整理出来，并补充一些关键细节和注意事项。</p>
 <h3 id="🧭-总览：Actor-的四种主要生成路径"><a href="#🧭-总览：Actor-的四种主要生成路径" class="headerlink" title="🧭 总览：Actor 的四种主要生成路径"></a>🧭 总览：Actor 的四种主要生成路径</h3><table>
 <thead>
@@ -740,7 +740,7 @@
 <p>当你调用 <code>BindUObject()</code>或 <code>BindStatic()</code>等方法时，委托内部会通过 <strong>Placement new</strong> 在预分配的内存上创建对应的委托实例对象，并将函数指针、对象指针等信息存储起来。</p>
 <p>模板类里定义了一系列的创建函数（Create<strong>）和绑定函数（</strong>Bind），用于代理的构造，还实现了执行代理的方法——Execute，用于代理的执行。</p>
 <p>CreateDelegateInstance函数：这是TDelegate的父类TBaseDelegate的一个方法。这里面的实现比较巧妙，大概就是通过Allocate函数把扩大自己内部指针的内存，使得自己TBaseDelegate内部能够放下一个T***DelegateInstance，并且对新申请的内存空间进行类型转换</p>
-<p><img src="/.com//1761188735788-1.png" alt="img"></p>
+<p><img src="/2025/08/03/0073-UEBase/1761188735788-1.png" alt="img"></p>
 <p>T***DelegateInstance</p>
 <p>委托系统通过不同的绑定方式，智能地管理对象生命周期，防止悬空指针：</p>
 <ul>
@@ -758,7 +758,7 @@
 <p>TWeakBaseFunctorDelegateInstance，接收类成员Lambda函数</p>
 <p>他们有个父类是TCommonDelegateInstanceState</p>
 <p>而这个TCommonDelegateInstanceState才是真正保存绑定函数和函数所在类的地方，包括UserObject记录函数所在类的实例、MethodPtr记录绑定函数、Payload记录参数等</p>
-<p><img src="/.com//1761188735788-2.png" alt="img"></p>
+<p><img src="/2025/08/03/0073-UEBase/1761188735788-2.png" alt="img"></p>
 <h2 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a><strong>Payload</strong></h2><p>UE 委托支持 <strong>Payload</strong> 机制，允许你在绑定时就固定一部分参数。当触发委托时，这些预先绑定的 Payload 参数会排在执行时传入的参数之前，一起传递给目标函数。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 假设有函数：void MyFunc(int RuntimeParam, float PreBoundParam, FString PreBoundString);</span><br><span class="line">DECLARE_DELEGATE_OneParam(FMyDelegate, int32); // 运行时只接受一个int参数</span><br><span class="line"></span><br><span class="line">FMyDelegate Delegate;</span><br><span class="line">// 绑定时传入两个Payload参数：12.0f 和 &quot;Hello&quot;</span><br><span class="line">Delegate.BindStatic(MyFunc, 12.0f, FString(TEXT(&quot;Hello&quot;)));</span><br><span class="line">// 触发时，参数这样传递：MyFunc(100, 12.0f, &quot;Hello&quot;);</span><br><span class="line">Delegate.ExecuteIfBound(100);</span><br></pre></td></tr></table></figure>
 

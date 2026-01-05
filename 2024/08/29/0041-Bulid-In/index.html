@@ -167,7 +167,7 @@
 <p><strong>应用程序阶段、几何阶段、光栅化阶段和像素处理阶段。</strong></p>
 <p><img src="https://pica.zhimg.com/80/v2-dfc730fe237cd1671ac7674bcea670ea_720w.webp" alt="img"></p>
 <p>​                        </p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831153722609.png" alt="image-20240831153722609"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831153722609.png" alt="image-20240831153722609"></p>
 <h2 id="调用Render"><a href="#调用Render" class="headerlink" title="调用Render()"></a>调用Render()</h2><p>摄像机对象调用一个Render()</p>
 <p>如同摄像机一样 调用渲染api 通知cpu开始渲染流程</p>
 <h2 id="CPU渲染管线-应用程序阶段"><a href="#CPU渲染管线-应用程序阶段" class="headerlink" title="CPU渲染管线-应用程序阶段"></a>CPU渲染管线-应用程序阶段</h2><h3 id="剔除"><a href="#剔除" class="headerlink" title="剔除"></a>剔除</h3><ul>
@@ -246,9 +246,9 @@
 <h3 id="综合"><a href="#综合" class="headerlink" title="综合"></a>综合</h3><p>该阶段主要是在软件层面上执行的一些工作，包括空间加速算法、视锥剔除、碰撞检测、动画物理模拟等。</p>
 <p>总体而言，这一阶段的任务是确保只渲染场景中需要的部分，并且以最优化的方式提交到GPU，从而实现高效的渲染。</p>
 <h2 id="GPU渲染管线"><a href="#GPU渲染管线" class="headerlink" title="GPU渲染管线"></a>GPU渲染管线</h2><p>把3d的转换成2d的图像渲染到屏幕上</p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831011702301.png" alt="image-20240831011702301"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831011702301.png" alt="image-20240831011702301"></p>
 <h3 id="几何阶段-顶点处理"><a href="#几何阶段-顶点处理" class="headerlink" title="几何阶段- 顶点处理"></a>几何阶段- 顶点处理</h3><p>包含顶点着色、投影变换、裁剪和屏幕映射阶段</p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831112227979.png" alt="image-20240831112227979"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831112227979.png" alt="image-20240831112227979"></p>
 <p>模型空间：建模软件坐标系</p>
 <p>世界空间坐标： 引擎内部坐标系</p>
 <p>相机空间： 以相机为参考系的坐标系</p>
@@ -256,7 +256,7 @@
 <p>MVP矩阵：模型矩阵（Model） 视图矩阵（view） 投影矩阵（projection）</p>
 <h3 id="光栅化阶段-图元装配及光栅化"><a href="#光栅化阶段-图元装配及光栅化" class="headerlink" title="光栅化阶段 - 图元装配及光栅化"></a>光栅化阶段 - 图元装配及光栅化</h3><p><img src="https://picx.zhimg.com/80/v2-2d50e876a7a49c4b910a4523b7937a9f_720w.webp" alt="img"></p>
 <p>片元可以理解成还没到屏幕的像素</p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831112901280.png" alt="image-20240831112901280"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831112901280.png" alt="image-20240831112901280"></p>
 <ul>
 <li><p>裁剪空间：顶点处理阶段输出 坐标在-W~W之间</p>
 </li>
@@ -324,23 +324,23 @@
 <li><p>纹理采样 </p>
 <ul>
 <li><p>通过UV坐标来计算纹素地址的坐标</p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831150824663.png" alt="image-20240831150824663"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831150824663.png" alt="image-20240831150824663"></p>
 </li>
 </ul>
 </li>
 <li><p>纹理过滤机制</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x= 0.4*32=12.8= 13</span><br><span class="line">y=0.4*32=12.8= 13</span><br><span class="line">会失真</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151018383.png" alt="image-20240831151018383"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151018383.png" alt="image-20240831151018383"></p>
 <p>Filter Mode =双线性插值</p>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151059853.png" alt="image-20240831151059853"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151059853.png" alt="image-20240831151059853"></p>
 </li>
 <li><p>Mipmap -纹理链</p>
 <ul>
 <li>映射区域大小 选择图像 </li>
 <li>会占用内存 生成额外对象</li>
 </ul>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151412639.png" alt="image-20240831151412639"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151412639.png" alt="image-20240831151412639"></p>
 </li>
 <li><p>纹理寻址模式</p>
 <ul>
@@ -348,11 +348,11 @@
 </ul>
 </li>
 </ul>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151348951.png" alt="image-20240831151348951"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151348951.png" alt="image-20240831151348951"></p>
 <ul>
 <li>纹理压缩格式</li>
 </ul>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151610396.png" alt="image-20240831151610396"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831151610396.png" alt="image-20240831151610396"></p>
 <h4 id="光照计算"><a href="#光照计算" class="headerlink" title="光照计算"></a>光照计算</h4><ul>
 <li><p>光照组成</p>
 <ul>
@@ -393,7 +393,7 @@
 <li><p>混合Blending</p>
 </li>
 </ul>
-<p><img src="/.com//Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831152852976.png" alt="image-20240831152852976"></p>
+<p><img src="/2024/08/29/0041-Bulid-In/Users\Fragmentary_\AppData\Roaming\Typora\typora-user-images\image-20240831152852976.png" alt="image-20240831152852976"></p>
 <ul>
 <li><p>Alpha 测试 ： 检测Alpha值小于一个特定值就丢弃</p>
 </li>
