@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>c++ 和c11 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="内存分配内存   内存区域 描述 分配和释放方式 特性    堆 使用malloc、free动态分配和释放空间，能分配较大的内存 malloc&#x2F;free 1. 需要手动申请和手动释放2. 能分配的内存较大3. 分配和释放内存可能产生内存碎片4. 分配效率较低5. 地址从低向上   栈 为函数的局部变量分配内存，能分配较小的内存 由操作系统自动分配和释放 1. 自动申请和自动释放2. 能分配的内存较">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>c++ 和c11 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="强制类型转换四个转换类型static_cast （隐式类型转换）实现隐式类型转换，支持基本数据类型、枚举、结构体、类之间的转换，以及类层次间的向上和向下转换（向下转换不安全）。 12double d &#x3D; 3.14; int i &#x3D; static_cast&lt;int&gt;(d);    用于各种隐式转换，比如void* 转ptr*，例如： 123456double a &#x3D; 1.0f;int b">
 <meta property="og:type" content="article">
 <meta property="og:title" content="c++ 和c11">
 <meta property="og:url" content="http://example.com/2024/05/06/0033-C11/index.html">
 <meta property="og:site_name" content="零の領域">
-<meta property="og:description" content="内存分配内存   内存区域 描述 分配和释放方式 特性    堆 使用malloc、free动态分配和释放空间，能分配较大的内存 malloc&#x2F;free 1. 需要手动申请和手动释放2. 能分配的内存较大3. 分配和释放内存可能产生内存碎片4. 分配效率较低5. 地址从低向上   栈 为函数的局部变量分配内存，能分配较小的内存 由操作系统自动分配和释放 1. 自动申请和自动释放2. 能分配的内存较">
+<meta property="og:description" content="强制类型转换四个转换类型static_cast （隐式类型转换）实现隐式类型转换，支持基本数据类型、枚举、结构体、类之间的转换，以及类层次间的向上和向下转换（向下转换不安全）。 12double d &#x3D; 3.14; int i &#x3D; static_cast&lt;int&gt;(d);    用于各种隐式转换，比如void* 转ptr*，例如： 123456double a &#x3D; 1.0f;int b">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/bg/default_cover.png">
 <meta property="article:published_time" content="2024-05-06T10:21:03.000Z">
-<meta property="article:modified_time" content="2025-11-12T16:48:39.953Z">
+<meta property="article:modified_time" content="2026-04-01T12:27:18.640Z">
 <meta property="article:author" content="Fragmentary">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2025-11-13 00:48:39'
+  postUpdate: '2026-04-01 20:27:18'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,315 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">93</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">c++ 和c11</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-12T16:48:39.953Z" title="更新于 2025-11-13 00:48:39">2025-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="c++ 和c11"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><table>
-<thead>
-<tr>
-<th align="center">内存区域</th>
-<th align="center">描述</th>
-<th align="center">分配和释放方式</th>
-<th align="center">特性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">堆</td>
-<td align="center">使用malloc、free动态分配和释放空间，能分配较大的内存</td>
-<td align="center">malloc/free</td>
-<td align="center">1. 需要<strong>手动</strong>申请和手动释放<br>2. 能分配的内存较大<br>3. 分配和释放内存可能产生内存碎片<br>4. 分配效率较低<br>5. 地址从低向上</td>
-</tr>
-<tr>
-<td align="center">栈</td>
-<td align="center">为函数的局部变量分配内存，能分配较小的内存</td>
-<td align="center">由<strong>操作系统</strong>自动分配和释放</td>
-<td align="center">1. 自动申请和自动释放<br>2. 能分配的内存较小<br>3. 不会产生内存碎片<br>4. 分配效率高<br>5. 地址由高向下</td>
-</tr>
-<tr>
-<td align="center">全局/静态存储区（.bss 和 .data段）</td>
-<td align="center">用于存储全局变量和静态变量</td>
-<td align="center">编译器分配和释放</td>
-<td align="center">存储全局和静态变量的生命周期（<strong>未初始化在.bss段，初始化的在.data段</strong>）</td>
-</tr>
-<tr>
-<td align="center">常量存储区(.data段)</td>
-<td align="center">专门用来存放常量</td>
-<td align="center">编译器分配和释放</td>
-<td align="center">存储常量，<strong>不可修改</strong></td>
-</tr>
-<tr>
-<td align="center">自由存储区</td>
-<td align="center">通过new和delete分配和释放空间的内存，具体实现可能是堆或者内存池</td>
-<td align="center">new/delete</td>
-<td align="center">1. 是C++的术语，抽象概念<br>2. 可以通过重载操作符使用其他内存实现<br>3. 对于自定义对象，能调用构造函数和析构函数</td>
-</tr>
-<tr>
-<td align="center">代码区(.text段)</td>
-<td align="center">存放代码，不允许修改，但可以执行。编译后的二进制文件存放在这里.</td>
-<td align="center"></td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<p>关于堆和栈的内存区别：</p>
-<table>
-<thead>
-<tr>
-<th align="center">区别点</th>
-<th align="center">堆</th>
-<th align="center">栈</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">内存申请和释放</td>
-<td align="center">手动申请和释放</td>
-<td align="center">自动申请和释放</td>
-</tr>
-<tr>
-<td align="center">内存大小</td>
-<td align="center">较大（4G(32位机器)）</td>
-<td align="center">较小（1M）</td>
-</tr>
-<tr>
-<td align="center">内存碎片</td>
-<td align="center">可能产生</td>
-<td align="center">不产生</td>
-</tr>
-<tr>
-<td align="center">分配效率</td>
-<td align="center">较低</td>
-<td align="center">较高</td>
-</tr>
-<tr>
-<td align="center">地址方向</td>
-<td align="center">从低向上</td>
-<td align="center">由高向下</td>
-</tr>
-</tbody></table>
-<p>C++和C分别使用什么函数来做内存的分配和释放：</p>
-<table>
-<thead>
-<tr>
-<th align="center">语言</th>
-<th align="center">分配和释放函数</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">C</td>
-<td align="center">malloc/free</td>
-<td align="center">库函数，只进行内存分配和释放，无法调用构造函数和析构函数</td>
-</tr>
-<tr>
-<td align="center">C++</td>
-<td align="center">new/delete</td>
-<td align="center">运算符，能调用构造函数和析构函数，完成对象的空间分配、初始化、销毁和释放空间</td>
-</tr>
-</tbody></table>
-<p>C++和C的内存管理函数的区别：</p>
-<ol>
-<li>new分配内存空间无需指定分配内存大小，malloc需要。</li>
-<li>new返回类型指针，类型安全，malloc返回void*，再强制转换成所需要的类型。</li>
-<li>new是从自由存储区获得内存，malloc从堆中获取内存。</li>
-<li>对于类对象，new会调用构造函数和析构函数，malloc不会。</li>
-</ol>
-<p>不能混用C和C++的内存管理函数，因为它们的处理方式和内存管理机制不同。</p>
-<h3 id="内存布局"><a href="#内存布局" class="headerlink" title="内存布局"></a>内存布局</h3><ul>
-<li>在C++中类对象的内存布局是如何分布的呢？</li>
-</ul>
-<p>在这里，影响对象大小的有哪些因素呢？</p>
-<p>成员变量的类型与数量、<strong>虚函数表的指针<code>(_vftptr)</code>、虚基类表指针<code>(_vbtptr)</code>–&gt;产生虚函数表、单一继承、多重继承、重复继承、虚拟继承</strong></p>
-<ul>
-<li><strong>问：类的内存布局是什么样的？考虑有虚函数、多继承、虚继承几种情况。（提问概率：★★★★★）</strong></li>
-</ul>
-<p>简单总结一下就是类只有成员变量占用内存（静态成员不占类内部内存，函数不占内存）。如果有虚函数，每个类对象都会有一个虚函数指针Vptr（占用一个指针大小的内存），vptr指向一个虚函数表，表里面记录了各项标记virtual的函数，子类如果覆盖父类虚函数，对应虚表位置的虚函数会被子类的替换。如果是虚继承，还会有虚基类表记录当前对象相对虚基类的偏移，以及一个虚基类指针指向这个虚基类表。</p>
-<p>虚表在编译完成时大小与布局就被决定了，加载时其内存位置也就被确定了。</p>
-<ul>
-<li>1.单继承一个或多个类只有一个虚表一个虚指针</li>
-<li>2.普通多继承会有基类的个数个虚表，基类的个数个虚指针。派生类自己独有的虚函数可能会放在第一个虚表的最后面</li>
-<li>3.单个虚继承会有两个虚表（看情况）以及一个虚基类表，两个虚指针（这个可能与我们想象中的不一样，一个指向自己独有的虚函数的虚表，一个指向覆盖基类虚函数的虚表）以及一个虚基类指针与虚基类表 <strong>注意：如果派生类自己的虚函数与基类完全相同，可能只有一个虚表，一个虚指针</strong></li>
-<li>4.菱形多虚继承会有基类的个数个虚指针以及虚表（看情况，第3条有提到），有几个虚继承就有几个虚基类指针以及虚基类表</li>
-</ul>
-<hr>
-<ul>
-<li>C++的<code>sizeof</code>影响因素</li>
-</ul>
-<ol>
-<li><strong>非静态成员变量</strong>：直接贡献大小。</li>
-<li><strong>内存对齐</strong>：编译器填充提升访问速度（如<code>#pragma pack</code>）。</li>
-<li><strong>虚函数表指针</strong>：存在虚函数时增加一个指针大小（64位下8字节）。</li>
-<li><strong>继承关系</strong>：基类成员+派生类成员，可能受空基类优化影响。</li>
-</ol>
-<p>**空对象<code>sizeof</code>**：</p>
-<p>默认为1字节（占位），若继承空基类可能优化为0（Empty Base Optimization）。</p>
-<hr>
-<p><strong>虚函数表为什么不放在全局区</strong></p>
-<ul>
-<li><strong>原因</strong>：<ul>
-<li>虚函数表（vtable）是与类相关的，而不是与程序全局相关的。</li>
-<li>每个类可能有多个虚函数表（如多继承）。</li>
-<li>虚函数表需要与类的定义紧密关联，放在全局区会增加管理复杂度。</li>
-</ul>
-</li>
-<li><strong>存储位置</strong>：<ul>
-<li>虚函数表通常存放在只读数据段（.rodata）。</li>
-</ul>
-</li>
-</ul>
-<hr>
-<p><strong><code>const</code> 变量的存储位置</strong></p>
-<ul>
-<li><strong>常量区（.rodata）</strong>：<ul>
-<li>全局 <code>const</code> 变量。</li>
-<li>字符串常量。</li>
-</ul>
-</li>
-<li><strong>栈区</strong>：<ul>
-<li>局部 <code>const</code> 变量。</li>
-</ul>
-</li>
-</ul>
-<h3 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h3><p><strong>为什么要字节对齐？</strong></p>
-<p>需要字节对齐的根本原因在于CPU访问数据的效率问题。假如没有字节对齐，那么一个double类型的变量会存储在4-11上（正常是0-7）这样计算机取这个数据的会会取两次，降低效率。而如果变量在自然对齐位置上，则只要一次就可以取出数据。一些系统对对齐要求非常严格，比如sparc系统，如果取未对齐的数据会发生错误。</p>
-<p> <strong>自定义类型的内存对齐规则</strong></p>
-<ul>
-<li><strong>规则</strong>：<ul>
-<li>对齐值为成员中最大对齐值的整数倍。</li>
-<li>每个成员的偏移量必须是其对齐值的整数倍。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Example</span> &#123;</span><br><span class="line">    <span class="type">char</span> a;      <span class="comment">// 1 字节，对齐值 1</span></span><br><span class="line">    <span class="type">int</span> b;       <span class="comment">// 4 字节，对齐值 4</span></span><br><span class="line">    <span class="type">double</span> c;    <span class="comment">// 8 字节，对齐值 8</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<hr>
-<p><strong>什么时候不希望进行内存对齐</strong></p>
-<ul>
-<li><strong>节省内存</strong>：在某些嵌入式系统中，内存资源有限，可能需要手动调整对齐方式。</li>
-<li><strong>兼容性</strong>：与某些硬件或协议交互时，可能需要特定的内存布局。</li>
-</ul>
-<hr>
-<ul>
-<li><strong>问：memory alignmentand padding,</strong> <strong>内存对齐的原理与意义（提问概率：★★★★）</strong></li>
-</ul>
-<p>结构体以及类成员对齐，意义就是减少cpu读取的次数，提高效率。比如一个int变量长度为4个字节，cpu一次读4个字节，当然是一次读取比较好。但是如果前面有一个char，地址为0-1。那么这个int的地址就为1-4。导致cpu，分两次读取int值。<br>具体的对齐规则，要说的非常准确可能比较麻烦，简单来讲就是，每个变量看后面的变量，如果后面的变量大，就和后面的大小对齐并补充字节。最后一个变量，按照成员内最大的对齐值，对齐并补充字节</p>
-<h3 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3><ul>
-<li><strong>问：内存泄露是什么意思？如何检测与避免内存泄漏？（提问概率：★★★★）</strong></li>
-</ul>
-<p>指由于疏忽或错误造成程序未能释放已经不再使用的内存的情况。内存泄漏并非指内存在物理上的消失，而是应用程序分配某段内存后，由于设计错误，导致在释放该段内存之前就失去了对该段内存的控制，从而造成了内存的浪费</p>
-<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><h3 id="Const"><a href="#Const" class="headerlink" title="Const"></a>Const</h3><ul>
-<li><strong>const的作用</strong>？指针常量和常量指针？const修饰的函数能否重载？</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">描述</th>
-<th align="center">细节</th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">const修饰符</td>
-<td align="center">用来定义常量，表示不可变性。</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">常量</td>
-<td align="center">被const修饰的成员函数不能修改类中的数据成员。</td>
-<td>具有不可变性</td>
-</tr>
-<tr>
-<td align="center">指针常量</td>
-<td align="center">指针本身不可修改，但指向的对象可以修改。</td>
-<td>指针本身的常量性</td>
-</tr>
-<tr>
-<td align="center">常量指针</td>
-<td align="center">指针指向的对象不可修改，但指针本身可以修改。</td>
-<td>指针指向对象的常量性。</td>
-</tr>
-<tr>
-<td align="center">const成员函数</td>
-<td align="center">不能改变类内的数据成员，也无法调用非const的成员函数。</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">const类对象函数调用const函数</td>
-<td align="center">只能调用const成员函数。</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">非const类对象函数调用const函数</td>
-<td align="center">可以调用const和非const成员函数，但优先调用非const函数（如果有重载）。</td>
-<td></td>
-</tr>
-</tbody></table>
-<ul>
-<li><strong>了解const么？哪些时候用到const？与宏定义有什么差异？（提问概率：★★★★）</strong></li>
-</ul>
-<p>简单理解，const的目的就是定义一个“不会被修改的常量”，可以修饰变量、引用、指针，可以用于函数参数、成员函数修饰、成员变量，<strong>修饰成员函数本质上就是修饰“this”指针，所以不能修改函数内部的成员变量</strong>。</p>
-<p>相比宏定义，const在编译期也会起作用（宏定义只是预编译期），会做一些类型检查，方便调试。而且，const不需要在每个用到的地方都申请一块内存空间，要更节省内存。</p>
-<h3 id="Static"><a href="#Static" class="headerlink" title="Static"></a>Static</h3><ul>
-<li><strong>static的作用</strong>？static变量什么时候初始化？</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">修饰对象</th>
-<th align="center">作用范围</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">文件作用域的变量</td>
-<td align="center">本文件</td>
-<td align="center">static修饰的变量和函数仅在<strong>本文件</strong>可见，其他文件无法访问和使用，有助于避免重定义问题。</td>
-</tr>
-<tr>
-<td align="center">函数作用域的变量</td>
-<td align="center">函数内部</td>
-<td align="center">作为<strong>局部静态变量</strong>时，该变量在函数调用期间保持其值，只进行一次初始化，不会因函数调用而重置，但仅在该函数内部可见。</td>
-</tr>
-<tr>
-<td align="center">类的静态数据成员</td>
-<td align="center">所有类对象</td>
-<td align="center">static修饰的静态数据成员是所有<strong>类对象共</strong>享的，而非每个类对象独有的。这些静态数据成员在类的声明中不占用内存，必须在.cpp文件中定义以分配内存。</td>
-</tr>
-<tr>
-<td align="center">类的静态成员函数</td>
-<td align="center">所有类对象</td>
-<td align="center">static修饰的静态成员函数-&gt;静态数据成员和函数-&gt;x非静态数据成员和函数。<br>它们属于类本身而非类的某个特定对象。</td>
-</tr>
-<tr>
-<td align="center">初始化过程</td>
-<td align="center"></td>
-<td align="center">文件域的静态变量和类的静态成员变量在main函数执行之前的静态初始化过程中分配内存并初始化；局部静态变量在第一次使用时分配内存并初始化。</td>
-</tr>
-</tbody></table>
-<h4 id="说一下static关键字的作用？"><a href="#说一下static关键字的作用？" class="headerlink" title="说一下static关键字的作用？"></a>说一下static关键字的作用？</h4><p>全局静态变量：位于静态存储区，程序运行期间一直存在，对外部文件不可见。</p>
-<p>局部静态变量：位于静态存储区，在局部作用域可以访问，离开局部作用域之后static变量仍存在，但无法访问。</p>
-<p>静态函数：即在函数定义前加static，函数默认情况下为extern，即可导出的。加了static就不能为外部类访问。注意不要在头文件声明static函数，因为static只对本文件有效。</p>
-<p>类的静态成员：可以实现多个不同的类实例之间的数据共享，且不破坏隐藏规则，不需要类名就可以访问。类的静态存储变量是可以修改的。可以通过&lt;对象名&gt;::&lt;静态成员&gt;进行访问。</p>
-<p>类的静态函数：不能调用非静态成员，只可以通过对象名调用&lt;对象名&gt;::&lt;静态成员函数&gt;</p>
-<p><strong>static 不需要初始化，默认为0值。</strong></p>
-<h4 id="extern与static"><a href="#extern与static" class="headerlink" title="extern与static"></a>extern与static</h4><ul>
-<li><strong>问：extern与static（提问概率：★★★）</strong></li>
-</ul>
-<p>extern 声明一个变量定义在其他文件，这样当前文件就可以使用这个变量，否则会编译失败，如果两个全局变量名称一样会出现链接失败。extern c的作用更重要，因为c++的编译方式与c是不同的，比如函数重载利用mangling的优化。</p>
-<p>static变量，很多编译器优化后的效果就是声明一个全局变量，然后判断是否初始化，是的话之后就不需要再初始化了，但是不绝对，win7的全局变量与static的位置就有差异。static成员函数其实在编译后与class完全没有关系。static成员其实也没关系，但是private的需要通过类去调用。static全局变量需要注意，他只能在当前编译单元也就是.cpp内使用(内链接)。全局函数变量是外链接，可以跨单元调用。</p>
-<p>static相关注意与理解：静态内存是在main前分配，在main后释放。当存在多个复杂的static变量时，你就不知道哪个先分配了，也控制不了。另外，关于static具体的存储位置，一般是我们常说的静态存储区（bss，数据区等），更贴切的说他是一个可执行文件里面的区域，到操作系统层面可能是另一种叫法，对不同的编译器、C++版本、操作系统可能都有所差异。我们一个程序编译链接好后会把一些静态数据写到exe、dll里面，注意这时候exe并没有放入到内存，所以，其实所谓的编译后内存位置就确定了只不过是一种“理解方式”，真正的静态区（全局变量、静态变量、常量）也是在程序运行后操作系统将这些数据装入内存后的一个位置，这个位置相对exe来说可以理解为静态的，然后当我们运行exe动态申请内存时就是我们 常说的堆区（也可以叫动态区、C++叫自由存储区等）</p>
-<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式(Singleton Pattern，也称为单件模式)，使用最广泛的设计模式之一。其意图是保证一个类仅有一个实例，并提供一个访问它的全局访问点，该实例被所有程序模块共享。</p>
-<p>定义一个单例类：</p>
-<ol>
-<li>私有化它的构造函数，以防止外界创建单例类的对象；</li>
-<li>使用类的私有静态指针变量指向类的唯一实例；</li>
-<li>使用一个公有的静态方法获取该实例。</li>
-</ol>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Singleton</span></span><br><span class="line">    &#123;</span><br><span class="line">       <span class="function"><span class="keyword">private</span> <span class="title">Sington</span>()</span> &#123; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton _Singleton = <span class="literal">null</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">CreateInstance</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (_Singleton == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">             Console.WriteLine(<span class="string">&quot;被创建&quot;</span>);</span><br><span class="line">             _Singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> _Singleton;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="单例模式-静态类的区别"><a href="#单例模式-静态类的区别" class="headerlink" title="单例模式 静态类的区别"></a>单例模式 静态类的区别</h3><p>1）首先单例模式会提供给你一个全局唯一的对象，静态类只是提供给你很多静态方法，这些方法不用创建对象，通过类就可以直接调用；</p>
-<p>2）<em><strong>单例模式的灵活性更高，方法可以被override，因为静态类都是静态方法，所以不能被override；</strong></em></p>
-<p>3）如果是一个非常重的对象，单例模式可以懒加载，静态类就无法做到；</p>
-<h1 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h1><h2 id="四个转换类型"><a href="#四个转换类型" class="headerlink" title="四个转换类型"></a>四个转换类型</h2><h3 id="static-cast-（隐式类型转换）"><a href="#static-cast-（隐式类型转换）" class="headerlink" title="static_cast （隐式类型转换）"></a>static_cast （隐式类型转换）</h3><p>实现隐式类型转换，支持基本数据类型、枚举、结构体、类之间的转换，以及类层次间的向上和向下转换（向下转换不安全）。</p>
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">c++ 和c11</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-06T10:21:03.000Z" title="发表于 2024-05-06 18:21:03">2024-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-01T12:27:18.640Z" title="更新于 2026-04-01 20:27:18">2026-04-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="c++ 和c11"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h1><h2 id="四个转换类型"><a href="#四个转换类型" class="headerlink" title="四个转换类型"></a>四个转换类型</h2><h3 id="static-cast-（隐式类型转换）"><a href="#static-cast-（隐式类型转换）" class="headerlink" title="static_cast （隐式类型转换）"></a>static_cast （隐式类型转换）</h3><p>实现隐式类型转换，支持基本数据类型、枚举、结构体、类之间的转换，以及类层次间的向上和向下转换（向下转换不安全）。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> d = <span class="number">3.14</span>; </span><br><span class="line"><span class="type">int</span> i = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(d);</span><br></pre></td></tr></table></figure>
 
 
@@ -565,8 +257,14 @@
 <p>（2）具体实现：</p>
 <p>1）构造函数：将指针指向该对象，引用计数置为1；</p>
 <p>2）拷贝构造函数：将指针指向该对象，引用计数++；</p>
-<p>3）赋值运算符：=号左边的shared_ptr的引用计数-1，右边的shared_ptr的引用计数+1，如果左边的引用技术降为0，还要销毁shared_ptr指向对象，释放内存空间。</p>
+<p>3）赋值运算符：= 号左边的shared_ptr的引用计数-1，右边的shared_ptr的引用计数+1，如果左边的引用计数降为0，还要销毁shared_ptr指向对象，释放内存空间。</p>
 <p>（3）shared_ptr的引用计数本身是安全且无锁的，但是它指向的对象的读写则不是，因此可以说shared_ptr不是线程安全的。<a href="https://link.zhihu.com/?target=https://cloud.tencent.com/developer/article/1654442">shared_ptr是线程安全的吗？ - 云+社区 - 腾讯云 (tencent.com)</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SharedPtr</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T* ptr;              <span class="comment">// 原始指针</span></span><br><span class="line">    <span class="type">int</span>* ref_count;      <span class="comment">// 引用计数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">SharedPtr</span><span class="params">(T* p = <span class="literal">nullptr</span>)</span> : ptr(p), ref_count(new int(<span class="number">1</span>)) &#123;</span></span><br><span class="line">        <span class="keyword">if</span> (p == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            *ref_count = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝构造函数</span></span><br><span class="line">    <span class="built_in">SharedPtr</span>(<span class="type">const</span> SharedPtr&lt;T&gt;&amp; other) : <span class="built_in">ptr</span>(other.ptr), <span class="built_in">ref_count</span>(other.ref_count) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ptr) &#123;</span><br><span class="line">            (*ref_count)++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动构造函数</span></span><br><span class="line">    <span class="built_in">SharedPtr</span>(SharedPtr&lt;T&gt;&amp;&amp; other) <span class="keyword">noexcept</span> : <span class="built_in">ptr</span>(other.ptr), <span class="built_in">ref_count</span>(other.ref_count) &#123;</span><br><span class="line">        other.ptr = <span class="literal">nullptr</span>;</span><br><span class="line">        other.ref_count = <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 析构函数</span></span><br><span class="line">    ~<span class="built_in">SharedPtr</span>() &#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放资源</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">release</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ptr &amp;&amp; ref_count) &#123;</span><br><span class="line">            (*ref_count)--;</span><br><span class="line">            <span class="keyword">if</span> (*ref_count == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">delete</span> ptr;</span><br><span class="line">                <span class="keyword">delete</span> ref_count;</span><br><span class="line">            &#125;</span><br><span class="line">            ptr = <span class="literal">nullptr</span>;</span><br><span class="line">            ref_count = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝赋值运算符</span></span><br><span class="line">    SharedPtr&lt;T&gt;&amp; <span class="keyword">operator</span>=(<span class="type">const</span> SharedPtr&lt;T&gt;&amp; other) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) &#123;</span><br><span class="line">            <span class="built_in">release</span>();  <span class="comment">// 释放当前资源</span></span><br><span class="line">            ptr = other.ptr;</span><br><span class="line">            ref_count = other.ref_count;</span><br><span class="line">            <span class="keyword">if</span> (ptr) &#123;</span><br><span class="line">                (*ref_count)++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移动赋值运算符</span></span><br><span class="line">    SharedPtr&lt;T&gt;&amp; <span class="keyword">operator</span>=(SharedPtr&lt;T&gt;&amp;&amp; other) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) &#123;</span><br><span class="line">            <span class="built_in">release</span>();</span><br><span class="line">            ptr = other.ptr;</span><br><span class="line">            ref_count = other.ref_count;</span><br><span class="line">            other.ptr = <span class="literal">nullptr</span>;</span><br><span class="line">            other.ref_count = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 重载运算符</span></span><br><span class="line">    T&amp; <span class="keyword">operator</span>*() <span class="type">const</span> &#123; <span class="keyword">return</span> *ptr; &#125;</span><br><span class="line">    T* <span class="keyword">operator</span>-&gt;() <span class="type">const</span> &#123; <span class="keyword">return</span> ptr; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取原始指针</span></span><br><span class="line">    <span class="function">T* <span class="title">get</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> ptr; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取引用计数</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">use_count</span><span class="params">()</span> <span class="type">const</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> ref_count ? *ref_count : <span class="number">0</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 重置指针</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">reset</span><span class="params">(T* p = <span class="literal">nullptr</span>)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">release</span>();</span><br><span class="line">        ptr = p;</span><br><span class="line">        <span class="keyword">if</span> (p) &#123;</span><br><span class="line">            ref_count = <span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ref_count = <span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查是否唯一所有者</span></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">unique</span><span class="params">()</span> <span class="type">const</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">use_count</span>() == <span class="number">1</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查是否为空</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">bool</span><span class="params">()</span> <span class="type">const</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> ptr != <span class="literal">nullptr</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <ul>
 <li>什么是shared_ptr的循环引用问题,如何解决?</li>
 </ul>
@@ -597,7 +295,7 @@
 <h3 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h3><ul>
 <li>如何实现独占式指针？</li>
 </ul>
-<p>由于指针或引用在离开作用域是不会调用析构函数的,但对象在离开作用域会调用析构函数。unique_ptr本质是一个类,将复制构造函数和赋值构造函数声明为delete就可以实现独占式,只允许移动构造和移动赋值。</p>
+<p>由于指针或引用在离开作用域是不会调用析构函数的,但对象在离开作用域会调用析构函数。unique_ptr本质是一个类,将拷贝构造函数和赋值构造函数声明为delete就可以实现独占式,只允许移动构造和移动赋值。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;T&gt; uptr = std::<span class="built_in">make_unique</span>&lt;T&gt;(...); <span class="comment">// 方式1</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;T&gt; <span class="title">uptr</span><span class="params">(<span class="keyword">new</span> T(...))</span></span>;<span class="comment">// 方式2</span></span><br></pre></td></tr></table></figure>
 
 
@@ -639,13 +337,19 @@
 <p>右值引用就是必须绑定到右值的引用，可以通过&amp;&amp;（两个取地址符）来获得右值引用；右值引用只能绑定到即将销毁的对象，因此可以自由地移动其资源；</p>
 <p>右值引用是为了支持移动操作而引出的一个概念，它只能绑定到一个将要销毁的对象，使用右值引用的移动操作可以避免无谓的拷贝，提高性能。使用std::move()函数可以将一个左值转换为右值引用。（可以通过两个很长的字符串的直接赋值和移动赋值来测试一下性能的差距)。</p>
 <h2 id="什么是将亡值，什么是纯右值。"><a href="#什么是将亡值，什么是纯右值。" class="headerlink" title="什么是将亡值，什么是纯右值。"></a>什么是将亡值，什么是纯右值。</h2><p>所谓纯右值就是<strong>临时变量或者字面值</strong>，将亡值是C++11新定义的<strong>将要被“移动”的变量，</strong>比如move返回的变量。</p>
-<h2 id="移动语义-move"><a href="#移动语义-move" class="headerlink" title="移动语义  move"></a>移动语义  move</h2><p>移动语义(move semantic)</p>
+<h2 id="移动语义-move-浅拷贝-转移所有权"><a href="#移动语义-move-浅拷贝-转移所有权" class="headerlink" title="移动语义 move 浅拷贝 + 转移所有权"></a>移动语义 move 浅拷贝 + 转移所有权</h2><p>移动语义(move semantic)</p>
 <p>某对象持有的资源或内容转移给另一个对象。为了保证移动语义,必须记得用 std::move 转化左值对象为右值，以避免调用复制构造函数.</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; a&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt;b=std::<span class="built_in">move</span>(a);<span class="comment">//我们不希望为了b拷贝新的内存空间，采用移动语义C++</span></span><br><span class="line"><span class="comment">//a的元素变为&#123;&#125;,b的元素变为&#123;1.2.3&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>完美转发(perfect forwarding)</p>
 <p>为了解决引用折叠问题,必须写一个任意参数的函数模板,并转发到其他函数.</p>
 <p>为了保证完美转发，必须使用std::forward，<strong>我们希望左值转发之后还是左值，右值转发后还是右值</strong></p>
+<p>std::move的核心原理是：</p>
+<p>类型转换：将左值转换为右值引用</p>
+<p>启用移动语义：使得编译器可以选择移动构造函数/移动赋值运算符</p>
+<p>零成本抽象：运行时没有任何开销，完全是编译时的类型操作</p>
+<p>资源转移：允许高效地转移资源所有权，避免深拷贝</p>
+<p><img src="/2024/05/06/0033-C11/v2-37a994f4d65e01406833e6483f2658b5_1440w.jpg" alt="img"></p>
 <h2 id="什么是引用折叠-forward函数的原理。"><a href="#什么是引用折叠-forward函数的原理。" class="headerlink" title="什么是引用折叠? forward函数的原理。"></a>什么是引用折叠? forward函数的原理。</h2><p>引用折叠就是，如果间接创建一个引用的引用，那么这些引用就会折叠。</p>
 <h2 id="深拷贝和浅拷贝"><a href="#深拷贝和浅拷贝" class="headerlink" title="深拷贝和浅拷贝"></a>深拷贝和浅拷贝</h2><ul>
 <li>为什么要自己定义拷贝构造函数？什么是深拷贝和浅拷贝？</li>
@@ -767,4 +471,4 @@
 </ul>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/47869981">https://zhuanlan.zhihu.com/p/47869981</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54136411">https://zhuanlan.zhihu.com/p/54136411</a></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/05/06/0033-C11/">http://example.com/2024/05/06/0033-C11/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">unity 优化</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/25/0032-gitCommit/" title="git commit规范"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">git commit规范</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/05/17/0061-OOP/" title="关于类与对象"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-17</div><div class="title">关于类与对象</div></div></a></div><div><a href="/2024/07/25/0038-CPP-STL/" title="C++ 之STL"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-25</div><div class="title">C++ 之STL</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">93</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">1.</span> <span class="toc-text">内存分配</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-number">1.1.</span> <span class="toc-text">内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">内存布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90"><span class="toc-number">1.1.2.</span> <span class="toc-text">内存对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">1.1.3.</span> <span class="toc-text">内存泄漏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">常量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Const"><span class="toc-number">1.2.1.</span> <span class="toc-text">Const</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Static"><span class="toc-number">1.2.2.</span> <span class="toc-text">Static</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8Bstatic%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">说一下static关键字的作用？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#extern%E4%B8%8Estatic"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">extern与static</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">单例模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F-%E9%9D%99%E6%80%81%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.4.</span> <span class="toc-text">单例模式 静态类的区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text">强制类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E8%BD%AC%E6%8D%A2%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">四个转换类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast-%EF%BC%88%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">static_cast （隐式类型转换）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#const-cast-%E5%B8%B8%E9%87%8F%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.2.</span> <span class="toc-text">const_cast (常量转换)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dynamic-cast-%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.3.</span> <span class="toc-text">dynamic_cast (动态类型转换)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reinterpret-cast-%EF%BC%88%E9%87%8D%E6%96%B0%E8%A7%A3%E9%87%8A%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">2.1.4.</span> <span class="toc-text">reinterpret_cast （重新解释转换）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%BC%82%E5%90%8C%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">强制转换的异同点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8"><span class="toc-number">2.2.1.</span> <span class="toc-text">类型安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast%E5%92%8Cdynamic-cast%E7%9A%84%E5%BC%82%E5%90%8C%E7%82%B9%EF%BC%9F"><span class="toc-number">2.2.2.</span> <span class="toc-text">static_cast和dynamic_cast的异同点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast-%E5%92%8C-reinterpret-cast-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.2.3.</span> <span class="toc-text">static_cast 和 reinterpret_cast 的区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">3.</span> <span class="toc-text">智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">3.1.</span> <span class="toc-text">三个智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr"><span class="toc-number">3.1.1.</span> <span class="toc-text">shared_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weak-ptr"><span class="toc-number">3.1.2.</span> <span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unique-ptr"><span class="toc-number">3.1.3.</span> <span class="toc-text">unique_ptr</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference-and-pointer"><span class="toc-number">3.2.</span> <span class="toc-text">reference and pointer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8BC-%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">3.2.1.</span> <span class="toc-text">说一下C++指针和引用的区别？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RALL"><span class="toc-number">3.3.</span> <span class="toc-text">RALL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">左值右值 构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC%E5%AE%9A%E4%B9%89"><span class="toc-number">4.1.</span> <span class="toc-text">左值右值定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B0%86%E4%BA%A1%E5%80%BC%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%AF%E5%8F%B3%E5%80%BC%E3%80%82"><span class="toc-number">4.2.</span> <span class="toc-text">什么是将亡值，什么是纯右值。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89-move"><span class="toc-number">4.3.</span> <span class="toc-text">移动语义  move</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0-forward%E5%87%BD%E6%95%B0%E7%9A%84%E5%8E%9F%E7%90%86%E3%80%82"><span class="toc-number">4.4.</span> <span class="toc-text">什么是引用折叠? forward函数的原理。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">4.5.</span> <span class="toc-text">深拷贝和浅拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC"><span class="toc-number">4.6.</span> <span class="toc-text">移动构造函数与移动赋值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">5.</span> <span class="toc-text">其他关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">5.1.</span> <span class="toc-text">关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">内联函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F%E5%AD%98%E4%B8%8D%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-number">5.2.1.</span> <span class="toc-text">内联函数有什么作用？存不存在什么缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%92%8C%E5%AE%8F%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%8C%E6%9C%89%E4%BA%86%E5%AE%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E9%9C%80%E8%A6%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="toc-number">5.2.2.</span> <span class="toc-text">内联函数和宏有什么区别，有了宏为什么还需要内联函数?</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%82%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">杂项</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Lyra 动画系统(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)">ue Lyra 动画系统(持续更新)</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate底层源码(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)">ue Slate底层源码(持续更新)</a><time datetime="2025-11-19T16:00:00.000Z" title="发表于 2025-11-20 00:00:00">2025-11-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue GAS(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)">ue GAS(持续更新)</a><time datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate初探"/></a><div class="content"><a class="title" href="/2025/11/06/0083-UeSlate/" title="ue Slate初探">ue Slate初探</a><time datetime="2025-11-05T16:00:00.000Z" title="发表于 2025-11-06 00:00:00">2025-11-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/05/06/0033-C11/">http://example.com/2024/05/06/0033-C11/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/cpp/">cpp</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/10/AAAunityOptimize/" title="unity 优化"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">unity 优化</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/25/0032-gitCommit/" title="git commit规范"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">git commit规范</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/05/17/0061-OOP/" title="关于类与对象"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-17</div><div class="title">关于类与对象</div></div></a></div><div><a href="/2024/07/25/0038-CPP-STL/" title="C++ 之STL"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-25</div><div class="title">C++ 之STL</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.</span> <span class="toc-text">强制类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E8%BD%AC%E6%8D%A2%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">四个转换类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast-%EF%BC%88%E9%9A%90%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">static_cast （隐式类型转换）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#const-cast-%E5%B8%B8%E9%87%8F%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">const_cast (常量转换)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dynamic-cast-%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.3.</span> <span class="toc-text">dynamic_cast (动态类型转换)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reinterpret-cast-%EF%BC%88%E9%87%8D%E6%96%B0%E8%A7%A3%E9%87%8A%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">1.1.4.</span> <span class="toc-text">reinterpret_cast （重新解释转换）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%BC%82%E5%90%8C%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">强制转换的异同点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">类型安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast%E5%92%8Cdynamic-cast%E7%9A%84%E5%BC%82%E5%90%8C%E7%82%B9%EF%BC%9F"><span class="toc-number">1.2.2.</span> <span class="toc-text">static_cast和dynamic_cast的异同点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#static-cast-%E5%92%8C-reinterpret-cast-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.3.</span> <span class="toc-text">static_cast 和 reinterpret_cast 的区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">2.</span> <span class="toc-text">智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">2.1.</span> <span class="toc-text">三个智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr"><span class="toc-number">2.1.1.</span> <span class="toc-text">shared_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weak-ptr"><span class="toc-number">2.1.2.</span> <span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unique-ptr"><span class="toc-number">2.1.3.</span> <span class="toc-text">unique_ptr</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference-and-pointer"><span class="toc-number">2.2.</span> <span class="toc-text">reference and pointer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E4%B8%8BC-%E6%8C%87%E9%92%88%E5%92%8C%E5%BC%95%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">2.2.1.</span> <span class="toc-text">说一下C++指针和引用的区别？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RALL"><span class="toc-number">2.3.</span> <span class="toc-text">RALL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">左值右值 构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC%E5%AE%9A%E4%B9%89"><span class="toc-number">3.1.</span> <span class="toc-text">左值右值定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B0%86%E4%BA%A1%E5%80%BC%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%AF%E5%8F%B3%E5%80%BC%E3%80%82"><span class="toc-number">3.2.</span> <span class="toc-text">什么是将亡值，什么是纯右值。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89-move-%E6%B5%85%E6%8B%B7%E8%B4%9D-%E8%BD%AC%E7%A7%BB%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-number">3.3.</span> <span class="toc-text">移动语义 move 浅拷贝 + 转移所有权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0-forward%E5%87%BD%E6%95%B0%E7%9A%84%E5%8E%9F%E7%90%86%E3%80%82"><span class="toc-number">3.4.</span> <span class="toc-text">什么是引用折叠? forward函数的原理。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">3.5.</span> <span class="toc-text">深拷贝和浅拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC"><span class="toc-number">3.6.</span> <span class="toc-text">移动构造函数与移动赋值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">4.</span> <span class="toc-text">其他关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">4.1.</span> <span class="toc-text">关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.</span> <span class="toc-text">内联函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F%E5%AD%98%E4%B8%8D%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-number">4.2.1.</span> <span class="toc-text">内联函数有什么作用？存不存在什么缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%92%8C%E5%AE%8F%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%8C%E6%9C%89%E4%BA%86%E5%AE%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E9%9C%80%E8%A6%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.2.</span> <span class="toc-text">内联函数和宏有什么区别，有了宏为什么还需要内联函数?</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%82%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text">杂项</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Lyra 动画系统(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)">ue Lyra 动画系统(持续更新)</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0088-LuaGc/" title="Lua Gc"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lua Gc"/></a><div class="content"><a class="title" href="/2025/11/21/0088-LuaGc/" title="Lua Gc">Lua Gc</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate底层源码(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)">ue Slate底层源码(持续更新)</a><time datetime="2025-11-19T16:00:00.000Z" title="发表于 2025-11-20 00:00:00">2025-11-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue GAS(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)">ue GAS(持续更新)</a><time datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

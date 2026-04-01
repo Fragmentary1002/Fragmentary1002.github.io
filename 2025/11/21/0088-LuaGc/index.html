@@ -1,0 +1,586 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Lua Gc | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言基本架构 以下是Lua 5.3.5源码在src目录下的代码结构整理，分为三大部分：虚拟机****核心功能、源代码****解析和预编译、内嵌库。每个部分包含核心文件及其作用说明，便于快速理解Lua源码的组织架构。 一、虚拟机核心功能部分负责Lua虚拟机的核心运行机制，包括内存管理、垃圾回收、字节码执行等。    文件 作用    lapi.c 提供C语言接口，实现Lua与C的交互   ldebu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua Gc">
+<meta property="og:url" content="http://example.com/2025/11/21/0088-LuaGc/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言基本架构 以下是Lua 5.3.5源码在src目录下的代码结构整理，分为三大部分：虚拟机****核心功能、源代码****解析和预编译、内嵌库。每个部分包含核心文件及其作用说明，便于快速理解Lua源码的组织架构。 一、虚拟机核心功能部分负责Lua虚拟机的核心运行机制，包括内存管理、垃圾回收、字节码执行等。    文件 作用    lapi.c 提供C语言接口，实现Lua与C的交互   ldebu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2025-11-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-19T15:51:57.228Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/11/21/0088-LuaGc/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lua Gc',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-19 23:51:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Lua Gc</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-19T15:51:57.228Z" title="更新于 2026-01-19 23:51:57">2026-01-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Lua Gc"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h1 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h1><p><img src="/2025/11/21/0088-LuaGc/1768203851572-4.jpeg" alt="img"></p>
+<p>以下是Lua 5.3.5源码在<code>src</code>目录下的代码结构整理，分为三大部分：<strong>虚拟机****核心功能</strong>、<strong>源代码****解析和预编译</strong>、<strong>内嵌库</strong>。每个部分包含核心文件及其作用说明，便于快速理解Lua源码的组织架构。</p>
+<h2 id="一、虚拟机核心功能部分"><a href="#一、虚拟机核心功能部分" class="headerlink" title="一、虚拟机核心功能部分"></a>一、虚拟机核心功能部分</h2><p>负责Lua虚拟机的核心运行机制，包括内存管理、垃圾回收、字节码执行等。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lapi.c</td>
+<td>提供C语言接口，实现Lua与C的交互</td>
+</tr>
+<tr>
+<td>ldebug.c</td>
+<td>Debug接口，支持断点、堆栈跟踪等调试功能</td>
+</tr>
+<tr>
+<td>ldo.c</td>
+<td>管理函数调用栈和协程栈</td>
+</tr>
+<tr>
+<td>lfunc.c</td>
+<td>管理函数原型（Proto）和闭包（Closure）的创建与销毁</td>
+</tr>
+<tr>
+<td>lgc.c</td>
+<td>垃圾回收机制（GC），包括标记-清除算法和分代回收策略</td>
+</tr>
+<tr>
+<td>lmem.c</td>
+<td>内存管理接口，负责动态内存分配与释放</td>
+</tr>
+<tr>
+<td>lobject.c</td>
+<td>对象操作函数，处理Lua中所有数据类型的通用操作（如类型判断、值转换）</td>
+</tr>
+<tr>
+<td>lopcodes.c</td>
+<td>定义虚拟机字节码的操作码（OpCode）及其编码格式</td>
+</tr>
+<tr>
+<td>lstate.c</td>
+<td>管理全局状态机（lua_State），维护运行时环境、注册表等全局信息</td>
+</tr>
+<tr>
+<td>lstring.c</td>
+<td>实现字符串池（String Interning），避免重复字符串的内存开销</td>
+</tr>
+<tr>
+<td>ltable.c</td>
+<td>表（Table）的实现，包括哈希表和数组的混合结构及元表操作</td>
+</tr>
+<tr>
+<td>ltm.c</td>
+<td>元方法（Metamethod）的处理，如__index、__add等运算符重载</td>
+</tr>
+<tr>
+<td>lvm.c</td>
+<td>虚拟机核心，解释执行字节码指令</td>
+</tr>
+<tr>
+<td>lzio.c</td>
+<td>输入流接口，支持从文件、字符串等源读取数据</td>
+</tr>
+<tr>
+<td>lua.c</td>
+<td>Lua可执行程序的入口（main函数），提供命令行交互环境</td>
+</tr>
+</tbody></table>
+<h2 id="二、源代码解析和预编译部分"><a href="#二、源代码解析和预编译部分" class="headerlink" title="二、源代码解析和预编译部分"></a>二、源代码解析和预编译部分</h2><p>将Lua脚本编译为字节码，支持序列化与反序列化。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lcode.c</td>
+<td>代码生成器，将抽象语法树（AST）转换为虚拟机字节码</td>
+</tr>
+<tr>
+<td>ldump.c</td>
+<td>序列化预编译的Lua字节码，生成.luac文件</td>
+</tr>
+<tr>
+<td>llex.c</td>
+<td>词法分析器，将源代码分割为Token（如标识符、关键字、数字等）</td>
+</tr>
+<tr>
+<td>lparser.c</td>
+<td>语法分析器，构建抽象语法树（AST）并校验语义合法性</td>
+</tr>
+<tr>
+<td>lundump.c</td>
+<td>还原预编译的字节码，加载.luac文件到内存</td>
+</tr>
+</tbody></table>
+<h2 id="三、内嵌库部分"><a href="#三、内嵌库部分" class="headerlink" title="三、内嵌库部分"></a>三、内嵌库部分</h2><p>提供Lua标准库的实现，支持基础功能扩展。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lauxlib.c</td>
+<td>辅助函数库，简化C模块开发（如参数检查、内存错误处理）</td>
+</tr>
+<tr>
+<td>lbaselib.c</td>
+<td>基础库，实现print()、assert()、error()等核心函数</td>
+</tr>
+<tr>
+<td>ldblib.c</td>
+<td>Debug库，提供debug.traceback()、debug.getlocal()等调试工具</td>
+</tr>
+<tr>
+<td>linit.c</td>
+<td>内嵌库初始化，注册所有标准库到全局环境</td>
+</tr>
+<tr>
+<td>liolib.c</td>
+<td>I/O库，实现文件读写（io.open()）、流操作（io.stdin）等</td>
+</tr>
+<tr>
+<td>lmathlib.c</td>
+<td>数学库，提供math.sin()、math.random()等数学函数</td>
+</tr>
+<tr>
+<td>loadlib.c</td>
+<td>动态扩展库管理，支持require()加载C模块</td>
+</tr>
+<tr>
+<td>loslib.c</td>
+<td>操作系统库，封装os.time()、os.execute()等系统调用</td>
+</tr>
+<tr>
+<td>lstrlib.c</td>
+<td>字符串库，支持模式匹配、格式化（string.match()、string.format()）</td>
+</tr>
+<tr>
+<td>ltablib.c</td>
+<td>表处理库，实现table.insert()、table.sort()等操作</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Lua源码设计特点：</p>
+<ol>
+<li><strong>模块化清晰</strong>：三个部分职责分离，虚拟机核心、编译器、标准库各自独立，便于维护。</li>
+<li><strong>轻量高效</strong>：总代码约1万行，核心虚拟机（<code>lvm.c</code>、<code>lstate.c</code>）和编译器（<code>lparser.c</code>、<code>lcode.c</code>）占主体。</li>
+<li><strong>可扩展性强</strong>：通过<code>lauxlib.c</code>和<code>loadlib.c</code>支持C模块动态加载，内嵌库可裁剪。</li>
+</ol>
+<blockquote>
+<p>对于源码学习建议：</p>
+<ul>
+<li><strong>从入口开始</strong>：优先阅读<code>lua.c</code>的<code>main</code>函数，理解解释器初始化流程。</li>
+<li><strong>深入****虚拟机</strong>：结合<code>lopcodes.c</code>的字节码定义，分析<code>lvm.c</code>中的指令执行逻辑。</li>
+<li><strong>实践调试</strong>：通过修改<code>ldebug.c</code>添加自定义调试信息，观察运行时行为。</li>
+</ul>
+</blockquote>
+<p>Lua的精简架构使其成为学习编译器与虚拟机设计的优秀范本，建议按“核心→编译器→库”的顺序逐步深入。</p>
+<h1 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h1><h2 id="版本发展"><a href="#版本发展" class="headerlink" title="版本发展"></a>版本发展</h2><p>Lua在<strong>5.0</strong>版本的时候，使⽤的是“<strong>双⾊标记清除算法</strong>”，垃圾回收过程⼀旦开始就需要等待全部完成才能继续其它流程，此时如果待处理的对象很多，则会卡顿至完成处理完所有对象，极大影响程序性能。</p>
+<p>Lua升级到<strong>5.1</strong>版本后，算法发生了很大的变化，算法优化成了“<strong>三⾊标记清除算法</strong>”， 后续的版本都⼀直采⽤该算法。垃圾回收过程可以<strong>增量式</strong>的分步执⾏，不再需要等待全部执⾏完毕再执⾏后⾯的其它程序流程。但这个算法也有⼀定<strong>局限性</strong>，虽然垃圾回收过程可 以分步执⾏，但这是⼀个<strong>由前往后</strong>的过程，意味着不能在处理到中间的时候⼜返回去前⾯处理新的对象，新加⼊的内存垃圾 ⼀定得等到本次垃圾回收过程处理完所有旧对象，下⼀次垃圾回收机制重新开始才能被处理到，所以及时性不够强。</p>
+<p>Lua升级到5.1版本后，除了⽀持“<strong>三⾊标记清除算法</strong>”，还新增了⼀个可选择的垃圾回收算法类型“<strong>分代式算法</strong>”，该算法把对象按<strong>年龄</strong>(被垃圾回收处理的次数)分为<strong>年轻⼀代</strong>和<strong>⽼⼀代</strong>。对年轻的对象会有更多的“关爱”，会有更及时的响应，所以能解决“三⾊标记清除算法”的<strong>及时性</strong>问题。但是“分代算法”也有其<strong>局限性</strong>，就是会有⽼⼀代对象的<strong>内存****堆积和残留</strong>。所以 在实际使⽤中，使⽤者可根据⾃身需求确定使⽤哪⼀种垃圾 回收算法或者混合使⽤。</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>Lua有两种垃圾回收算法，分别为<strong>增量式标记清除算法</strong>与<strong>分代式算法</strong>，见源码***《lstate.h》***中的枚举定义：</p>
+<p><img src="/2025/11/21/0088-LuaGc/1768203851571-1.png" alt="img"></p>
+<p>我们常说的GC即代表<strong>GarbageCollection</strong>，译为<strong>垃圾回收</strong>。见上图英文，<strong>KGC</strong>则代表<strong>Kindofgarbagecollection</strong>，翻译为<strong>垃圾回收类型</strong>，Lua中分为两种垃圾回收算法类型：</p>
+<p>1）***KGC_INC：incrementalgc***，增量式算法，实现方式即为我们说到的三色标记清除算法；</p>
+<p>2）***KGC_GEN:genrationalgc***，分代式算法。</p>
+<h2 id="默认的垃圾回收算法类型"><a href="#默认的垃圾回收算法类型" class="headerlink" title="默认的垃圾回收算法类型"></a>默认的垃圾回收算法类型</h2><p>若开发人员没有设置Lua的垃圾回收算法类型，则<strong>增量式三色标记清除算法</strong>类型为默认垃圾回收类型，见源码***《lstate.c》中lua_newstate***：</p>
+<p><img src="/2025/11/21/0088-LuaGc/1768203851571-2.png" alt="img"></p>
+<p>此函数用于创建Lua运行状态机，可理解为Lua主线程运行环境的初始化，红框部分代码<strong>g-&gt;gckind=KGC_INC</strong>即表示默认使用增量式算法。</p>
+<p>使用默认的增量式三色标记清除算法可满足大多数Lua项目的需求，所以相对于分代式算法，大家更应该加强理解这个三色标记清除算法。</p>
+<h2 id="垃圾回收的基础单位-GCObject"><a href="#垃圾回收的基础单位-GCObject" class="headerlink" title="垃圾回收的基础单位-GCObject"></a>垃圾回收的基础单位-GCObject</h2><p>接下来，我们就真正开始讲解Lua对象在内存中的组织与遍历形式。在Lua中，我们上层开发者使用的对象其实都是<strong>TValue</strong>类型的对象，然后这些TValue对象有些会直接存储有意义数据，有些则通过指针指向一个需要被垃圾回收机制所管理的对象，而这些被管理的对象，他们有着共同的特点，就是他们都是从<strong>GCObject</strong>类继承的子类型。</p>
+<p>TValue:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lobject.h</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 目标值. 这是Lua中的值的基础代理: 一个准确的值加上其类型</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TValuefields	Value value_; lu_byte tt_</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">TValue</span> &#123;</span></span><br><span class="line">  TValuefields;</span><br><span class="line">&#125; TValue;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Value:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lobject.h</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 所有lua值的union</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> <span class="title">Value</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">GCObject</span> *<span class="title">gc</span>;</span>    <span class="comment">/* 可收集对象(table，string，完整userdata类型等，所有类型查看union GCUnion) */</span></span><br><span class="line">  <span class="type">void</span> *p;         <span class="comment">/* light userdata */</span></span><br><span class="line">  lua_CFunction f; <span class="comment">/* light C functions */</span></span><br><span class="line">  lua_Integer i;   <span class="comment">/* integer numbers */</span></span><br><span class="line">  lua_Number n;    <span class="comment">/* float numbers */</span></span><br><span class="line">  <span class="comment">/* 无用，但可避免未初始化值的警告 */</span></span><br><span class="line">  lu_byte ub;</span><br><span class="line">&#125; Value;</span><br></pre></td></tr></table></figure>
+
+<p>上述的4个字段变量，他们都是分配于<strong>栈</strong>之中，内存回收算法不需要回收栈里面的对象。因为随着代码的执行，栈顶指针会不断移动，在上述变量脱离了作用域之后，即变量数值存储的内存地址不在当前运行的栈顶范围的时候，就等于是进行了<strong>自动的清除</strong>，因为下次栈顶指针再次移动到该位置进行写入的时候，就相当于自动对旧的内存进行了覆盖与回收。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  Igс.c</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 创建一个新的可收集对象(通过传入的type, size, offset)并且将他和‘allgc&#x27;列表链接</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">GCObject *<span class="title function_">luaC_newobjdt</span> <span class="params">(lua_State *L, <span class="type">int</span> tt, <span class="type">size_t</span> sz, <span class="type">size_t</span> offset)</span> &#123;</span><br><span class="line">  global_State *g = G(L);</span><br><span class="line">  <span class="type">char</span> *p = cast_charp(  luaM_newobject  (L, novariant(tt), sz));</span><br><span class="line">  GCObject *o = cast(GCObject *, p + offset);</span><br><span class="line">  o-&gt;marked = luaC_white(g);</span><br><span class="line">  o-&gt;tt = tt;</span><br><span class="line">    </span><br><span class="line">  o-&gt;next = g-&gt;allgc;</span><br><span class="line">  g-&gt;allgc = o;</span><br><span class="line">     </span><br><span class="line">  <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">GCObject *<span class="title function_">luaC_newobj</span> <span class="params">(lua_State *L, <span class="type">int</span> tt, <span class="type">size_t</span> sz)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> luaC_newobjdt(L, tt, sz, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>luaM_newobject</strong> </li>
+</ol>
+<p>会调用 <strong>malloc****堆内存</strong>空间的分配</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lmem.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> luaM_newobject(L,tag,s)	luaM_malloc_(L, (s), tag)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>在Lua中，垃圾回收机制的作用就是帮助开发者自动清除回收这部分堆空间内存。</p>
+<ol start="2">
+<li><strong>o-&gt;next = g-&gt;allgc;  g-&gt;allgc = o;</strong></li>
+</ol>
+<p>形成了一个<strong>链表</strong></p>
+<p>GCObject的next字段，还有<strong>global_State</strong>的<em>*GCObject *allgc**字段，它们的类型都是指针类型，指向</em>*GCObject**对象</p>
+<p>这边相当于建堆的操作 堆的Root是 *<em>GCObject <em>allgc</em></em></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lobject.h </span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 所有gc对象公共的通用header (以宏形式的形式包含在其他对象中)</span></span><br><span class="line"><span class="comment">** next: 下一个GCObject</span></span><br><span class="line"><span class="comment">** tt: 对象类型</span></span><br><span class="line"><span class="comment">** marked: 标记</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* gc对象类型 */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">GCObject</span> &#123;</span></span><br><span class="line">  CommonHeader;</span><br><span class="line">&#125; GCObject;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>销毁</li>
+</ol>
+<p>GCObject销毁在*<strong>《lgc.c》freeobj*</strong> 中 根据不同数据结构去采用不同的销毁函数</p>
+<h2 id="不需要GC的类型"><a href="#不需要GC的类型" class="headerlink" title="不需要GC的类型"></a>不需要GC的类型</h2><p>我们知道Lua总共有9种基础类型分别为：<strong>nil</strong>, <strong>boolean</strong>, <strong>lightuserdata</strong>, <strong>number</strong>, <strong>string</strong>, <strong>table</strong>, <strong>function</strong>, <strong>userdata</strong>, <strong>thread</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lua.h</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 基础类型</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TNONE		(-1)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TNIL		0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TBOOLEAN		1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TLIGHTUSERDATA	2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TNUMBER		3</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TSTRING		4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TTABLE		5</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TFUNCTION		6</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TUSERDATA		7</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_TTHREAD		8</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LUA_NUMTYPES		9</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>有另外的字段进行表示</li>
+</ol>
+<p>1）<strong>lightuserdata</strong>类型使用Value的<strong>void* p</strong>字段；</p>
+<p>2）<strong>number</strong>类型对象使用Value的<strong>lua_Integer i</strong>和<strong>lua_Number n</strong>字段；</p>
+<ol start="2">
+<li>逻辑上不需要GC的</li>
+</ol>
+<p>3）我们的<strong>nil</strong>对象是不需要存储任何数值的；</p>
+<p>4）然后<strong>boolean</strong>对象会把<strong>true</strong>和<strong>false</strong>作为一种子类型，以不同标识存储在类型标识tt(typetag)中；</p>
+<p><strong>string</strong>,<strong>table</strong>,<strong>function</strong>,<strong>userdata</strong>,<strong>thread</strong> 都是需要GC的类型</p>
+<p>在每一个定义的struct中都会存在一个 <strong>CommonHeader</strong></p>
+<p>特殊的是<strong>function</strong>类型数据结构<strong>闭包Closure</strong>的定义</p>
+<p>我们知道分为<strong>Lua闭包</strong>和<strong>C语言闭包</strong> 都使用了 <strong>ClosureHeader</strong> </p>
+<p><strong>ClosureHeader</strong> 引用了CommonHeader</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lobject.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ClosureHeader \</span></span><br><span class="line"><span class="meta">	CommonHeader; lu_byte nupvalues; GCObject *gclist</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>lua 利用了 CommonHeader 处理的数据类型</p>
+<p>就都可以理解为都为<strong>GCObject的子类型</strong></p>
+<h2 id="Mark"><a href="#Mark" class="headerlink" title="Mark"></a>Mark</h2><p>复习一下CommonHeader：</p>
+<p>其中marked字段为<strong>lu_byte</strong>类型 一个字节有8位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>在<strong>分代算法</strong>中 会使用marked字段的第0-2位</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lgc.h</span></span><br><span class="line"><span class="comment">/* 分代模式中对象年龄 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_NEW		0	<span class="comment">/* 当前周期创建 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_SURVIVAL	1	<span class="comment">/* 上一个周期创建 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_OLD0		2	<span class="comment">/* 2个周期后变老 在这个周期中被标记为旧的由frw设置的屏障(屏障：用于在GC过程中保护某些对象不被错误回收，可以确保在收集器运行时，某些重要的引用关系不被破坏) marked old by frw. barrier in this cycle */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_OLD1		3	<span class="comment">/* 1个周期后变老 第一个完整周期的老对象 first full cycle as old */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_OLD		4	<span class="comment">/* really old object (not to be visited) */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_TOUCHED1	5	<span class="comment">/* 这个周期被touched的老对象 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> G_TOUCHED2	6	<span class="comment">/* 上一周期被touched的老对象 */</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AGEBITS		7  <span class="comment">/* 所有的年龄位 (111) */</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>在<strong>三色标记清除算法</strong>中 会有染色过程 会使用marked字段的第3-5位</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 位的布局使用’marked&#x27; 前3位用于分代模式的‘age&#x27;，最后一位用于测试</span></span><br><span class="line"><span class="comment">** 由于清除阶段是增量式的，需要防止清除阶段产生的新对象被错误回收，所以使用两种白色(一种需要被回收，一种不需要)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WHITE0BIT	3  <span class="comment">/* 对象是白色(type 0) */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WHITE1BIT	4  <span class="comment">/* 对象是白色(type 1) */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BLACKBIT	5  <span class="comment">/* 对象是黑色 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FINALIZEDBIT	6  <span class="comment">/* 对象是否有终结器(析构标记，定义了析构器的对象拥有这个析构标记，代表释放之前需要先调用__GC元方法) */</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TESTBIT		7</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="触发时机"><a href="#触发时机" class="headerlink" title="触发时机"></a>触发时机</h1><p>垃圾回收机制的<strong>触发时机</strong>，讲解用于触发垃圾回收，控制算法<strong>步长</strong>的<strong>债务管理算法</strong>。详细介绍算法中债务的<strong>产生方式</strong>，债务的<strong>触发方式</strong>，还有债务的<strong>偿还清算</strong>方式。</p>
+<h2 id="债务管理算法"><a href="#债务管理算法" class="headerlink" title="债务管理算法"></a>债务管理算法</h2><p>通常来说，一段需要<strong>偶尔执行</strong>的逻辑需要被触发，无外乎有两种方式：</p>
+<p>1）<strong>定时触发</strong>：使用定时器，每隔固定的时间执行一次；</p>
+<p>2）<strong>事件驱动</strong>：每当特定事件发生的时候执行一次。</p>
+<p>在Lua中，采用的是第二种，即<strong>事件驱动</strong>的触发方式，具体的实现使用的是本文将要介绍的债务管理算法，债务增加事件就是驱动逻辑的事件，当债务增加到大于0时，就会触发GC</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">global_State</span> &#123;</span></span><br><span class="line">            l_mem totalbytes;  <span class="comment">/* 当前已经分配内存的总字节数 - GCdebt */</span></span><br><span class="line">            l_mem GCdebt;  <span class="comment">/* 尚未由收集器补偿的已分配字节(GC的债务(负数)，当债务 &gt; 0 时，触发GC) */</span></span><br><span class="line">            lu_mem GCestimate;  <span class="comment">/* 正在使用的非垃圾内存预估 */</span></span><br><span class="line">&#125;global_State;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/11/21/0088-LuaGc/v2-1f0d7146425dc64d137e2ecf7f138f2d_720w.jpg" alt="img"></p>
+<p><strong>l_mem</strong>为<strong>size_t</strong>的别名，可理解为<strong>整型</strong>，表示<strong>内存字节数</strong></p>
+<p>1）*<strong>l_mem totalbytes*<strong>：可理解为个人</strong>总消费</strong>，见上图，数值等于真实消费（allocated已分配的总内存）+ 预充值到系统的金额（用于后续抵消债务）。</p>
+<p>2）***l_mem GCdebt***：债务。负数的话其绝对值代表预充值多少金额到系统；正数代表需要偿还多少债务。</p>
+<p>3）<strong>lu_mem GCestimate：</strong>非垃圾对象内存占用。在GC中已经处理完毕，被视为合法非垃圾对象的内存占用，在债务算法中可理解为消费后已经确认的订单消费金额。</p>
+<p>知道了<strong>global_State</strong>中这3个数据字段的抽象含义，我们现在可以从资产债务的角度再说一下GC的功能了：在程序运行中，随着内存的不断使用，<strong>真实消费</strong>会不断增加，因为增长的消费金额先消耗<strong>预充值</strong>部分，当消费增加的部分超过了预充值的金额，说明预充值的金额耗尽了，又要去借债了，此时则会触发GC。GC触发后会继续处理那些未被处理完毕的消费订单，GC结束后则会再次<strong>预充值</strong>一笔金额并等待下次GC的重新开始。</p>
+<h2 id="债务的产生"><a href="#债务的产生" class="headerlink" title="债务的产生"></a>债务的产生</h2><p>债务就是每次产生<strong>GCObject</strong>或者更精确地说是每次申请<strong>堆内存空间</strong>的时候产生的，每申请<strong>1字节</strong>的堆空间，就会产生<strong>1单位</strong>的债务</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lmem.c</span></span><br><span class="line"><span class="comment">// malloc</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">luaM_malloc_</span> <span class="params">(lua_State *L, <span class="type">size_t</span> size, <span class="type">int</span> tag)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (size == <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">/* that&#x27;s all */</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    global_State *g = G(L);</span><br><span class="line">    <span class="type">void</span> *newblock = firsttry(g, <span class="literal">NULL</span>, tag, size);</span><br><span class="line">    <span class="keyword">if</span> (l_unlikely(newblock == <span class="literal">NULL</span>)) &#123;</span><br><span class="line">      newblock = tryagain(L, <span class="literal">NULL</span>, tag, size);</span><br><span class="line">      <span class="keyword">if</span> (newblock == <span class="literal">NULL</span>)</span><br><span class="line">        luaM_error(L);</span><br><span class="line">    &#125;</span><br><span class="line">    g-&gt;GCdebt += size;    <span class="comment">// 增加债务</span></span><br><span class="line">    <span class="keyword">return</span> newblock;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="债务的检测"><a href="#债务的检测" class="headerlink" title="债务的检测"></a>债务的检测</h2><p>每次有<strong>债务新增</strong>的时候，系统就会检测当前累积的<strong>总债务</strong>是否已经大于0，大于0表示预充值的金额耗尽了，正式进入真正的<strong>负债</strong>，系统就会要求你<strong>还清债务</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lgc.h</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 当债务变成正数时，做一步收集. &#x27;pre&#x27;/&#x27;pos&#x27;允许在需要时进行一些调整</span></span><br><span class="line"><span class="comment">** 宏 &#x27;condchangemem&#x27;用于重度测试(每次有机会都强制执行一次完整的gc)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> luaC_condGC(L,pre,pos) \</span></span><br><span class="line"><span class="meta">	&#123; <span class="keyword">if</span> (G(L)-&gt;GCdebt &gt; 0) &#123; pre; luaC_step(L); pos;&#125;; \</span></span><br><span class="line"><span class="meta">	  condchangemem(L,pre,pos); &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> luaC_checkGC(L)		luaC_condGC(L,(void)0,(void)0)</span></span><br></pre></td></tr></table></figure>
+
+<p>大于0就会执行**luaC_step(L)**函数</p>
+<p><strong>luaC_checkGC</strong>的调用时机是在各种申请了堆内存的对象创建的时候，调用的地方很多</p>
+<ul>
+<li>创建一个<strong>string</strong>类型对象</li>
+<li>我们知道闭包分为<strong>lua闭包</strong>与<strong>C语言闭包</strong>，下面是创建一个<strong>C语言闭包</strong></li>
+<li>创建一个<strong>table</strong></li>
+<li><strong>字符串拼接</strong>的时候</li>
+<li>创建<strong>协程</strong>的时候</li>
+</ul>
+<h2 id="债务的偿还"><a href="#债务的偿还" class="headerlink" title="债务的偿还"></a>债务的偿还</h2><p>我们知道<strong>堆内存</strong>对象的创建会产生债务，相对应的，堆内存对象的<strong>释放</strong>则会减少对应内存字节数的债务</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lmem.c</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 释放内存</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">luaM_free_</span> <span class="params">(lua_State *L, <span class="type">void</span> *block, <span class="type">size_t</span> osize)</span> &#123;</span><br><span class="line">  global_State *g = G(L);</span><br><span class="line">  lua_assert((osize == <span class="number">0</span>) == (block == <span class="literal">NULL</span>));</span><br><span class="line">  callfrealloc(g, block, osize, <span class="number">0</span>);</span><br><span class="line">  g-&gt;GCdebt -= osize; 		<span class="comment">// 减少债务</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>luaM_free_函数会在GCObject被GC清除的时候调用进行堆内存的释放。</p>
+<h2 id="债务的清算"><a href="#债务的清算" class="headerlink" title="债务的清算"></a>债务的清算</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lgc.c</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 如果收集器正在运行，执行一个基础GC步骤（如果收集器没在运行中，设置一个合理的debt以避免每次check他都被调用)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">luaC_step</span> <span class="params">(lua_State *L)</span> &#123;</span><br><span class="line">  global_State *g = G(L);</span><br><span class="line">  <span class="keyword">if</span> (!gcrunning(g))  <span class="comment">/* 没有运行? */</span> &#123;</span><br><span class="line">    luaE_setdebt(g, <span class="number">-2000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> ( isdecGCmodegen(g) )</span><br><span class="line">      genstep(L, g);  <span class="comment">// 分代算法单步</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      incstep(L, g);   <span class="comment">// 增量式标记清除算法单步</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="incstep-增量式标记清除算法单步"><a href="#incstep-增量式标记清除算法单步" class="headerlink" title="incstep 增量式标记清除算法单步"></a>incstep 增量式标记清除算法单步</h2><p>增量式标记清除算法清算债务的方式，我们称之为“<strong>工作（Work）</strong>”。算法每次触发后，在开始算法真正开始之前，会根据当前<strong>欠下</strong>的债务以及需要<strong>预充值</strong>的金额，进行一个<strong>工作量的评估</strong>，然后通过while循环不断地去工作，直到完成这些工作量，才允许结束本轮GC</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lgc.c</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 执行一个基础的增量步骤. debt和step size(步骤尺寸)从字节转换成“units of work(工作单位)”</span></span><br><span class="line"><span class="comment">** “工作单元” = g-&gt;GCdebt / WORK2MEM</span></span><br><span class="line"><span class="comment">** 然后这个函数循环调用单个步骤直到添加那么多工作单位或完成一个GC周期(暂停状态)</span></span><br><span class="line"><span class="comment">** 最后，他设置debt以控制下个步骤什么时候执行</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">incstep</span> <span class="params">(lua_State *L, global_State *g)</span> &#123;</span><br><span class="line">  <span class="type">int</span> stepmul = (getgcparam(g-&gt;gcstepmul) | <span class="number">1</span>);  <span class="comment">/* 避免除以0 */</span></span><br><span class="line">  l_mem debt = (g-&gt;GCdebt / WORK2MEM) * stepmul;  <span class="comment">// 当前债务需要完成的work数(此时g-&gt;GCdebt &gt;= 0)</span></span><br><span class="line">  l_mem stepsize = (g-&gt;gcstepsize &lt;= log2maxs(l_mem))</span><br><span class="line">                 ? ((cast(l_mem, <span class="number">1</span>) &lt;&lt; g-&gt;gcstepsize) / WORK2MEM) * stepmul</span><br><span class="line">                 : MAX_LMEM;  <span class="comment">/* 溢出，保持最大值 */</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//================================================</span></span><br><span class="line">  <span class="keyword">do</span> &#123;  <span class="comment">/* 循环直至暂停或有足够的“信用”(负的debt) */</span></span><br><span class="line">    lu_mem work = singlestep(L);  <span class="comment">/* 执行一个单独的步骤 */</span></span><br><span class="line">    debt -= work;</span><br><span class="line">  &#125; <span class="keyword">while</span> (debt &gt; -stepsize &amp;&amp; g-&gt;gcstate != GCSpause); <span class="comment">/* 债务少于步长或者gc状态暂停 */</span></span><br><span class="line">        <span class="comment">//================================================</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">  <span class="keyword">if</span> (g-&gt;gcstate == GCSpause)</span><br><span class="line">    setpause(g);  <span class="comment">/* 暂停直至下一个周期 */</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    debt = (debt / stepmul) * WORK2MEM;  <span class="comment">/* 转换“工作单元”为字节 */</span></span><br><span class="line">    luaE_setdebt(g, debt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>*<strong>预充值*<strong>：之所以还清债务后还要预充值一笔金额，是因为这样可以做一个</strong>债务缓冲</strong>，下次债务增长时可以先从预充值的金额扣除，可以避免债务迅速大于0而再次快速触发GC，能有效控制GC的频率。</p>
+<p>简单来说标记清除算法对债务的清算：就是处理工作的过程，然后在工作量完成后把全局的负债g-&gt;GCdebt设置为那个预充值的金额。</p>
+<p>只需要看最后一行<strong>return work</strong>，它就是返回了这次GC步骤对应的<strong>工作量</strong>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> lu_mem <span class="title function_">singlestep</span> <span class="params">(lua_State *L)</span> &#123;</span><br><span class="line">  global_State *g = G(L);</span><br><span class="line">  lu_mem work;</span><br><span class="line">  lua_assert(!g-&gt;gcstopem);  <span class="comment">/* 收集器不可重入 */</span></span><br><span class="line">  g-&gt;gcstopem = <span class="number">1</span>;  <span class="comment">/* 收集时不能运行紧急收集 */</span></span><br><span class="line">  <span class="keyword">switch</span> (g-&gt;gcstate) &#123;</span><br><span class="line">    <span class="keyword">case</span> GCSpause: &#123;</span><br><span class="line">      restartcollection(g); <span class="comment">// 重启收集</span></span><br><span class="line">      g-&gt;gcstate = GCSpropagate;  <span class="comment">// 进入传播阶段</span></span><br><span class="line">      work = <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   ...</span><br><span class="line">  &#125;</span><br><span class="line">  g-&gt;gcstopem = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> work;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>1）内存增长，预充值资产耗尽，真实消费不断增加，g-&gt;GCdebt由负数变成正数，触发GC：</p>
+<p><img src="/2025/11/21/0088-LuaGc/v2-f5f9192bbecacd8dffb9c4c27097a9a5_720w.jpg" alt="img"></p>
+<p>2）每次GC完成一定工作量，处理中的消费订单会减少，处理完毕的消费订单会不变或增加，如果顺利释放堆内存对象，则<strong>g-&gt;GCdebt</strong>和<strong>总分配的内存（allocated）</strong>会下降：</p>
+<p><img src="/2025/11/21/0088-LuaGc/v2-5d110d15ee97f6d6cbdeb74eaa12f192_720w.jpg" alt="img"></p>
+<p>3）每轮GC所有工作量都完成后，保持<strong>真实消费</strong>不变，调整设置清算债务为预存入的金额，等待下轮GC，下一轮GC触发后则又会重复第1步的轮回：</p>
+<p><img src="/2025/11/21/0088-LuaGc/v2-1af55e36633718af04b9276addebd969_720w.jpg" alt="img"></p>
+<p>讲完标记清除算法的债务触发，工作，债务调整清算，接下来我们就讲分代式算法的这些流程。</p>
+<h2 id="genstep-全量式分代算法单步"><a href="#genstep-全量式分代算法单步" class="headerlink" title="genstep 全量式分代算法单步"></a>genstep 全量式分代算法单步</h2><p>分代式算法为<strong>全量式</strong>算法，每次开始垃圾回收都需要全部处理完成才能继续下一步。虽然也是通过<strong>债务大于0</strong>来触发分代式算法的执行，但分代式算法没法像增量式算法那样根据工作量通过循环不断“<strong>工作（Work）</strong>”积累工作量来进行债务清算，而是全量级地通过两种方案去清算债务：</p>
+<p>1）第一种方案为：向<strong>年轻</strong>人员征税；</p>
+<p>2）第二种方案为：向<strong>全年纪（年轻+年老）</strong>人员征税；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">genstep</span> <span class="params">(lua_State *L, global_State *g)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (g-&gt;lastatomic != <span class="number">0</span>)  <span class="comment">/* 上一次回收效果不佳？ */</span></span><br><span class="line">    stepgenfull(L, g);  <span class="comment">/* 执行一次完整的回收步骤 */</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    lu_mem majorbase = g-&gt;GCestimate;  <span class="comment">/* 上一次主回收后的内存量 */</span></span><br><span class="line">    lu_mem majorinc = (majorbase / <span class="number">100</span>) * getgcparam(g-&gt;genmajormul);</span><br><span class="line">    <span class="keyword">if</span> (g-&gt;GCdebt &gt; <span class="number">0</span> &amp;&amp; gettotalbytes(g) &gt; majorbase + majorinc) &#123;</span><br><span class="line">      lu_mem numobjs = fullgen(L, g);  <span class="comment">/* 执行一次主回收 */</span></span><br><span class="line">      <span class="keyword">if</span> (gettotalbytes(g) &lt; majorbase + (majorinc / <span class="number">2</span>)) &#123;</span><br><span class="line">        <span class="comment">/* 自从上一次主回收以来，至少回收了内存增长量的一半；继续执行次回收。 */</span></span><br><span class="line">        lua_assert(g-&gt;lastatomic == <span class="number">0</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;  <span class="comment">/* 回收效果不佳 */</span></span><br><span class="line">        g-&gt;lastatomic = numobjs;  <span class="comment">/* 标记上一次回收效果不佳 */</span></span><br><span class="line">        setpause(g);  <span class="comment">/* 在下一次（主）回收之前，进行较长时间的等待 */</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;  <span class="comment">/* 常规情况：执行一次次回收 */</span></span><br><span class="line">      youngcollection(L, g);</span><br><span class="line">      setminordebt(g);</span><br><span class="line">      g-&gt;GCestimate = majorbase;  <span class="comment">/* 保持基础值 */</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  lua_assert(isdecGCmodegen(g));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这个固定消费支出数值的一个使用例子，在触发GC后，当满足条件：</p>
+<p><strong>真实消费 &gt; 固定消费 + 新增消费检测值</strong></p>
+<p>就会执行第二种方案向<strong>全年纪</strong>人员征税，否则只需要执行第一种向<strong>年轻</strong>一代征税</p>
+<p><img src="/2025/11/21/0088-LuaGc/v2-0cc42f8061660f0ad88fa78163d1e6c2_720w.jpg" alt="img"></p>
+<p>在方案1中，GC完成后会把真实消费金额的100分之20，即5分1作为预充值金额。</p>
+<p>而在方案2向全年纪（年轻+年老）人员征税的方案中，预充值金额多少还需要看本轮征税结果是否合格。</p>
+<p>1）若GC清理的内存不小于固定消费的一半，则仍然是像上述方案1中预充值较小的值，仍然使用真实消费金额的5分之1作为预充值金额；</p>
+<p>2）若GC清理的内存小于固定消费的一半，说明本次GC效果不佳，则会预充值更多的金额，让下轮GC更晚地到来，避免短时间内再去做一些无效的垃圾回收。</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>本篇简述了债务管理算法，以及对于增量式标记清除算法和全量式分代算法分别怎么使用债务和预充值的处理，这边我记录比较粗，可以后面再研究</p>
+<h1 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="全量模式"><a href="#全量模式" class="headerlink" title="全量模式"></a>全量模式</h3><p>全量GC：Lua5.0及以前</p>
+<p><img src="/2025/11/21/0088-LuaGc/78946-20231109235248761-2074662644.png" alt="img"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">每个新创建的对象颜色为白色(white)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化阶段</span></span><br><span class="line">遍历在root链表中的对象,加入到对象链表</span><br><span class="line"></span><br><span class="line"><span class="comment">// 标记阶段</span></span><br><span class="line">当对象链表中还有未扫描的元素:</span><br><span class="line">    从中取出一个对象,标记为黑色(black)</span><br><span class="line">    遍历这个对象关联的其他所有对象:</span><br><span class="line">        标记为黑色(black)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回收阶段</span></span><br><span class="line">遍历所有对象:</span><br><span class="line">    如果为白色(white):</span><br><span class="line">        这些对象都是没有被引用的对象,逐个回收</span><br><span class="line">    否则:</span><br><span class="line">        这些对象时被引用的对象，重新加入对象链表中等待下一轮的GC检查</span><br></pre></td></tr></table></figure>
+
+<p>该算法的问题是：整个GC过程不能被打断，必须暂停程序（Stop the World），一次性扫描并清除完所有对象。</p>
+<h3 id="增量模式"><a href="#增量模式" class="headerlink" title="增量模式"></a>增量模式</h3><p>步进式GC（增量模式）：Lua5.1</p>
+<p>Lua5.1在双色标记清除算法上改进实现了三色增量标记清除算法（Tri-Color Incremental Mark and Sweep）。</p>
+<p>该GC算法不再要求一次性标记清除完所有对象，可以被中断去执行业务逻辑，然后再恢复回来继续执行，是一种增量式垃圾收集器（Incremental Collector）。</p>
+<blockquote>
+<p>白色(White)：表示当前对象为待访问状态，用于表示对象还没有被GC的标记过，这也是任何一个Lua对象在创建之后的初始状态。            </p>
+<p>换言之，如果一个对象，在一个GC扫描完毕之后，仍然是白色的，那么说明该对象没有被系统中任何一个对象所引用，可以回收其空间了。<br>灰色(Gray)：表示当前对象为带扫描状态，用于表示对象已经被GC访问过，但是被该对象直接引用的其他对象还没有被访问到。<br>黑色(Black)：表示当前对象为已扫描状态，用于表示对象已经被GC访问过，并且被该对象直接引用的其他对象也已经被访问过了。</p>
+</blockquote>
+<p><img src="/2025/11/21/0088-LuaGc/78946-20231110001227470-632208800.png" alt="img"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">每个新创建的对象颜色为白色(white)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化阶段</span></span><br><span class="line">遍历在root节点中引用的对象从白色(white)置为灰色(gray),并且放入到灰色节点列表中.</span><br><span class="line"></span><br><span class="line"><span class="comment">// 标记阶段</span></span><br><span class="line">当灰色链表中还有未扫描的元素:</span><br><span class="line">    从中取出一个对象,标记为黑色(black)</span><br><span class="line">    遍历这个对象关联的其他所有对象:</span><br><span class="line">        如果是白色(white):</span><br><span class="line">            标记为灰色(gray),加入灰色链表</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回收阶段</span></span><br><span class="line">遍历所有对象:</span><br><span class="line">    如果为白色(white):</span><br><span class="line">        这些对象都是没有被引用的对象,逐个回收</span><br><span class="line">    否则:</span><br><span class="line">        重新加入对象链表中等待下一轮的GC检查</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lgc.c</span></span><br><span class="line"><span class="type">static</span> lu_mem <span class="title function_">singlestep</span> <span class="params">(lua_State *L)</span> &#123;</span><br><span class="line">  global_State *g = G(L);</span><br><span class="line">  lu_mem work;</span><br><span class="line">  lua_assert(!g-&gt;gcstopem);  <span class="comment">/* 收集器不可重入 */</span></span><br><span class="line">  g-&gt;gcstopem = <span class="number">1</span>;  <span class="comment">/* 收集时不能运行紧急收集 */</span></span><br><span class="line">  <span class="keyword">switch</span> (g-&gt;gcstate) &#123;</span><br><span class="line">    <span class="keyword">case</span> GCSpause: &#123;</span><br><span class="line">      restartcollection(g); <span class="comment">// 重启收集</span></span><br><span class="line">      g-&gt;gcstate = GCSpropagate;  <span class="comment">// 进入传播阶段</span></span><br><span class="line">      work = <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSpropagate: &#123;</span><br><span class="line">      <span class="keyword">if</span> (g-&gt;gray == <span class="literal">NULL</span>) &#123;  <span class="comment">/* 没有更多的灰色对象? */</span></span><br><span class="line">        g-&gt;gcstate = GCSenteratomic;  <span class="comment">/* 完成传播阶段 */</span></span><br><span class="line">        work = <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        work = propagatemark(g);  <span class="comment">/* 遍历一个灰色对象 */</span></span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSenteratomic: &#123;</span><br><span class="line">      work = atomic(L);</span><br><span class="line">      entersweep(L);</span><br><span class="line">      g-&gt;GCestimate = gettotalbytes(g);  <span class="comment">/* 第一次预估 */</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSswpallgc: &#123;  <span class="comment">/* 清除普通对象 */</span></span><br><span class="line">      work = sweepstep(L, g, GCSswpfinobj, &amp;g-&gt;finobj);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSswpfinobj: &#123;  <span class="comment">/* 清除有终结器的对象 */</span></span><br><span class="line">      work = sweepstep(L, g, GCSswptobefnz, &amp;g-&gt;tobefnz);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSswptobefnz: &#123;  <span class="comment">/* 清除尚未执行终结器的对象 */</span></span><br><span class="line">      work = sweepstep(L, g, GCSswpend, <span class="literal">NULL</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCSswpend: &#123;  <span class="comment">/* 结束清除 */</span></span><br><span class="line">      checkSizes(L, g);</span><br><span class="line">      g-&gt;gcstate = GCScallfin;</span><br><span class="line">      work = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> GCScallfin: &#123;  <span class="comment">/* 调用终结器 */</span></span><br><span class="line">      <span class="keyword">if</span> (g-&gt;tobefnz &amp;&amp; !g-&gt;gcemergency) &#123;</span><br><span class="line">        g-&gt;gcstopem = <span class="number">0</span>;  <span class="comment">/* 在终结器执行期间允许正常收集 */</span></span><br><span class="line">        work = runafewfinalizers(L, GCFINMAX) * GCFINALIZECOST;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;  <span class="comment">/* 紧急模式或没有更多终结器 */</span></span><br><span class="line">        g-&gt;gcstate = GCSpause;  <span class="comment">/* 完成收集 */</span></span><br><span class="line">        work = <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">default</span>: lua_assert(<span class="number">0</span>); <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  g-&gt;gcstopem = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> work;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><table>
+<thead>
+<tr>
+<th><strong>状态</strong></th>
+<th><strong>分步（step）</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GCSpause（gc开始阶段）</td>
+<td>不分步（原子操作）</td>
+<td>开启新一轮 gc，从root节点遍历并开始标记（mark），<br>table/proto/closure/thread 对象标记为 gray，<br>加入 g-&gt;gray 链表，string/userdata 对象标记为黑色。<br>遍历完成后，切换到GCSpropagate</td>
+</tr>
+<tr>
+<td>GCSpropagate（扫描标记阶段）</td>
+<td>分步</td>
+<td>每次从 g-&gt;gray 链表取出一个对象，先标记为 black。<br>如果对象是弱表或 thread，则加入 g-&gt;grayagain 链表，<br>然后遍历这个对象的子项开始 mark，把没有标记的对象都标记了。<br>直到 g-&gt;gray 链表为空，切换到 GCSatoimic</td>
+</tr>
+<tr>
+<td>GCSatoimic（再次扫描标记，并处理finalizer和弱表）</td>
+<td>不分步（原子操作）</td>
+<td>再次从root节点遍历并开始标记（mark），<br>对 GCSpropagate 期间可能的改变再重新标记，将未标记的对象加入 g-&gt;gray 链表。<br>遍历 g-&gt;gray 链表取所有对象完成标记。<br>遍历 g-&gt;grayagain 链表取所有对象完成标记，遍历弱表，将白色的项置为nil。<br>遍历 g-&gt;finobj 链表，把白色的对象移到 g-&gt;tobefnz 链表。<br>遍历 g-&gt;tobefnz 链表，完成标记（mark）。切换当前白色到另一种白色。切换到 GCSswpallgc</td>
+</tr>
+<tr>
+<td>GCSswpallgc（清除阶段）</td>
+<td>分步</td>
+<td>每次取 g-&gt;allgc 链表一定数量的对象（最多GCSWEEPMAX个）, <br>将还是上一种白色的对象清理掉。 <br>// #define GCSWEEPMAX 100<br>同时将黑色对象标记为当前白色。<br>当 g-&gt;allgc遍历完成，切换到 GCSswpfinobj</td>
+</tr>
+<tr>
+<td>GCSswpfinobj（清除阶段）</td>
+<td>分步</td>
+<td>每次取 g-&gt;finobj 链表一定数量的对象（最多GCSWEEPMAX个）, <br>将还是上一种白色的对象清理掉。 <br>// #define GCSWEEPMAX 100<br>同时将黑色对象标记为当前白色。<br>当 g-&gt;finobj 遍历完成，切换到 GCSswptobefnz</td>
+</tr>
+<tr>
+<td>GCSswptobefnz（清除阶段）</td>
+<td>分步</td>
+<td>每次取 g-&gt;tobefnz 链表一定数量的对象（最多GCSWEEPMAX个）,<br> 将还是上一种白色的对象清理掉。 <br>// #define GCSWEEPMAX 100<br>同时将黑色对象标记为当前白色。<br>当 g-&gt;tobefnz 遍历完成，切换到 GCSswpend</td>
+</tr>
+<tr>
+<td>GCSswpend</td>
+<td>不分步（原子操作）</td>
+<td>收缩全局 string 的hash表，保证hash桶利用率超过 1/4， 切换到 GCScallfin</td>
+</tr>
+<tr>
+<td>GCScallfin（执行finalizer）</td>
+<td>分步</td>
+<td>每次取 g-&gt;tobefnz 链表一定数量的对象（最多GCFINMAX个），<br>执行 __gc元方法，然后将对象标记为白色，<br>加入 g-&gt;allgc 链表，等下一次 gc 清理。 <br>// #define GCFINMAX 10<br>当 g-&gt;tobefnz 为空时，切换到 GCSpause</td>
+</tr>
+</tbody></table>
+<h2 id="标记阶段"><a href="#标记阶段" class="headerlink" title="标记阶段"></a>标记阶段</h2><h3 id="清除阶段-allgc链表"><a href="#清除阶段-allgc链表" class="headerlink" title="清除阶段-allgc链表"></a>清除阶段-allgc链表</h3><p><strong>entersweep</strong>(): 遍历</p>
+<p><strong>luaC_fix</strong>(): 标记需要被GC清除的对象</p>
+<h3 id="标记阶段—标记初始结点"><a href="#标记阶段—标记初始结点" class="headerlink" title="标记阶段—标记初始结点"></a>标记阶段—标记初始结点</h3><p><strong>restartcollection</strong>(): 根结点global_State中需要被标记为初始标记结点的字段分别只有4个，分别是：<strong>mainthread</strong>，<strong>l_registry</strong>，<strong>twups</strong>，<strong>mt</strong>。</p>
+<h3 id="标记阶段—染色"><a href="#标记阶段—染色" class="headerlink" title="标记阶段—染色"></a>标记阶段—染色</h3><p><strong>reallymarkobject</strong>(): 在需要被GC处理的不同GCObject类型中，字符串类型，无UpValue的UserData类型，它们在染色时会直接设置为<strong>黑色</strong>，因为他们没有引用其它GCObject对象；而function，thread，table，包括他们引用的UpValue类型，都属于可引用其它GCObject对象的<strong>集合</strong>类型，所以会先设置为<strong>灰色</strong>。</p>
+<h3 id="标记阶段—颜色传播"><a href="#标记阶段—颜色传播" class="headerlink" title="标记阶段—颜色传播"></a>标记阶段—颜色传播</h3><p><strong>propagatemark</strong>():  g-&gt;gray = *getgclist(o); </p>
+<p>会先把这个灰色对象修改为<strong>黑色</strong>，然后根据不同数据类型调用不同的染色函数去对他所有的子对象进行染色。遍历子对象的时候也有可能遇到这个子对象也是属于集合类型，它们也有它们的子对象，此时会把这些集合类子对象先标记为<strong>灰色</strong>，若是遍历的对象没有引用其它子对象，则可以直接设置为<strong>黑色</strong>。在颜色传播过程中产生的这些新的集合灰色结点不会立即继续递归往下传播，它们也会先链接到<strong>global_State</strong>的<strong>gray</strong>链表头部，等待下一步GC颜色传播的时候继续处理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 遍历一个灰色对象，将其转换成黑色</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">static</span> lu_mem <span class="title function_">propagatemark</span> <span class="params">(global_State *g)</span> &#123;</span><br><span class="line">  GCObject *o = g-&gt;gray;</span><br><span class="line">  nw2black(o);</span><br><span class="line">  g-&gt;gray = *getgclist(o);  <span class="comment">/* 从‘gray’列表中移除 */</span></span><br><span class="line">  <span class="keyword">switch</span> (o-&gt;tt) &#123;</span><br><span class="line">    <span class="keyword">case</span> LUA_VTABLE: <span class="keyword">return</span> traversetable(g, gco2t(o));</span><br><span class="line">    <span class="keyword">case</span> LUA_VUSERDATA: <span class="keyword">return</span> traverseudata(g, gco2u(o));</span><br><span class="line">    <span class="keyword">case</span> LUA_VLCL: <span class="keyword">return</span> traverseLclosure(g, gco2lcl(o));</span><br><span class="line">    <span class="keyword">case</span> LUA_VCCL: <span class="keyword">return</span> traverseCclosure(g, gco2ccl(o));</span><br><span class="line">    <span class="keyword">case</span> LUA_VPROTO: <span class="keyword">return</span> traverseproto(g, gco2p(o));</span><br><span class="line">    <span class="keyword">case</span> LUA_VTHREAD: <span class="keyword">return</span> traversethread(g, gco2th(o));</span><br><span class="line">    <span class="keyword">default</span>: lua_assert(<span class="number">0</span>); <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="标记传播-各数据类型的传播方式"><a href="#标记传播-各数据类型的传播方式" class="headerlink" title="标记传播-各数据类型的传播方式"></a>标记传播-各数据类型的传播方式</h3><p>讲<strong>债务管理算法</strong>的时候，知道增量式算法中调用的函数的返回值就是遍历处理的TValue对象个数，代表当轮债务清算过程的<strong>工作量</strong>。</p>
+<h1 id="分代算法"><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h1><blockquote>
+<p>经验表明，大部分对象在被分配之后很快就被回收掉了（如栈上的临时变量），长时间存活的对象很大可能会一直存活下去。所以，垃圾回收可以集中精力去回收刚刚造出来的对象。</p>
+<p>将所有gc对象分成两种，young和old；过程也分为minor（浅扫描，或次级收集周期）和major（深扫描，或主收集周期）。</p>
+<p>对象创建时标记为young，minor过程扫描young对象，当young节点活过了两次gc过程，就会标记成old对象 。注：活过两次gc过程也是与lua5.2 gc过程的最大不同点。lua5.2 gc只需要活过一次，就算做old。</p>
+<p>minor过程只对young 对象进行遍历清除工作。这样就避免了每次都遍历大量并不活跃却长期存活的old对象，又可以及时清理掉大量生命短暂的young对象。</p>
+<p>minor过程越密集，单个过程内的young对象数量就越少，需要做的工作也越少，停顿时间也就缩小了。可见增加minor过程并不会太多的增加整体工作量，却可以更及时的回收内存。</p>
+<p>当总的内存增长超过阈值时，会执行major过程，来做一次完整的标记清除（带来严重的GC卡顿），处理全部young对象和old对象，清理垃圾对象后，把所有存活对象都变为old对象。</p>
+<p>只不过分代 GC 模式下，major过程（全量 GC）的频率可以降的非常低，因为大量临时内存都通过minor过程清理掉了，内存并不会增长太快。</p>
+<p>当遇到必须消除停顿的环境，我们可以手工精确调整：发现内存持续增长，不要主动触发完整的major过程</p>
+<p>而是主动切换到增量gc模式，然后周期性的调用 gc step （不等内存分配器来触发）在合理的时间内分步处理完一个完整的 GC 周期，再切换回分代gc模式。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1595011738562494465">Lua5.4源代码剖析 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/initphp/article/details/82703846">https://blog.csdn.net/initphp/article/details/82703846</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/SimanX/lua-Chinese">https://gitee.com/SimanX/lua-Chinese</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kekec/p/14151606.html">Lua GC基础 - 可可西 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaolehu/articles/15961660.html">Lua5.4 分代gc 的理解 - 小乐虎 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaolehu/p/15850673.html">lua5.4 分代gc - 小乐虎 - 博客园</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/11/21/0088-LuaGc/">http://example.com/2025/11/21/0088-LuaGc/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ue Lyra 动画系统(持续更新)</div></div></a></div><div class="next-post pull-right"><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ue Slate底层源码(持续更新)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">ue Lyra 动画系统(持续更新)</div></div></a></div><div><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-20</div><div class="title">ue Slate底层源码(持续更新)</div></div></a></div><div><a href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-10</div><div class="title">ue GAS(持续更新)</div></div></a></div><div><a href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-07</div><div class="title">UE 适配与多分辨率</div></div></a></div><div><a href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-06</div><div class="title">ue Slate初探</div></div></a></div><div><a href="/2025/10/13/0081-UeAync/" title="ue 多线程"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-13</div><div class="title">ue 多线程</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">基本架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text">一、虚拟机核心功能部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%BA%90%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90%E5%92%8C%E9%A2%84%E7%BC%96%E8%AF%91%E9%83%A8%E5%88%86"><span class="toc-number">2.2.</span> <span class="toc-text">二、源代码解析和预编译部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%86%85%E5%B5%8C%E5%BA%93%E9%83%A8%E5%88%86"><span class="toc-number">2.3.</span> <span class="toc-text">三、内嵌库部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GC"><span class="toc-number">3.</span> <span class="toc-text">GC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8F%91%E5%B1%95"><span class="toc-number">3.1.</span> <span class="toc-text">版本发展</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">4.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.1.</span> <span class="toc-text">默认的垃圾回收算法类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9A%84%E5%9F%BA%E7%A1%80%E5%8D%95%E4%BD%8D-GCObject"><span class="toc-number">4.2.</span> <span class="toc-text">垃圾回收的基础单位-GCObject</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E9%9C%80%E8%A6%81GC%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.3.</span> <span class="toc-text">不需要GC的类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mark"><span class="toc-number">4.4.</span> <span class="toc-text">Mark</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E6%97%B6%E6%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">触发时机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BA%E5%8A%A1%E7%AE%A1%E7%90%86%E7%AE%97%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">债务管理算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BA%E5%8A%A1%E7%9A%84%E4%BA%A7%E7%94%9F"><span class="toc-number">5.2.</span> <span class="toc-text">债务的产生</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BA%E5%8A%A1%E7%9A%84%E6%A3%80%E6%B5%8B"><span class="toc-number">5.3.</span> <span class="toc-text">债务的检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BA%E5%8A%A1%E7%9A%84%E5%81%BF%E8%BF%98"><span class="toc-number">5.4.</span> <span class="toc-text">债务的偿还</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BA%E5%8A%A1%E7%9A%84%E6%B8%85%E7%AE%97"><span class="toc-number">5.5.</span> <span class="toc-text">债务的清算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#incstep-%E5%A2%9E%E9%87%8F%E5%BC%8F%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95%E5%8D%95%E6%AD%A5"><span class="toc-number">5.6.</span> <span class="toc-text">incstep 增量式标记清除算法单步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#genstep-%E5%85%A8%E9%87%8F%E5%BC%8F%E5%88%86%E4%BB%A3%E7%AE%97%E6%B3%95%E5%8D%95%E6%AD%A5"><span class="toc-number">5.7.</span> <span class="toc-text">genstep 全量式分代算法单步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">5.8.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">标记清除算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">6.1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E9%87%8F%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.1.1.</span> <span class="toc-text">全量模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.1.2.</span> <span class="toc-text">增量模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">6.2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E6%A0%BC"><span class="toc-number">6.3.</span> <span class="toc-text">表格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E9%98%B6%E6%AE%B5"><span class="toc-number">6.4.</span> <span class="toc-text">标记阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E9%99%A4%E9%98%B6%E6%AE%B5-allgc%E9%93%BE%E8%A1%A8"><span class="toc-number">6.4.1.</span> <span class="toc-text">清除阶段-allgc链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E9%98%B6%E6%AE%B5%E2%80%94%E6%A0%87%E8%AE%B0%E5%88%9D%E5%A7%8B%E7%BB%93%E7%82%B9"><span class="toc-number">6.4.2.</span> <span class="toc-text">标记阶段—标记初始结点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E9%98%B6%E6%AE%B5%E2%80%94%E6%9F%93%E8%89%B2"><span class="toc-number">6.4.3.</span> <span class="toc-text">标记阶段—染色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E9%98%B6%E6%AE%B5%E2%80%94%E9%A2%9C%E8%89%B2%E4%BC%A0%E6%92%AD"><span class="toc-number">6.4.4.</span> <span class="toc-text">标记阶段—颜色传播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E4%BC%A0%E6%92%AD-%E5%90%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%BC%A0%E6%92%AD%E6%96%B9%E5%BC%8F"><span class="toc-number">6.4.5.</span> <span class="toc-text">标记传播-各数据类型的传播方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E4%BB%A3%E7%AE%97%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">分代算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Lyra 动画系统(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)">ue Lyra 动画系统(持续更新)</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0088-LuaGc/" title="Lua Gc"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lua Gc"/></a><div class="content"><a class="title" href="/2025/11/21/0088-LuaGc/" title="Lua Gc">Lua Gc</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate底层源码(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)">ue Slate底层源码(持续更新)</a><time datetime="2025-11-19T16:00:00.000Z" title="发表于 2025-11-20 00:00:00">2025-11-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue GAS(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)">ue GAS(持续更新)</a><time datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
