@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>ue GAS(持续更新) | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言介绍UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。    组件名称 核心功能简介    Ability System Component (ASC) GAS的总协调中心，一个必须挂在Actor上的组件，负责管理所有GAS">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>ue GAS(持续更新) | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言基本架构介绍UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。    组件名称 核心功能简介    Ability System Component (ASC) GAS的总协调中心，一个必须挂在Actor上的组件，负责管理所">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ue GAS(持续更新)">
 <meta property="og:url" content="http://example.com/2025/11/10/0085-UeGasUse/index.html">
 <meta property="og:site_name" content="零の領域">
-<meta property="og:description" content="前言介绍UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。    组件名称 核心功能简介    Ability System Component (ASC) GAS的总协调中心，一个必须挂在Actor上的组件，负责管理所有GAS">
+<meta property="og:description" content="前言基本架构介绍UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。    组件名称 核心功能简介    Ability System Component (ASC) GAS的总协调中心，一个必须挂在Actor上的组件，负责管理所">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/bg/default_cover.png">
 <meta property="article:published_time" content="2025-11-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-01T12:27:22.856Z">
+<meta property="article:modified_time" content="2026-05-12T04:00:20.189Z">
 <meta property="article:author" content="Fragmentary">
 <meta property="article:tag" content="ue">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2026-04-01 20:27:22'
+  postUpdate: '2026-05-12 12:00:20'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,7 +161,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ue GAS(持续更新)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-01T12:27:22.856Z" title="更新于 2026-04-01 20:27:22">2026-04-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ue GAS(持续更新)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。</p>
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ue GAS(持续更新)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-12T04:00:20.189Z" title="更新于 2026-05-12 12:00:20">2026-05-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ue GAS(持续更新)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h1 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>UE（Unreal Engine）中的 GAS（Gameplay Ability System）是一套非常强大且灵活的游戏玩法技能框架，尤其适合用来构建复杂的战斗系统、技能和状态管理。下面这个表格能让你快速把握其核心组件。</p>
 <table>
 <thead>
 <tr>
@@ -188,6 +188,10 @@
 <tr>
 <td><strong>Gameplay Tag</strong></td>
 <td>一种<strong>层级标签系统</strong>，用于标记对象的状态、行为的分类，实现高效的逻辑判断和驱动。</td>
+</tr>
+<tr>
+<td><strong>GameplayCue（GC）</strong></td>
+<td>处理客户端表现，如特效、音效等</td>
 </tr>
 </tbody></table>
 <h3 id="💡-核心概念详解"><a href="#💡-核心概念详解" class="headerlink" title="💡 核心概念详解"></a>💡 核心概念详解</h3><p>为了让你更好地理解和使用GAS，下面是对上述组件的进一步说明：</p>
@@ -218,13 +222,13 @@
 </li>
 </ul>
 <p>希望这份概述能帮助你建立起对UE GAS系统的整体认识。如果你对其中某个特定组件（比如如何具体编写一个Gameplay Ability）有更深入的兴趣，我们可以继续展开讨论。</p>
-<h1 id="GT-Gameplay-Tags"><a href="#GT-Gameplay-Tags" class="headerlink" title="GT(Gameplay Tags)"></a>GT(Gameplay Tags)</h1><p>GameplayTags是一个内置的插件，不属于GAS。</p>
+<h2 id="GT-Gameplay-Tags"><a href="#GT-Gameplay-Tags" class="headerlink" title="GT(Gameplay Tags)"></a>GT(Gameplay Tags)</h2><p>GameplayTags是一个内置的插件，不属于GAS。</p>
 <p>角色本身的枚举、布尔等<strong>状态</strong>（非属性）变量也可以用Tag储存，非常好用，我自己的用法是在让AI在行为树的Decorator节点中，通过玩家拥有的Gameplay Tag来判断玩家是否处于无敌帧、喝药。</p>
 <p>在每个模块中最好设置上自己的命名空间前缀，避免整个系统的Tag混乱。</p>
-<h1 id="ACS-Ability-System-Component"><a href="#ACS-Ability-System-Component" class="headerlink" title="ACS(Ability System Component)"></a>ACS(Ability System Component)</h1><blockquote>
+<h2 id="ACS-Ability-System-Component"><a href="#ACS-Ability-System-Component" class="headerlink" title="ACS(Ability System Component)"></a>ACS(Ability System Component)</h2><blockquote>
 <p>Ability System Component(ASC)是整个GAS的基础组件。<br>ASC本质上是一个UActorComponent，用于处理整个框架下的交互逻辑，包括使用技能 （GameplayAbility）、包含属性（AttributeSet）、处理各种效果（GameplayEffect）。<br>所有需要应用GAS的对象（Actor），都必须拥有GAS组件。<br>拥有ASC的Actor被称为ASC的OwnerActor，ASC实际作用的Actor叫做AvatarActor。ASC可以被赋予某个角色ASC，也可以被赋予PlayerState（可以保存死亡角色的一些数据</p>
 </blockquote>
-<h1 id="GA-Gameplay-Ability"><a href="#GA-Gameplay-Ability" class="headerlink" title="GA(Gameplay Ability)"></a>GA(Gameplay Ability)</h1><blockquote>
+<h2 id="GA-Gameplay-Ability"><a href="#GA-Gameplay-Ability" class="headerlink" title="GA(Gameplay Ability)"></a>GA(Gameplay Ability)</h2><blockquote>
 <p>Gameplay Ability(GA)标识了游戏中一个对象（Actor）可以做的行为或技能。 能力（Ability）可以是普通攻击或者吟唱技能，可以是角色被击飞倒地，还可以是使用 某种道具，交互某个物件，甚至跳跃、飞行等角色行为也可以是Ability。<br>Ability可以被赋予对象或从对象的ASC中移除，对象同时可以激活多个GameplayAbility。 基本的移动输入、UI交互行为则不能或不建议通过GA来实现</p>
 </blockquote>
 <img src="/2025/11/10/0085-UeGasUse/v2-753b6cb16cb635af5275888c9911c576_1440w.jpg" alt="img" style="zoom:50%;">
@@ -233,7 +237,7 @@
 <p>GA的<strong>使用</strong>分为<strong>实例化</strong>和<strong>释放</strong>两个过程，前者主要是生成一个<strong>FGameplayAbilitySpec</strong>对象，并为一部分非公有（非静态）属性赋值，如当前GA的等级。后者操作的实际对象则为Spec。</p>
 <p>可以把Spec理解为GA的实例，GE等其他类也有相似的概念。\</p>
 <p>通常来说，使用GA时不用去考虑两个过程的区别，除非你需要在<strong>实例化</strong>Spec后，手动修改一些在GA类上定义好的属性再去手动<strong>释放</strong>。在GE篇会详细介绍，用于实现技能的冷却、消耗。</p>
-<h2 id="添加GA"><a href="#添加GA" class="headerlink" title="添加GA"></a>添加GA</h2><p>如果不使用C++修改，只能通过GE去添加GA，非常不方便。</p>
+<h3 id="添加GA"><a href="#添加GA" class="headerlink" title="添加GA"></a>添加GA</h3><p>如果不使用C++修改，只能通过GE去添加GA，非常不方便。</p>
 <ul>
 <li>在角色类中创建一个数组，游戏启动时自动添加数组里的GA</li>
 </ul>
@@ -249,10 +253,10 @@
 <ul>
 <li>使用GE添加GA </li>
 </ul>
-<h1 id="GE-Gameplay-Effect"><a href="#GE-Gameplay-Effect" class="headerlink" title="GE(Gameplay Effect)"></a>GE(Gameplay Effect)</h1><blockquote>
+<h2 id="GE-Gameplay-Effect"><a href="#GE-Gameplay-Effect" class="headerlink" title="GE(Gameplay Effect)"></a>GE(Gameplay Effect)</h2><blockquote>
 <p>Gameplay Effect(GE)是Ability对自己或他人产生影响的途径。 GE通常可以被理解为我们游戏中的buff。比如增益/减益效果（修改属性）。<br>但是GAS中的GE也更加广义，释放技能时候的伤害结算，施加特殊效果的控制、霸体效果 （修改GameplayTag）都是通过GE来实现的。<br>GE相当于一个可配置的数据表，不可以添加逻辑。开发者创建一个UGameplayEffect的派 生蓝图，就可以根据需求制作想要的效果。</p>
 </blockquote>
-<h1 id="AS-Attribute-Set"><a href="#AS-Attribute-Set" class="headerlink" title="AS(Attribute Set)"></a>AS(Attribute Set)</h1><blockquote>
+<h2 id="AS-Attribute-Set"><a href="#AS-Attribute-Set" class="headerlink" title="AS(Attribute Set)"></a>AS(Attribute Set)</h2><blockquote>
 <p>AttributeSet 负责定义和持有属性，并且管理属性的变化，包括网络同步。 需要在Actor中被添加为成员变量，并注册到ASC（C++）。<br>一个ASC可以拥有一个或多个(不同的)AttributeSet，因此可以角色共享一个很大的 Attribute Set，也可以每个角色按需添加Attribute Set。<br>可以在属性变化前（PreAttributeChange）后（PostGameplayEffectExecute）处理相关 逻辑，可以通过委托的方式绑定属性变化。</p>
 </blockquote>
 <p>正如字面意思，AS是Attribute的集合。</p>
@@ -262,15 +266,15 @@
 <p>如临时增加100生命值10s，改变的就是Current Value，10s后自动变回Base Value。</p>
 <p><strong>做GE时要注意修改的是哪种Value</strong></p>
 <p>AS只能使用C++创建。</p>
-<h2 id="修改事件"><a href="#修改事件" class="headerlink" title="修改事件"></a>修改事件</h2><ul>
+<h3 id="修改事件"><a href="#修改事件" class="headerlink" title="修改事件"></a>修改事件</h3><ul>
 <li>PreAttributeChange：用于Attribute的<strong>Current Value被改变前</strong>调用，对应Infinite和Has Duration的GE。</li>
 <li>PostGameplayEffectExecute：用于<strong>Base Value改变后</strong>调用，对应InstantGE。</li>
 <li>GetGameplayAttributeValueChangeDelegate：<strong>监听Attribute的变化以更新UI</strong>，则不适合用上面的方法，应该在<strong>角色类中</strong>创建一个回调，以及蓝图事件</li>
 </ul>
-<h1 id="GC-Gameplay-Cues"><a href="#GC-Gameplay-Cues" class="headerlink" title="GC(Gameplay Cues)"></a>GC(Gameplay Cues)</h1><blockquote>
+<h2 id="GC-Gameplay-Cues"><a href="#GC-Gameplay-Cues" class="headerlink" title="GC(Gameplay Cues)"></a>GC(Gameplay Cues)</h2><blockquote>
 <p><code>GameplayCues</code> (<code>GC</code>) 执行非游戏性相关的事情，比如音效，粒子特效，震屏等。<code>GameplayCues</code>通常会被复制和预测（除非设置<code>Executed</code>, <code>Added</code>或<code>Removed</code>是本地的）。</p>
 </blockquote>
-<h1 id="网络预测"><a href="#网络预测" class="headerlink" title="网络预测"></a>网络预测</h1><p>客户端使用技能，客户端和服务器都需要执行，而且很多结果需要服务器的权威验证。但事事都等待服务器验证，就会有网络延迟问题，操作体验不佳，为了避免延迟，GAS支持本地预测执行GA，和预测添加GE。把GA的NetExecutionPolicy属性设置为LocalPredicted，就能让GA支持网络预测执行。</p>
+<h2 id="网络预测"><a href="#网络预测" class="headerlink" title="网络预测"></a>网络预测</h2><p>客户端使用技能，客户端和服务器都需要执行，而且很多结果需要服务器的权威验证。但事事都等待服务器验证，就会有网络延迟问题，操作体验不佳，为了避免延迟，GAS支持本地预测执行GA，和预测添加GE。把GA的NetExecutionPolicy属性设置为LocalPredicted，就能让GA支持网络预测执行。</p>
 <p>可以本地预测的</p>
 <ul>
 <li>激活GA</li>
@@ -285,9 +289,346 @@
 <li>GE的周期性操作</li>
 </ul>
 <p>预测执行框架的重点是客户端与服务器不一致时，如何回滚客户端的操作。</p>
+<h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><ol>
+<li>ASC应该放在哪里？不同放置位置的优缺点是什么？</li>
+</ol>
+<p><strong>放在Character上</strong>：适用于简单AI、单人游戏，实现简单但角色重生后数据丢失</p>
+<p><strong>放在PlayerState上</strong>：适用于多人PvP/PvE，角色重生数据保留但需处理Owner/Avatar分离</p>
+<p><strong>最佳实践</strong>：</p>
+<p>对于多人RPG，推荐将ASC放在PlayerState上（Owner），而Character作为Avatar.</p>
+<p>这样即使 Character 被销毁重建（如死亡重生），属性和技能状态仍然保留</p>
+<ol start="2">
+<li>GAS中的属性系统是如何工作的？BaseValue和CurrentValue有什么区别？</li>
+</ol>
+<p>FGameplayAttributeData是GAS属性的基本存储单元，每个属性包含两个值：</p>
+<ul>
+<li><strong>BaseValue（基础值）</strong>：永久性修改作用于此，如升级加点、装备穿戴</li>
+<li><strong>CurrentValue（当前值）</strong>：临时修改作用于此，如Buff加成、临时减速</li>
+</ul>
+<h2 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h2><table>
+<thead>
+<tr>
+<th align="left">模块</th>
+<th align="left">职责</th>
+<th align="left">UE 实现载体</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">属性系统</td>
+<td align="left">定义生命值、攻击力等数值</td>
+<td align="left">UAttributeSet</td>
+</tr>
+<tr>
+<td align="left">技能系统</td>
+<td align="left">定义释放技能的逻辑流程</td>
+<td align="left">UGameplayAbility</td>
+</tr>
+<tr>
+<td align="left">效果系统</td>
+<td align="left">数值修改、状态施加</td>
+<td align="left">UGameplayEffect</td>
+</tr>
+<tr>
+<td align="left">标签系统</td>
+<td align="left">状态标识、条件过滤</td>
+<td align="left">FGameplayTag</td>
+</tr>
+<tr>
+<td align="left">命中检测</td>
+<td align="left">攻击碰撞判定</td>
+<td align="left">Trace / Overlap</td>
+</tr>
+<tr>
+<td align="left">Buff系统</td>
+<td align="left">持续效果管理</td>
+<td align="left">GE (Duration/Infinite)</td>
+</tr>
+<tr>
+<td align="left">连招系统</td>
+<td align="left">输入缓冲、招式链接</td>
+<td align="left">FSM + AnimMontage</td>
+</tr>
+<tr>
+<td align="left">AI系统</td>
+<td align="left">敌方行为决策</td>
+<td align="left">BehaviorTree + EQS</td>
+</tr>
+<tr>
+<td align="left">同步系统</td>
+<td align="left">多人战斗状态一致</td>
+<td align="left">GAS Prediction</td>
+</tr>
+</tbody></table>
+<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">                                     ┌──────────────────┐</span><br><span class="line">                                     │      Character/Pawn            │</span><br><span class="line">                                     └────────┬─────────┘</span><br><span class="line">                                              │ 持有</span><br><span class="line">                                     ┌────────▼─────────┐</span><br><span class="line">                                     │            AbilitySystem          │</span><br><span class="line">                                     │         Component (ASC)      │──── 核心枢纽</span><br><span class="line">                                     └──┬───┬───┬───┬───┘</span><br><span class="line">                                        │   │   │   │</span><br><span class="line">       ┌────────────┘   │   │   └────────────┐</span><br><span class="line">       ▼                ▼   ▼                ▼</span><br><span class="line">┌─────────────┐  ┌─────────┐ ┌──────────┐  ┌──────────┐</span><br><span class="line">│   AttributeSet           │  │ Gameplay     │ │   Gameplay     │  │   Gameplay    │</span><br><span class="line">│    (属性数据)           │  │     Ability     │ │      Effect         │  │     Tag             │</span><br><span class="line">│     HP/ATK/DEF        │  │       (技能)      │ │        (效果)      │  │      ( 标签)        │</span><br><span class="line">└─────────────┘  └─────────┘ └──────────┘  └──────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="业务结合"><a href="#业务结合" class="headerlink" title="业务结合"></a>业务结合</h1><h2 id="BUff叠加"><a href="#BUff叠加" class="headerlink" title="BUff叠加"></a>BUff叠加</h2><table>
+<thead>
+<tr>
+<th align="left">叠加策略</th>
+<th align="left">行为</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">AggregateBySource</td>
+<td align="left">同一来源只保留一个，不同来源可叠加</td>
+<td align="left">不同角色的同种 Buff</td>
+</tr>
+<tr>
+<td align="left">AggregateByTarget</td>
+<td align="left">目标身上只保留一个</td>
+<td align="left">唯一性 Buff（如护盾）</td>
+</tr>
+<tr>
+<td align="left">Stack Count</td>
+<td align="left">可叠加层数，增加效果强度</td>
+<td align="left">中毒层数、流血层数</td>
+</tr>
+<tr>
+<td align="left">Overflow</td>
+<td align="left">超过最大层数时触发额外效果</td>
+<td align="left">满层爆发</td>
+</tr>
+<tr>
+<td align="left">Duration Refresh</td>
+<td align="left">新叠加刷新持续时间</td>
+<td align="left">大多数 DoT 效果</td>
+</tr>
+</tbody></table>
+<h2 id="命中检测"><a href="#命中检测" class="headerlink" title="命中检测"></a>命中检测</h2><table>
+<thead>
+<tr>
+<th align="left">方式</th>
+<th align="left">原理</th>
+<th align="left">优点</th>
+<th align="left">缺点</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Sphere/Box Overlap</td>
+<td align="left">在指定位置检测重叠Actor</td>
+<td align="left">简单高效</td>
+<td align="left">精度较低</td>
+<td align="left">AOE、范围技能</td>
+</tr>
+<tr>
+<td align="left">Line Trace</td>
+<td align="left">射线检测</td>
+<td align="left">精准</td>
+<td align="left">无法表达武器体积</td>
+<td align="left">射击、远程攻击</td>
+</tr>
+<tr>
+<td align="left">Shape Trace</td>
+<td align="left">沿路径做形状扫掠</td>
+<td align="left">平衡精度与性能</td>
+<td align="left">复杂度适中</td>
+<td align="left">近战武器</td>
+</tr>
+<tr>
+<td align="left">Socket 插值 Trace</td>
+<td align="left">两帧间Socket位置插值</td>
+<td align="left">帧率无关、最精准</td>
+<td align="left">实现复杂</td>
+<td align="left">高品质近战</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">帧 N:   武器Socket位置 A₁, B₁ (刀尖, 刀根)</span><br><span class="line">帧 N+1: 武器Socket位置 A₂, B₂</span><br><span class="line"></span><br><span class="line">                A₁ ─────────── A₂</span><br><span class="line">                │  ╲         ╱ │</span><br><span class="line">                │    ╲     ╱   │    ← 这个扫掠面积就是检测区域</span><br><span class="line">                │      ╲ ╱     │       在其间做多条LineTrace</span><br><span class="line">                B₁ ─────────── B₂</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="连击"><a href="#连击" class="headerlink" title="连击"></a>连击</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">玩家输入&quot;攻击&quot;</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">┌─────────────────┐     输入窗口内      ┌─────────────────┐</span><br><span class="line">│  Attack_1       │ ──── 再次输入 ────→ │  Attack_2       │</span><br><span class="line">│  (轻击第一段)    │     &quot;攻击&quot;按键      │  (轻击第二段)    │</span><br><span class="line">└─────────────────┘                     └────────┬────────┘</span><br><span class="line">                                                 │ 输入窗口内</span><br><span class="line">                                                 │ 再次输入</span><br><span class="line">                                                 ▼</span><br><span class="line">                                        ┌─────────────────┐</span><br><span class="line">                                        │  Attack_3       │</span><br><span class="line">                                        │  (轻击第三段)    │</span><br><span class="line">                                        └─────────────────┘</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="打击感"><a href="#打击感" class="headerlink" title="打击感"></a>打击感</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">命中瞬间</span><br><span class="line">    │</span><br><span class="line">    ├── 帧冻结（HitStop）         ← 攻击者和受击者短暂暂停 2~5帧</span><br><span class="line">    ├── 镜头震动（Camera Shake）   ← 短促的镜头抖动</span><br><span class="line">    ├── 受击硬直（Hit Stagger）    ← 受击方播放硬直动画</span><br><span class="line">    ├── 击退位移（Knockback）      ← 受击方沿攻击方向位移</span><br><span class="line">    ├── 打击特效（Hit VFX）        ← 命中点的粒子特效</span><br><span class="line">    ├── 打击音效（Hit SFX）        ← 有力的音效反馈</span><br><span class="line">    ├── 时间缩放（Time Dilation）  ← 关键一击时全局减速</span><br><span class="line">    └── 手柄震动（Force Feedback） ← 物理触觉反馈</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="网络同步"><a href="#网络同步" class="headerlink" title="网络同步"></a>网络同步</h1><ol>
+<li><p><strong>GAS支持哪些网络复制模式？各自适用于什么场景？</strong></p>
+<ul>
+<li><strong>Full模式</strong>：适用于单人/简单AI，所有GE复制给所有客户端</li>
+<li><strong>Mixed模式</strong>：适用于玩家角色，GE仅复制给拥有者，Tag和Cue复制给所有人</li>
+<li><strong>Minimal模式</strong>：适用于AI角色，不复制GE，仅复制Tag和Cue</li>
+</ul>
+</li>
+<li><p><strong>GAS如何支持客户端预测和状态回滚？</strong></p>
+</li>
+</ol>
+<p>GAS支持联机游戏中的网络复制和预测机制，服务器上的技能逻辑可以广播到客户端上展示，客户端技能也可以在本地先执行，若服务器预测不通过，则可以在客户端上回滚操作</p>
+<ul>
+<li>GAS 可预测的内容：<ul>
+<li>技能激活</li>
+<li>触发 GameplayEvent</li>
+<li>应用 GameplayEffect（属性修改）</li>
+<li>添加/移除 GameplayTag</li>
+<li>播放 AnimMontage</li>
+<li>移动（基于 CharacterMovementComponent）</li>
+</ul>
+</li>
+<li>不可预测的内容：<ul>
+<li>GameplayEffect 的移除</li>
+<li>GameplayCue 的某些触发</li>
+</ul>
+</li>
+</ul>
+<h2 id="回滚方式"><a href="#回滚方式" class="headerlink" title="回滚方式"></a>回滚方式</h2><table>
+<thead>
+<tr>
+<th align="left">预测的东西</th>
+<th align="left">回滚方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">属性变化（扣蓝、扣血）</td>
+<td align="left">GAS 内部维护了属性变化的记录，直接反向操作恢复原值</td>
+</tr>
+<tr>
+<td align="left">GameplayEffect（CD、Buff）</td>
+<td align="left">预测创建的 GE 被标记为“待确认”，拒绝后直接 Remove</td>
+</tr>
+<tr>
+<td align="left">GameplayTag</td>
+<td align="left">GE 被移除时，它授予的 Tag 自动跟着消失</td>
+</tr>
+<tr>
+<td align="left">蒙太奇动画</td>
+<td align="left">调用 StopMontage，混合回待机动画</td>
+</tr>
+<tr>
+<td align="left">特效/音效</td>
+<td align="left">GameplayCue 层面处理，停止播放（但可能已经播了一部分，这是预测的代价）</td>
+</tr>
+<tr>
+<td align="left">生成的 Actor（投射物）</td>
+<td align="left">预测生成的 Actor 会被标记，拒绝后销毁</td>
+</tr>
+</tbody></table>
+<h2 id="逻辑表现分离"><a href="#逻辑表现分离" class="headerlink" title="逻辑表现分离"></a>逻辑表现分离</h2><table>
+<thead>
+<tr>
+<th align="left">逻辑层</th>
+<th align="left">表现层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">GameplayAbility</td>
+<td align="left">AnimMontage (通过 AbilityTask)</td>
+</tr>
+<tr>
+<td align="left">GameplayEffect</td>
+<td align="left">GameplayCue (粒子/音效/震动)</td>
+</tr>
+<tr>
+<td align="left">AttributeSet</td>
+<td align="left">UI Widget (血条/伤害数字)</td>
+</tr>
+<tr>
+<td align="left">GameplayTag</td>
+<td align="left">动画状态机 (ABP 中读 Tag)</td>
+</tr>
+</tbody></table>
+<h2 id="Key"><a href="#Key" class="headerlink" title="Key"></a>Key</h2><h3 id="FPredictionKey"><a href="#FPredictionKey" class="headerlink" title="FPredictionKey"></a><strong>FPredictionKey</strong></h3><p>首先介绍PredictionKey概念，它是一个uint16的id，客户端每次预测执行GA，都会赋予一个自增的新Key。后面客户端向Server发送Active GA，会带上这个PredictionKey，服务器之后确认或拒绝这次GA的激活，也都用PredictionKey来标识。</p>
+<p>下面是几个接口，注意其中的PredictionKey参数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Client-&gt;Server 请求激活GA</span></span><br><span class="line"><span class="function">UE_API <span class="type">void</span> <span class="title">ServerTryActivateAbility</span><span class="params">(FGameplayAbilitySpecHandle AbilityToActivate, <span class="type">bool</span> InputPressed, FPredictionKey PredictionKey)</span></span>;</span><br><span class="line"><span class="comment">//Server-&gt;Client 拒绝激活GA</span></span><br><span class="line"><span class="function">UE_API <span class="type">void</span> <span class="title">ClientActivateAbilityFailed</span><span class="params">(FGameplayAbilitySpecHandle AbilityToActivate, int16 PredictionKey)</span></span>;</span><br><span class="line"><span class="comment">//Server-&gt;Client 确认激活GA</span></span><br><span class="line"><span class="function">UE_API <span class="type">void</span> <span class="title">ClientActivateAbilitySucceed</span><span class="params">(FGameplayAbilitySpecHandle AbilityToActivate, FPredictionKey PredictionKey)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成新key"><a href="#生成新key" class="headerlink" title="生成新key"></a>生成新key</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">FPredictionKey::GenerateNewPredictionKey</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">static</span> KeyType GKey = <span class="number">1</span>;</span><br><span class="line">    Current = GKey++;</span><br><span class="line">    <span class="keyword">if</span> (GKey &lt;= <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        GKey = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Key的依赖关系"><a href="#Key的依赖关系" class="headerlink" title="Key的依赖关系"></a>Key的依赖关系</h3><p>exp:</p>
+<p>如果GA中产生了GameplayEvent，串联激活其他GA，预测过程会更复杂些。</p>
+<p>例如开枪后立即自动接一个Melee攻击，打一套“军体拳”。</p>
+<p>分析:</p>
+<p>GA的Activate过程中，串行的激活了另一个GA，那么这两次激活都有自己的PredictionKey，而且后一次依赖前一次。</p>
+<p>下面是PredictionKey的生成过程，Base就是前一个Key，最后的AddDependency会建立这种依赖。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">FPredictionKey::GenerateDependentPredictionKey</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bIsServerInitiated)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Can&#x27;t have dependent keys on server keys, use same key</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    KeyType Previous = Current;</span><br><span class="line">    <span class="keyword">if</span> (Base == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        Base = Current;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">GenerateNewPredictionKey</span>();</span><br><span class="line">    <span class="built_in">ensureAlwaysMsgf</span>((Base == <span class="number">0</span>) || (Current - Base &lt; <span class="number">20</span>), <span class="built_in">TEXT</span>(<span class="string">&quot;Deep PredictionKey Chain Detected.  It&#x27;s likely there&#x27;s circular logic that could stack overflow.&quot;</span>));</span><br><span class="line">    <span class="keyword">if</span> (Previous &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        FPredictionKeyDelegates::<span class="built_in">AddDependency</span>(Current, Previous);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><h2 id="优化-1"><a href="#优化-1" class="headerlink" title="优化"></a>优化</h2><table>
+<thead>
+<tr>
+<th align="left">优化项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Ability Batching</td>
+<td align="left">多个技能激活/执行合并为一个 RPC</td>
+</tr>
+<tr>
+<td align="left">GameplayCue Batching</td>
+<td align="left">多个 Cue 合并一次网络传输</td>
+</tr>
+<tr>
+<td align="left">ASC Lazy Loading</td>
+<td align="left">AI 角色延迟初始化 ASC，进入战斗时才加载</td>
+</tr>
+<tr>
+<td align="left">Minimal Replication</td>
+<td align="left">AI 使用 Minimal 复制模式</td>
+</tr>
+<tr>
+<td align="left">非实例化 Ability</td>
+<td align="left">简单被动技能使用 NonInstanced</td>
+</tr>
+</tbody></table>
+<h2 id="碰撞优化"><a href="#碰撞优化" class="headerlink" title="碰撞优化"></a>碰撞优化</h2><table>
+<thead>
+<tr>
+<th align="left">优化项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">碰撞通道分离</td>
+<td align="left">武器使用专用 Trace Channel</td>
+</tr>
+<tr>
+<td align="left">空间分区</td>
+<td align="left">先用粗粒度检测筛选候选目标</td>
+</tr>
+<tr>
+<td align="left">对象池</td>
+<td align="left">投射物、特效使用对象池复用</td>
+</tr>
+<tr>
+<td align="left">LOD 检测</td>
+<td align="left">远处战斗使用简化碰撞体</td>
+</tr>
+</tbody></table>
+<h2 id="动画优化"><a href="#动画优化" class="headerlink" title="动画优化"></a>动画优化</h2><table>
+<thead>
+<tr>
+<th>优化项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Significance Manager</strong></td>
+<td>根据距离/屏幕占比降低 Tick 频率</td>
+</tr>
+<tr>
+<td><strong>URO (Update Rate Optimization)</strong></td>
+<td>远处角色降低动画更新率</td>
+</tr>
+<tr>
+<td><strong>Cue 裁剪</strong></td>
+<td>屏幕外/远距离 Cue 不执行</td>
+</tr>
+<tr>
+<td><strong>特效 LOD</strong></td>
+<td>远距离使用简化粒子</td>
+</tr>
+</tbody></table>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/486808688">【Unreal】虚幻GAS系统快速入门 - 知乎</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/416805924">用Unity制作一个极具扩展性的顶视角射击游戏战斗系统 - 知乎</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/643301579">基于 Unreal Lyra 的 GAS 属性扩展和应用 - 知乎</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1934717850632823338"> UE5 GAS - 以Lyra为例 - 知乎</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/BillEliot/GASDocumentation_Chinese?tab=readme-ov-file">GitHub - BillEliot/GASDocumentation_Chinese</a></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/11/10/0085-UeGasUse/">http://example.com/2025/11/10/0085-UeGasUse/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ue Slate底层源码(持续更新)</div></div></a></div><div class="next-post pull-right"><a href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UE 适配与多分辨率</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">ue Lyra 动画系统(持续更新)</div></div></a></div><div><a href="/2025/11/21/0088-LuaGc/" title="Lua Gc"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">Lua Gc</div></div></a></div><div><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-20</div><div class="title">ue Slate底层源码(持续更新)</div></div></a></div><div><a href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-07</div><div class="title">UE 适配与多分辨率</div></div></a></div><div><a href="/2025/11/06/0083-UeSlate/" title="ue Slate初探"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-06</div><div class="title">ue Slate初探</div></div></a></div><div><a href="/2025/10/13/0081-UeAync/" title="ue 多线程"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-13</div><div class="title">ue 多线程</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.0.1.</span> <span class="toc-text">💡 核心概念详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E4%BD%BF%E7%94%A8GAS%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.0.2.</span> <span class="toc-text">🛠️ 使用GAS的基本步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E8%BF%9B%E9%98%B6%E7%89%B9%E6%80%A7%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">2.0.3.</span> <span class="toc-text">⚙️ 进阶特性与调试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GT-Gameplay-Tags"><span class="toc-number">3.</span> <span class="toc-text">GT(Gameplay Tags)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ACS-Ability-System-Component"><span class="toc-number">4.</span> <span class="toc-text">ACS(Ability System Component)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GA-Gameplay-Ability"><span class="toc-number">5.</span> <span class="toc-text">GA(Gameplay Ability)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0GA"><span class="toc-number">5.1.</span> <span class="toc-text">添加GA</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GE-Gameplay-Effect"><span class="toc-number">6.</span> <span class="toc-text">GE(Gameplay Effect)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AS-Attribute-Set"><span class="toc-number">7.</span> <span class="toc-text">AS(Attribute Set)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6"><span class="toc-number">7.1.</span> <span class="toc-text">修改事件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GC-Gameplay-Cues"><span class="toc-number">8.</span> <span class="toc-text">GC(Gameplay Cues)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%A2%84%E6%B5%8B"><span class="toc-number">9.</span> <span class="toc-text">网络预测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">10.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Lyra 动画系统(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)">ue Lyra 动画系统(持续更新)</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/21/0088-LuaGc/" title="Lua Gc"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lua Gc"/></a><div class="content"><a class="title" href="/2025/11/21/0088-LuaGc/" title="Lua Gc">Lua Gc</a><time datetime="2025-11-20T16:00:00.000Z" title="发表于 2025-11-21 00:00:00">2025-11-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Slate底层源码(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)">ue Slate底层源码(持续更新)</a><time datetime="2025-11-19T16:00:00.000Z" title="发表于 2025-11-20 00:00:00">2025-11-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue GAS(持续更新)"/></a><div class="content"><a class="title" href="/2025/11/10/0085-UeGasUse/" title="ue GAS(持续更新)">ue GAS(持续更新)</a><time datetime="2025-11-09T16:00:00.000Z" title="发表于 2025-11-10 00:00:00">2025-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UE 适配与多分辨率"/></a><div class="content"><a class="title" href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率">UE 适配与多分辨率</a><time datetime="2025-11-06T16:00:00.000Z" title="发表于 2025-11-07 00:00:00">2025-11-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43757333/article/details/159584928#2-gas--%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E7%9F%B3">https://blog.csdn.net/weixin_43757333/article/details/159584928#2-gas--%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E7%9F%B3</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sQNbebEFC/?spm_id_from=333.1387.favlist.content.click&vd_source=d19e47552f1614194f0d0b0662850083">UE5 GAS ACT教程（一）连招系统_哔哩哔哩_bilibili</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/11/10/0085-UeGasUse/">http://example.com/2025/11/10/0085-UeGasUse/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ue Slate底层源码(持续更新)</div></div></a></div><div class="next-post pull-right"><a href="/2025/11/07/0084-UeAdapt/" title="UE 适配与多分辨率"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">UE 适配与多分辨率</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="title">Unlua 绑定</div></div></a></div><div><a href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-14</div><div class="title">ue 浅谈网络容器</div></div></a></div><div><a href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-14</div><div class="title">ue DS的思考</div></div></a></div><div><a href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-10</div><div class="title">ue Q&amp;A</div></div></a></div><div><a href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-09</div><div class="title">ue智能指针</div></div></a></div><div><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">ue Lyra 动画系统(持续更新)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">基本架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.1.1.</span> <span class="toc-text">💡 核心概念详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E4%BD%BF%E7%94%A8GAS%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.1.2.</span> <span class="toc-text">🛠️ 使用GAS的基本步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E8%BF%9B%E9%98%B6%E7%89%B9%E6%80%A7%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">2.1.3.</span> <span class="toc-text">⚙️ 进阶特性与调试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GT-Gameplay-Tags"><span class="toc-number">2.2.</span> <span class="toc-text">GT(Gameplay Tags)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACS-Ability-System-Component"><span class="toc-number">2.3.</span> <span class="toc-text">ACS(Ability System Component)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GA-Gameplay-Ability"><span class="toc-number">2.4.</span> <span class="toc-text">GA(Gameplay Ability)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0GA"><span class="toc-number">2.4.1.</span> <span class="toc-text">添加GA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GE-Gameplay-Effect"><span class="toc-number">2.5.</span> <span class="toc-text">GE(Gameplay Effect)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AS-Attribute-Set"><span class="toc-number">2.6.</span> <span class="toc-text">AS(Attribute Set)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.6.1.</span> <span class="toc-text">修改事件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC-Gameplay-Cues"><span class="toc-number">2.7.</span> <span class="toc-text">GC(Gameplay Cues)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%A2%84%E6%B5%8B"><span class="toc-number">2.8.</span> <span class="toc-text">网络预测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97"><span class="toc-number">3.1.</span> <span class="toc-text">核心模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="toc-number">3.2.</span> <span class="toc-text">架构图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E7%BB%93%E5%90%88"><span class="toc-number">4.</span> <span class="toc-text">业务结合</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BUff%E5%8F%A0%E5%8A%A0"><span class="toc-number">4.1.</span> <span class="toc-text">BUff叠加</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%B8%AD%E6%A3%80%E6%B5%8B"><span class="toc-number">4.2.</span> <span class="toc-text">命中检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E5%87%BB"><span class="toc-number">4.3.</span> <span class="toc-text">连击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%87%BB%E6%84%9F"><span class="toc-number">4.4.</span> <span class="toc-text">打击感</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5"><span class="toc-number">5.</span> <span class="toc-text">网络同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E6%BB%9A%E6%96%B9%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">回滚方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%A1%A8%E7%8E%B0%E5%88%86%E7%A6%BB"><span class="toc-number">5.2.</span> <span class="toc-text">逻辑表现分离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Key"><span class="toc-number">5.3.</span> <span class="toc-text">Key</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FPredictionKey"><span class="toc-number">5.3.1.</span> <span class="toc-text">FPredictionKey</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%96%B0key"><span class="toc-number">5.3.2.</span> <span class="toc-text">生成新key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Key%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB"><span class="toc-number">5.3.3.</span> <span class="toc-text">Key的依赖关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96-1"><span class="toc-number">6.1.</span> <span class="toc-text">优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A2%B0%E6%92%9E%E4%BC%98%E5%8C%96"><span class="toc-number">6.2.</span> <span class="toc-text">碰撞优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96"><span class="toc-number">6.3.</span> <span class="toc-text">动画优化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unlua 绑定"/></a><div class="content"><a class="title" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定">Unlua 绑定</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 浅谈网络容器"/></a><div class="content"><a class="title" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器">ue 浅谈网络容器</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue DS的思考"/></a><div class="content"><a class="title" href="/2026/04/14/0091-UeDS/" title="ue DS的思考">ue DS的思考</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Q&amp;A"/></a><div class="content"><a class="title" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A">ue Q&amp;A</a><time datetime="2026-04-09T16:00:00.000Z" title="发表于 2026-04-10 00:00:00">2026-04-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue智能指针"/></a><div class="content"><a class="title" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针">ue智能指针</a><time datetime="2026-04-08T16:00:00.000Z" title="发表于 2026-04-09 00:00:00">2026-04-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

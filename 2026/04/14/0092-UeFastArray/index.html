@@ -1,0 +1,520 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>ue 浅谈网络容器 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言研究PushModel与FastArray等 对于网络的容器的介绍 PushModelPushModel 是 Unreal Engine 中用于优化网络复制性能的一种机制。它的核心思想是将网络更新的触发从“轮询检查”改为“事件驱动”，从而减少不必要的复制开销。 传统复制模式的问题在传统的属性复制（Replication）中，Unreal 默认使用 “脏标记”（Dirty Flag） 机制：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ue 浅谈网络容器">
+<meta property="og:url" content="http://example.com/2026/04/14/0092-UeFastArray/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言研究PushModel与FastArray等 对于网络的容器的介绍 PushModelPushModel 是 Unreal Engine 中用于优化网络复制性能的一种机制。它的核心思想是将网络更新的触发从“轮询检查”改为“事件驱动”，从而减少不必要的复制开销。 传统复制模式的问题在传统的属性复制（Replication）中，Unreal 默认使用 “脏标记”（Dirty Flag） 机制：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2026-04-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-12T04:00:20.218Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/14/0092-UeFastArray/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ue 浅谈网络容器',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-12 12:00:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ue 浅谈网络容器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-12T04:00:20.218Z" title="更新于 2026-05-12 12:00:20">2026-05-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ue 浅谈网络容器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>研究PushModel与FastArray等</p>
+<p>对于网络的容器的介绍</p>
+<h1 id="PushModel"><a href="#PushModel" class="headerlink" title="PushModel"></a>PushModel</h1><p><strong>PushModel</strong> 是 Unreal Engine 中用于优化网络复制性能的一种机制。它的核心思想是<strong>将网络更新的触发从“轮询检查”改为“事件驱动”</strong>，从而减少不必要的复制开销。</p>
+<h3 id="传统复制模式的问题"><a href="#传统复制模式的问题" class="headerlink" title="传统复制模式的问题"></a>传统复制模式的问题</h3><p>在传统的属性复制（Replication）中，Unreal 默认使用 <strong>“脏标记”（Dirty Flag）</strong> 机制：</p>
+<ul>
+<li>每个可复制的属性在值发生变化时会被标记为“脏”。</li>
+<li>每帧（或每个复制周期）服务器会检查所有对象的脏标记，将标记为脏的属性打包发送给客户端。</li>
+<li>这种<strong>轮询检查</strong>的方式在属性多、变化少的场景下会产生不必要的性能开销。</li>
+</ul>
+<h3 id="PushModel-的工作原理"><a href="#PushModel-的工作原理" class="headerlink" title="PushModel 的工作原理"></a>PushModel 的工作原理</h3><p>PushModel 改变了这一流程：</p>
+<ol>
+<li><strong>主动标记</strong>：当某个可复制的属性值发生变化时，开发者需要<strong>显式调用</strong> <code>MarkPropertyDirty()</code>或 <code>MARK_PROPERTY_DIRTY()</code>宏来通知网络系统：“这个属性需要复制”。</li>
+<li><strong>按需打包</strong>：网络系统只打包那些被显式标记为“脏”的属性，不再进行全量轮询检查。</li>
+<li><strong>自动清除</strong>：属性被成功复制后，其“脏”标记会被自动清除。</li>
+</ol>
+<h3 id="核心优势"><a href="#核心优势" class="headerlink" title="核心优势"></a>核心优势</h3><ul>
+<li><strong>减少CPU开销</strong>：避免了每帧对所有属性进行脏检查的循环，特别适合属性数量多但变化频率低的场景（如大量AI角色、环境物体）。</li>
+<li><strong>精确控制</strong>：开发者可以更精细地控制何时触发复制，避免不必要的网络流量。</li>
+<li><strong>向后兼容</strong>：可以与传统的复制模式混合使用，逐步优化。</li>
+</ul>
+<h3 id="使用方法示例"><a href="#使用方法示例" class="headerlink" title="使用方法示例"></a>使用方法示例</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 在属性声明处启用 PushModel</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(ReplicatedUsing = OnRep_Health)</span><br><span class="line"><span class="type">float</span> Health;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在修改属性的地方显式标记</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TakeDamage</span><span class="params">(<span class="type">float</span> Amount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Health -= Amount;</span><br><span class="line">    <span class="built_in">MARK_PROPERTY_DIRTY</span>(UActorComponent, Health); <span class="comment">// 通知系统此属性已变化</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 确保在 GetLifetimeReplicatedProps 中正确设置</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">GetLifetimeReplicatedProps</span><span class="params">(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Super::<span class="built_in">GetLifetimeReplicatedProps</span>(OutLifetimeProps);</span><br><span class="line">    <span class="built_in">DOREPLIFETIME_WITH_PARAMS_FAST</span>(UActorComponent, Health); <span class="comment">// 使用 FAST 宏支持 PushModel</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><ul>
+<li><strong>大量相似对象</strong>：如MMO中的NPC、射击游戏中的弹丸。</li>
+<li><strong>低频更新属性</strong>：如角色的经验值、任务的进度、建筑物的耐久度。</li>
+<li><strong>性能敏感项目</strong>：需要最大限度减少网络和CPU开销的在线游戏。</li>
+</ul>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li><strong>需要手动管理</strong>：开发者必须记得在属性变化时调用标记函数，否则会导致复制失败。</li>
+<li><strong>不适合高频变化属性</strong>：对于每帧都变化的属性（如位置、旋转），传统模式可能更合适。</li>
+<li><strong>调试复杂度</strong>：如果忘记标记，网络问题可能更难排查。</li>
+</ul>
+<p>PushModel 是 Unreal Engine 4.25+ 引入的重要优化特性，特别适合大规模多人游戏或对象数量众多的场景，能够显著提升服务器的运行效率。</p>
+<h1 id="FastArray"><a href="#FastArray" class="headerlink" title="FastArray"></a>FastArray</h1><p><strong>FastArray</strong> 是 Unreal Engine 中专门为<strong>高效网络同步动态数组</strong>而设计的一套系统。它基于 <code>FFastArraySerializer</code>和 <code>FFastArraySerializerItem</code>这两个核心类，通过<strong>差分复制（Delta Replication）</strong> 机制，只同步发生变化的部分，从而显著减少网络带宽消耗和CPU开销。</p>
+<h3 id="核心设计原理"><a href="#核心设计原理" class="headerlink" title="核心设计原理"></a>核心设计原理</h3><p>FastArray 的“快速”体现在其<strong>增量同步</strong>策略上：</p>
+<ul>
+<li><strong>传统 TArray 复制</strong>：每次数组变化都可能需要序列化整个数组。</li>
+<li><strong>FastArray 复制</strong>：通过 <code>ReplicationID</code>和 <code>ReplicationKey</code>精确追踪每个元素的变化，只同步新增、修改或删除的元素。</li>
+</ul>
+<h3 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h3><ol>
+<li><p><strong>FFastArraySerializerItem</strong>（数组元素）</p>
+<ul>
+<li>每个数组元素必须继承此类。</li>
+<li>包含两个关键标识符：<ul>
+<li><code>ReplicationID</code>：元素的唯一标识（类似GUID）。</li>
+<li><code>ReplicationKey</code>：元素被修改的次数，用于检测变化。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>FFastArraySerializer</strong>（数组容器）</p>
+<ul>
+<li>管理整个数组的复制逻辑。</li>
+<li>维护 <code>IDCounter</code>（用于生成 ReplicationID）和 <code>ArrayReplicationKey</code>（数组整体修改次数）。</li>
+<li>提供 <code>MarkItemDirty()</code>和 <code>MarkArrayDirty()</code>等关键方法。</li>
+</ul>
+</li>
+</ol>
+<h3 id="基本使用流程"><a href="#基本使用流程" class="headerlink" title="基本使用流程"></a>基本使用流程</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 定义Item结构体</span></span><br><span class="line"><span class="built_in">USTRUCT</span>()</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FMyItem</span> : <span class="keyword">public</span> FFastArraySerializerItem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    FName ItemName;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    int32 Count;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 必须实现的回调函数</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">PreReplicatedRemove</span><span class="params">(<span class="type">const</span> FMyArray&amp; Serializer)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">PostReplicatedAdd</span><span class="params">(<span class="type">const</span> FMyArray&amp; Serializer)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">PostReplicatedChange</span><span class="params">(<span class="type">const</span> FMyArray&amp; Serializer)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 定义数组容器</span></span><br><span class="line"><span class="built_in">USTRUCT</span>()</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FMyArray</span> : <span class="keyword">public</span> FFastArraySerializer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    TArray&lt;FMyItem&gt; Items;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 添加元素</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">AddItem</span><span class="params">(<span class="type">const</span> FMyItem&amp; NewItem)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Items.<span class="built_in">Add</span>(NewItem);</span><br><span class="line">        <span class="built_in">MarkItemDirty</span>(Items.<span class="built_in">Last</span>()); <span class="comment">// 标记新增元素为“脏”</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 修改元素</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ModifyItem</span><span class="params">(int32 Index)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Items[Index].Count++;</span><br><span class="line">        <span class="built_in">MarkItemDirty</span>(Items[Index]); <span class="comment">// 标记修改元素为“脏”</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 删除元素</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">RemoveItem</span><span class="params">(int32 Index)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Items.<span class="built_in">RemoveAt</span>(Index);</span><br><span class="line">        <span class="built_in">MarkArrayDirty</span>(); <span class="comment">// 删除元素需要标记整个数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="网络复制流程"><a href="#网络复制流程" class="headerlink" title="网络复制流程"></a>网络复制流程</h3><ol>
+<li><strong>服务器端修改</strong>：调用 <code>MarkItemDirty()</code>或 <code>MarkArrayDirty()</code>标记变化。</li>
+<li><strong>差分序列化</strong>：网络系统比较当前状态与上次复制状态，只打包变化的部分。</li>
+<li><strong>客户端反序列化</strong>：接收差分数据，应用变化，触发相应的回调函数（<code>PostReplicatedAdd</code>、<code>PostReplicatedChange</code>、<code>PreReplicatedRemove</code>）。</li>
+</ol>
+<h3 id="主要特点与优势"><a href="#主要特点与优势" class="headerlink" title="主要特点与优势"></a>主要特点与优势</h3><ul>
+<li><strong>高效差分同步</strong>：只传输变化的数据，特别适合频繁更新的动态数组。</li>
+<li><strong>精确变化追踪</strong>：通过 ReplicationKey 机制准确识别元素级别的变化。</li>
+<li><strong>回调机制完善</strong>：提供三个关键回调函数，方便客户端响应变化。</li>
+<li><strong>广泛引擎应用</strong>：Unreal 的 Gameplay Ability System（GAS）中大量使用，如 <code>ActiveGameplayEffects</code>、<code>ActivatableAbilities</code>等。</li>
+</ul>
+<h3 id="重要注意事项"><a href="#重要注意事项" class="headerlink" title="重要注意事项"></a>重要注意事项</h3><ol>
+<li><strong>次序不保证</strong>：FastArray <strong>不保证</strong> 服务端和客户端数组元素的顺序一致。</li>
+<li><strong>手动标记</strong>：必须显式调用 <code>MarkItemDirty()</code>或 <code>MarkArrayDirty()</code>，否则变化不会同步。</li>
+<li><strong>回调仅客户端</strong>：<code>PostReplicatedAdd</code>等回调函数<strong>只在连接到服务器的客户端</strong>触发，服务器和单机模式不会调用。</li>
+<li><strong>适合场景</strong>：最适合元素数量多、变化频繁但每次变化比例小的数组（如背包物品、技能列表、状态效果等）。</li>
+</ol>
+<h3 id="实际应用场景"><a href="#实际应用场景" class="headerlink" title="实际应用场景"></a>实际应用场景</h3><ul>
+<li><strong>背包/库存系统</strong>：物品的添加、删除、数量变化。</li>
+<li><strong>技能/能力系统</strong>：GAS 中的 GameplayAbilitySpec 数组。</li>
+<li><strong>状态效果系统</strong>：ActiveGameplayEffects 的同步。</li>
+<li><strong>玩家列表/队伍管理</strong>：动态变化的玩家信息列表。</li>
+</ul>
+<p>FastArray 是 Unreal 网络同步中处理动态数组的<strong>标准解决方案</strong>，虽然需要更多的手动管理，但能带来显著的性能提升，特别适合大规模多人游戏中的高频数据同步需求。</p>
+<h1 id="FastArray和TArray的区别"><a href="#FastArray和TArray的区别" class="headerlink" title="FastArray和TArray的区别"></a>FastArray和TArray的区别</h1><p><strong>FastArray</strong>（特指 <code>FFastArraySerializer</code>）和 <strong>TArray</strong> 是 Unreal Engine 中两种用途和设计目标完全不同的数组容器。简单来说，<strong>TArray 是通用的内存容器，而 FastArray 是专为高效网络同步设计的网络容器</strong>。</p>
+<p>下面是它们的核心区别对比：</p>
+<h3 id="核心区别总览"><a href="#核心区别总览" class="headerlink" title="核心区别总览"></a>核心区别总览</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th><strong>TArray</strong></th>
+<th><strong>FastArray (FFastArraySerializer)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本质</strong></td>
+<td>通用的、标准的内存动态数组容器。</td>
+<td>专为<strong>网络复制（Replication）</strong> 优化的、支持<strong>差分同步</strong>的数组结构。</td>
+</tr>
+<tr>
+<td><strong>设计目标</strong></td>
+<td>提供高效的内存操作（添加、删除、访问）。</td>
+<td>提供高效的<strong>网络序列化与同步</strong>，最小化带宽和CPU开销。</td>
+</tr>
+<tr>
+<td><strong>复制方式</strong></td>
+<td><strong>全量复制</strong>。任何修改（即使只改一个元素）都可能导致整个数组被序列化并发送。</td>
+<td><strong>增量（差分）复制</strong>。只同步发生变化的部分（新增、修改、删除的元素）。</td>
+</tr>
+<tr>
+<td><strong>脏标记机制</strong></td>
+<td>无内置脏标记。依赖UE的属性复制系统自动检测整个数组的“脏”状态。</td>
+<td><strong>有</strong>。基于 <code>ReplicationKey</code>的脏标记系统，需手动调用 <code>MarkItemDirty()</code>或 <code>MarkArrayDirty()</code>来触发同步。</td>
+</tr>
+<tr>
+<td><strong>客户端回调</strong></td>
+<td>仅支持标准的 <code>RepNotify</code>（整个数组变化时触发一次）。</td>
+<td>提供<strong>精细的元素级回调</strong>：<code>PostReplicatedAdd</code>、<code>PostReplicatedChange</code>、<code>PreReplicatedRemove</code>。</td>
+</tr>
+<tr>
+<td><strong>顺序保证</strong></td>
+<td>保证服务端与客户端的元素顺序完全一致。</td>
+<td><strong>不保证</strong> 服务端与客户端的元素顺序一致。顺序可能因网络包延迟或重排而不同。</td>
+</tr>
+<tr>
+<td><strong>使用复杂度</strong></td>
+<td><strong>低</strong>。声明即可用，与普通编程中的数组无异。</td>
+<td><strong>高</strong>。需定义从 <code>FFastArraySerializerItem</code>派生的元素结构，并实现特定回调函数。</td>
+</tr>
+<tr>
+<td><strong>典型应用场景</strong></td>
+<td>存储纯本地数据、配置表、临时计算结果等<strong>不需要网络同步</strong>的列表。</td>
+<td>存储需要高效同步的<strong>游戏动态列表</strong>，如玩家的技能列表、激活的状态效果、背包物品等。</td>
+</tr>
+</tbody></table>
+<h3 id="详细对比分析"><a href="#详细对比分析" class="headerlink" title="详细对比分析"></a>详细对比分析</h3><h4 id="1-网络同步效率"><a href="#1-网络同步效率" class="headerlink" title="1. 网络同步效率"></a>1. <strong>网络同步效率</strong></h4><ul>
+<li><strong>TArray</strong>：每次数组有任何修改，网络系统在复制时默认会<strong>序列化整个数组</strong>并发送。如果一个数组有1000个元素，只修改了1个，也会发送1000个元素的数据。<strong>带宽消耗大</strong>。</li>
+<li><strong>FastArray</strong>：内部跟踪每个元素的 <code>ReplicationKey</code>。网络同步时，只打包 <code>ReplicationKey</code>发生变化的元素。修改1个元素就只发送1个元素的数据。<strong>带宽消耗小</strong>。</li>
+</ul>
+<h4 id="2-数据变化追踪"><a href="#2-数据变化追踪" class="headerlink" title="2. 数据变化追踪"></a>2. <strong>数据变化追踪</strong></h4><ul>
+<li><strong>TArray</strong>：依赖UE底层的属性脏标记系统。开发者无法精细控制“哪个元素变了”，系统只知道“这个数组属性变了”。</li>
+<li><strong>FastArray</strong>：要求开发者<strong>显式标记</strong>变化。修改元素内容后需调用 <code>MarkItemDirty(Item)</code>，增删元素后需调用 <code>MarkArrayDirty()</code>。这提供了精确的变化控制。</li>
+</ul>
+<h4 id="3-客户端响应"><a href="#3-客户端响应" class="headerlink" title="3. 客户端响应"></a>3. <strong>客户端响应</strong></h4><ul>
+<li><strong>TArray</strong>：只能在数组属性上设置一个 <code>RepNotify</code>函数，当整个数组的任何变化从服务器同步下来时触发一次。你无法直接知道是哪个元素变了、怎么变的。</li>
+<li><strong>FastArray</strong>：为每个元素提供了独立的回调函数。当客户端收到同步数据时，会精确调用对应元素的 <code>PostReplicatedAdd</code>（新增）、<code>PostReplicatedChange</code>（修改）或 <code>PreReplicatedRemove</code>（删除）。这让客户端能高效、精确地更新UI或游戏状态。</li>
+</ul>
+<h4 id="4-内存与性能开销"><a href="#4-内存与性能开销" class="headerlink" title="4. 内存与性能开销"></a>4. <strong>内存与性能开销</strong></h4><ul>
+<li><strong>TArray</strong>：内存布局紧凑，访问速度极快，是UE中最高效的通用容器之一。</li>
+<li><strong>FastArray</strong>：为了支持差分同步和元素追踪，每个元素需要额外的内存存储 <code>ReplicationID</code>和 <code>ReplicationKey</code>，容器本身也有额外状态。<strong>内存开销更大，访问速度略低于 TArray</strong>。</li>
+</ul>
+<h4 id="5-代码示例对比"><a href="#5-代码示例对比" class="headerlink" title="5. 代码示例对比"></a>5. <strong>代码示例对比</strong></h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// --- TArray 用法（简单但低效的网络同步）---</span></span><br><span class="line"><span class="built_in">UPROPERTY</span>(Replicated)</span><br><span class="line">TArray&lt;FMyData&gt; MyItems; <span class="comment">// 网络复制时，任何改动都可能同步整个数组</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// --- FastArray 用法（高效但复杂）---</span></span><br><span class="line"><span class="comment">// 1. 定义Item</span></span><br><span class="line"><span class="built_in">USTRUCT</span>()</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FMyFastItem</span> : <span class="keyword">public</span> FFastArraySerializerItem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    FMyData Data;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">PostReplicatedChange</span><span class="params">(<span class="type">const</span> FMyFastArray&amp; Serializer)</span> </span>&#123; <span class="comment">/* 响应变化 */</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 定义Array</span></span><br><span class="line"><span class="built_in">USTRUCT</span>()</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FMyFastArray</span> : <span class="keyword">public</span> FFastArraySerializer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">GENERATED_BODY</span>()</span><br><span class="line">    <span class="built_in">UPROPERTY</span>()</span><br><span class="line">    TArray&lt;FMyFastItem&gt; Items;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">AddItem</span><span class="params">(<span class="type">const</span> FMyData&amp; NewData)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        FMyFastItem&amp; NewItem = Items.<span class="built_in">AddDefaulted_GetRef</span>();</span><br><span class="line">        NewItem.Data = NewData;</span><br><span class="line">        <span class="built_in">MarkItemDirty</span>(NewItem); <span class="comment">// 必须手动标记！</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h3><ul>
+<li><strong>使用 TArray 当</strong>：数据不需要网络同步，或数组很小且变化不频繁，或你不想引入额外复杂性。</li>
+<li><strong>使用 FastArray 当</strong>：数据需要网络同步，且数组可能很大，或元素会频繁变化（尤其是部分变化），或你需要客户端对特定元素的变化做出精细响应。</li>
+</ul>
+<p><strong>在 Unreal 的 Gameplay Ability System (GAS) 中</strong>，所有需要网络同步的核心列表（如 <code>ActivatableAbilities</code>、<code>ActiveGameplayEffects</code>）都使用 FastArray，这正是因为GAS需要高效同步大量可变的能力和效果状态。</p>
+<p><strong>简单比喻</strong>：</p>
+<ul>
+<li><strong>TArray</strong> 像一份纸质名单，每次有人员变动（哪怕只改一个字），都需要重新打印整份名单发给所有人。</li>
+<li><strong>FastArray</strong> 像一份电子表格，系统只记录“谁变了、怎么变的”，然后把这些变动记录同步给大家，大家在自己的副本上应用这些改动即可。</li>
+</ul>
+<h1 id="PushModel-和FastArray的区别"><a href="#PushModel-和FastArray的区别" class="headerlink" title="PushModel 和FastArray的区别"></a>PushModel 和FastArray的区别</h1><p>PushModel 和 FastArray 是 Unreal Engine 中两个不同层面、用于优化网络复制的机制，它们的核心区别在于<strong>优化的对象和抽象的层次</strong>。</p>
+<p>简单来说：</p>
+<ul>
+<li><strong>PushModel 是一种优化策略</strong>，作用于<strong>单个可复制属性</strong>的更新通知机制。</li>
+<li><strong>FastArray 是一个专用容器</strong>，作用于<strong>整个动态数组</strong>的同步和数据管理。</li>
+</ul>
+<p>下面是详细的对比分析：</p>
+<h3 id="1-核心定位与解决的问题"><a href="#1-核心定位与解决的问题" class="headerlink" title="1. 核心定位与解决的问题"></a>1. 核心定位与解决的问题</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>PushModel</strong></th>
+<th><strong>FastArray</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本质</strong></td>
+<td>一种属性复制（Replication）的<strong>优化策略</strong>或<strong>模式</strong>。</td>
+<td>一个为网络同步设计的<strong>专用数据结构</strong>（<code>TArray</code>的替代品）。</td>
+</tr>
+<tr>
+<td><strong>解决的核心问题</strong></td>
+<td>避免服务器每帧轮询检查<strong>所有属性</strong>是否变化（“脏”检查）带来的CPU开销。</td>
+<td>避免在同步大型动态数组时，因微小改动就序列化和传输<strong>整个数组</strong>带来的带宽和CPU开销。</td>
+</tr>
+<tr>
+<td><strong>优化目标</strong></td>
+<td><strong>减少服务器端的CPU计算开销</strong>（减少不必要的检查）。</td>
+<td><strong>减少网络带宽占用和序列化开销</strong>（只发送增量变化）。</td>
+</tr>
+</tbody></table>
+<h3 id="2-工作原理与使用方式"><a href="#2-工作原理与使用方式" class="headerlink" title="2. 工作原理与使用方式"></a>2. 工作原理与使用方式</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>PushModel</strong></th>
+<th><strong>FastArray</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>工作原理</strong></td>
+<td>从“轮询检查”改为“事件驱动”。开发者需在属性值改变时，<strong>手动调用</strong> <code>MarkPropertyDirty()</code>来通知网络系统此属性需要复制。</td>
+<td>基于“差分复制”。容器内部跟踪每个元素（<code>FFastArraySerializerItem</code>）的<code>ReplicationKey</code>，在同步时只打包<strong>新增、修改或删除的元素</strong>。</td>
+</tr>
+<tr>
+<td><strong>数据结构</strong></td>
+<td>不引入新的数据结构，它是对现有 <code>UPROPERTY(Replicated)</code>属性的使用方式约束。</td>
+<td>引入了新的数据结构：必须从 <code>FFastArraySerializerItem</code>派生元素，从 <code>FFastArraySerializer</code>派生容器。</td>
+</tr>
+<tr>
+<td><strong>使用复杂度</strong></td>
+<td><strong>中</strong>。需要开发者改变习惯，记住在属性修改后手动标记，否则复制会失效。</td>
+<td><strong>高</strong>。需要定义新的结构体，实现特定的回调函数（如 <code>PostReplicatedAdd</code>），并理解其同步语义（如不保证顺序）。</td>
+</tr>
+</tbody></table>
+<h3 id="3-应用场景"><a href="#3-应用场景" class="headerlink" title="3. 应用场景"></a>3. 应用场景</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>PushModel</strong></th>
+<th><strong>FastArray</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>典型场景</strong></td>
+<td>适用于<strong>任何低频更新</strong>的可复制属性。例如：角色的金币数、任务状态、建筑的生命值。</td>
+<td>专为<strong>频繁变化</strong>的<strong>动态列表</strong>设计。例如：玩家的技能列表（<code>ActivatableAbilities</code>）、激活的效果列表（<code>ActiveGameplayEffects</code>）、背包物品栏。</td>
+</tr>
+<tr>
+<td><strong>在GAS中的体现</strong></td>
+<td>可以用于优化GAS中任何标量属性的同步，但文档未明确说明GAS核心组件是否强制使用。</td>
+<td><strong>GAS的核心组件重度依赖FastArray</strong>。例如 <code>AbilitySystemComponent</code>中的 <code>ActivatableAbilities</code>（存储GameplayAbilitySpec）和 <code>ActiveGameplayEffects</code>都是FastArray。</td>
+</tr>
+</tbody></table>
+<h3 id="4-网络行为"><a href="#4-网络行为" class="headerlink" title="4. 网络行为"></a>4. 网络行为</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>PushModel</strong></th>
+<th><strong>FastArray</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>同步粒度</strong></td>
+<td><strong>属性级</strong>。标记哪个属性，就同步哪个属性。</td>
+<td><strong>元素级</strong>。识别到哪个数组项（Item）变化（增、删、改），就同步哪个项。</td>
+</tr>
+<tr>
+<td><strong>客户端回调</strong></td>
+<td>无。依赖标准的 <code>RepNotify</code>函数（即 <code>ReplicatedUsing</code>指定的函数）。</td>
+<td><strong>有</strong>。提供 <code>PostReplicatedAdd</code>， <code>PostReplicatedChange</code>， <code>PreReplicatedRemove</code>三个精确的回调，方便客户端响应特定元素的变化。</td>
+</tr>
+</tbody></table>
+<h3 id="关系与协作"><a href="#关系与协作" class="headerlink" title="关系与协作"></a>关系与协作</h3><p>它们不是互斥的，而是可以<strong>协同工作</strong>：</p>
+<ul>
+<li>你可以在一个 <code>FFastArraySerializerItem</code>（FastArray的元素）内部，对其多个属性使用 <strong>PushModel</strong> 策略进行优化。</li>
+<li>例如，一个背包物品Item有“数量”、“耐久度”等属性。当数量变化时，FastArray负责将这个Item的“变化”同步到客户端；而在这个Item内部，如果使用了PushModel，则能优化服务器判断这些属性是否“变脏”的过程。</li>
+</ul>
+<h3 id="总结对比表"><a href="#总结对比表" class="headerlink" title="总结对比表"></a>总结对比表</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th><strong>PushModel</strong></th>
+<th><strong>FastArray</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>抽象层次</strong></td>
+<td>设计模式/优化策略</td>
+<td>数据结构/容器</td>
+</tr>
+<tr>
+<td><strong>作用对象</strong></td>
+<td>单个UProperty</td>
+<td>整个TArray</td>
+</tr>
+<tr>
+<td><strong>核心机制</strong></td>
+<td>手动标记脏属性（事件驱动）</td>
+<td>自动追踪元素变化（差分同步）</td>
+</tr>
+<tr>
+<td><strong>主要收益</strong></td>
+<td>节省服务器CPU（免轮询）</td>
+<td>节省网络带宽和序列化成本（免全量）</td>
+</tr>
+<tr>
+<td><strong>使用难度</strong></td>
+<td>中等（需记得标记）</td>
+<td>高（需理解整套机制）</td>
+</tr>
+<tr>
+<td><strong>典型用途</strong></td>
+<td>优化低频变化的属性</td>
+<td>同步高频变化的动态列表</td>
+</tr>
+</tbody></table>
+<p><strong>简单比喻</strong>：</p>
+<ul>
+<li><strong>PushModel</strong> 就像从“每天检查所有仓库的门锁（轮询）”改为“只有保安收到门被动的报告才去检查（事件驱动）”。</li>
+<li><strong>FastArray</strong> 就像同步一份员工花名册，不再每天重新打印全员名单，而是只打印“今天新入职、离职或信息有变动的员工”的条目。</li>
+</ul>
+<p>因此，选择使用哪一个取决于你要优化的具体问题：是想优化大量分散属性的检查开销（用PushModel），还是想优化一个庞大列表的同步效率（用FastArray）。在GAS这类列表数据密集的系统中，FastArray是基石；而在整个游戏项目的网络优化中，PushModel则是应被广泛采用的通用最佳实践。</p>
+<h1 id="FastArray会有脏标记吗"><a href="#FastArray会有脏标记吗" class="headerlink" title="FastArray会有脏标记吗"></a>FastArray会有脏标记吗</h1><p>是的，<strong>FastArray 有自己的一套脏标记（Dirty Marking）机制</strong>，这是其实现高效差分同步（Delta Replication）的核心。与 PushModel 优化通用属性不同，FastArray 的脏标记是专门为其数组结构设计的内部系统。</p>
+<p>其工作原理如下：</p>
+<h3 id="1-脏标记的核心：ReplicationKey"><a href="#1-脏标记的核心：ReplicationKey" class="headerlink" title="1. 脏标记的核心：ReplicationKey"></a>1. 脏标记的核心：<code>ReplicationKey</code></h3><p>FastArray 的脏标记不叫 “Dirty Flag”，而称为 **<code>ReplicationKey</code>**（复制键）。它有两个层级：</p>
+<ul>
+<li><strong>元素级 ReplicationKey</strong>：每个 <code>FFastArraySerializerItem</code>都有一个 <code>ReplicationKey</code>，用于追踪<strong>该元素</strong>自创建以来的修改次数。每次修改元素后，你需要调用 <code>MarkItemDirty()</code>，这个函数内部会增加该元素的 <code>ReplicationKey</code>。</li>
+<li><strong>数组级 ReplicationKey</strong>：<code>FFastArraySerializer</code>容器本身有一个 <code>ArrayReplicationKey</code>，用于追踪<strong>整个数组结构</strong>的变化（主要指元素的增加或删除）。当数组结构改变时，你需要调用 <code>MarkArrayDirty()</code>来增加 <code>ArrayReplicationKey</code>。</li>
+</ul>
+<h3 id="2-脏标记如何驱动同步"><a href="#2-脏标记如何驱动同步" class="headerlink" title="2. 脏标记如何驱动同步"></a>2. 脏标记如何驱动同步</h3><p>服务器在准备复制数据时，会比较当前状态与上一次成功复制时的状态：</p>
+<ol>
+<li>**比较 <code>ArrayReplicationKey</code>**：如果不一致，说明数组结构（元素数量、顺序）有变，需要同步全量的结构信息。</li>
+<li>**逐个比较元素的 <code>ReplicationKey</code>**：将每个元素的当前 <code>ReplicationKey</code>与上次复制时记录的 <code>ReplicationKey</code>对比。如果某个元素的键值增加了，说明该元素内容有更新，需要将这个元素的数据打包进网络包。</li>
+</ol>
+<h3 id="3-必须“手动”标记"><a href="#3-必须“手动”标记" class="headerlink" title="3. 必须“手动”标记"></a>3. 必须“手动”标记</h3><p>和 PushModel 类似，FastArray <strong>要求开发者显式调用标记函数</strong>来通知系统哪些地方发生了变化。这是与普通 <code>TArray</code>自动复制最根本的区别。</p>
+<ul>
+<li><strong>修改元素内容后</strong>：必须调用 <code>MarkItemDirty(Item)</code>。</li>
+<li><strong>添加或删除元素后</strong>：必须调用 <code>MarkArrayDirty()</code>。</li>
+</ul>
+<h3 id="与-PushModel-的“脏标记”对比"><a href="#与-PushModel-的“脏标记”对比" class="headerlink" title="与 PushModel 的“脏标记”对比"></a>与 PushModel 的“脏标记”对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>FastArray 的脏标记 (ReplicationKey)</strong></th>
+<th><strong>PushModel 的脏标记</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>作用对象</strong></td>
+<td>数组中的<strong>元素</strong>（<code>FFastArraySerializerItem</code>）</td>
+<td>普通的<strong>属性</strong>（<code>UPROPERTY</code>）</td>
+</tr>
+<tr>
+<td><strong>标记方式</strong></td>
+<td>调用容器的 <code>MarkItemDirty()</code>或 <code>MarkArrayDirty()</code>方法。</td>
+<td>调用 <code>MARK_PROPERTY_DIRTY()</code>宏或 <code>MarkPropertyDirty()</code>函数。</td>
+</tr>
+<tr>
+<td><strong>标记目标</strong></td>
+<td>标记的是<strong>具体的某个数组项</strong>或<strong>整个数组结构</strong>。</td>
+<td>标记的是<strong>某个对象实例的某个属性</strong>。</td>
+</tr>
+<tr>
+<td><strong>优化目标</strong></td>
+<td>实现数组的<strong>差分同步</strong>，只同步变化的元素，节省带宽。</td>
+<td>避免对<strong>所有属性</strong>的轮询检查，节省CPU。</td>
+</tr>
+</tbody></table>
+<p><strong>简单总结</strong>：FastArray 不仅“有”脏标记，而且这套标记机制（基于 <code>ReplicationKey</code>）是其实现高效、精确的差分网络同步的基石。它要求开发者在修改数组或元素后手动触发标记，以此驱动网络系统只打包和发送变化的部分数据。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/638876315">UE5 FastArray同步原理 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1934717850632823338">UE5 GAS - 以Lyra为例 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/628107927">UE网络-PushModel详解 - 知乎</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/14/0092-UeFastArray/">http://example.com/2026/04/14/0092-UeFastArray/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Unlua 绑定</div></div></a></div><div class="next-post pull-right"><a href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ue DS的思考</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="title">Unlua 绑定</div></div></a></div><div><a href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-14</div><div class="title">ue DS的思考</div></div></a></div><div><a href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-10</div><div class="title">ue Q&amp;A</div></div></a></div><div><a href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-09</div><div class="title">ue智能指针</div></div></a></div><div><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">ue Lyra 动画系统(持续更新)</div></div></a></div><div><a href="/2025/11/20/0086-UeSlateBase/" title="ue Slate底层源码(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-20</div><div class="title">ue Slate底层源码(持续更新)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PushModel"><span class="toc-number">2.</span> <span class="toc-text">PushModel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E5%A4%8D%E5%88%B6%E6%A8%A1%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.0.1.</span> <span class="toc-text">传统复制模式的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PushModel-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">2.0.2.</span> <span class="toc-text">PushModel 的工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF"><span class="toc-number">2.0.3.</span> <span class="toc-text">核心优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.0.4.</span> <span class="toc-text">使用方法示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.0.5.</span> <span class="toc-text">适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">2.0.6.</span> <span class="toc-text">注意事项</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FastArray"><span class="toc-number">3.</span> <span class="toc-text">FastArray</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86"><span class="toc-number">3.0.1.</span> <span class="toc-text">核心设计原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%BB%84%E4%BB%B6"><span class="toc-number">3.0.2.</span> <span class="toc-text">关键组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">3.0.3.</span> <span class="toc-text">基本使用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%A4%8D%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">3.0.4.</span> <span class="toc-text">网络复制流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="toc-number">3.0.5.</span> <span class="toc-text">主要特点与优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.0.6.</span> <span class="toc-text">重要注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.0.7.</span> <span class="toc-text">实际应用场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FastArray%E5%92%8CTArray%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">FastArray和TArray的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%E6%80%BB%E8%A7%88"><span class="toc-number">4.0.1.</span> <span class="toc-text">核心区别总览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90"><span class="toc-number">4.0.2.</span> <span class="toc-text">详细对比分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5%E6%95%88%E7%8E%87"><span class="toc-number">4.0.2.1.</span> <span class="toc-text">1. 网络同步效率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%95%B0%E6%8D%AE%E5%8F%98%E5%8C%96%E8%BF%BD%E8%B8%AA"><span class="toc-number">4.0.2.2.</span> <span class="toc-text">2. 数据变化追踪</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%93%8D%E5%BA%94"><span class="toc-number">4.0.2.3.</span> <span class="toc-text">3. 客户端响应</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%86%85%E5%AD%98%E4%B8%8E%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80"><span class="toc-number">4.0.2.4.</span> <span class="toc-text">4. 内存与性能开销</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%E5%AF%B9%E6%AF%94"><span class="toc-number">4.0.2.5.</span> <span class="toc-text">5. 代码示例对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">4.0.3.</span> <span class="toc-text">使用建议</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PushModel-%E5%92%8CFastArray%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">PushModel 和FastArray的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A0%B8%E5%BF%83%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">5.0.1.</span> <span class="toc-text">1. 核心定位与解决的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">5.0.2.</span> <span class="toc-text">2. 工作原理与使用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">5.0.3.</span> <span class="toc-text">3. 应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BD%91%E7%BB%9C%E8%A1%8C%E4%B8%BA"><span class="toc-number">5.0.4.</span> <span class="toc-text">4. 网络行为</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%8D%8F%E4%BD%9C"><span class="toc-number">5.0.5.</span> <span class="toc-text">关系与协作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-number">5.0.6.</span> <span class="toc-text">总结对比表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FastArray%E4%BC%9A%E6%9C%89%E8%84%8F%E6%A0%87%E8%AE%B0%E5%90%97"><span class="toc-number">6.</span> <span class="toc-text">FastArray会有脏标记吗</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%84%8F%E6%A0%87%E8%AE%B0%E7%9A%84%E6%A0%B8%E5%BF%83%EF%BC%9AReplicationKey"><span class="toc-number">6.0.1.</span> <span class="toc-text">1. 脏标记的核心：ReplicationKey</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%84%8F%E6%A0%87%E8%AE%B0%E5%A6%82%E4%BD%95%E9%A9%B1%E5%8A%A8%E5%90%8C%E6%AD%A5"><span class="toc-number">6.0.2.</span> <span class="toc-text">2. 脏标记如何驱动同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BF%85%E9%A1%BB%E2%80%9C%E6%89%8B%E5%8A%A8%E2%80%9D%E6%A0%87%E8%AE%B0"><span class="toc-number">6.0.3.</span> <span class="toc-text">3. 必须“手动”标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-PushModel-%E7%9A%84%E2%80%9C%E8%84%8F%E6%A0%87%E8%AE%B0%E2%80%9D%E5%AF%B9%E6%AF%94"><span class="toc-number">6.0.4.</span> <span class="toc-text">与 PushModel 的“脏标记”对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unlua 绑定"/></a><div class="content"><a class="title" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定">Unlua 绑定</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 浅谈网络容器"/></a><div class="content"><a class="title" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器">ue 浅谈网络容器</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue DS的思考"/></a><div class="content"><a class="title" href="/2026/04/14/0091-UeDS/" title="ue DS的思考">ue DS的思考</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Q&amp;A"/></a><div class="content"><a class="title" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A">ue Q&amp;A</a><time datetime="2026-04-09T16:00:00.000Z" title="发表于 2026-04-10 00:00:00">2026-04-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue智能指针"/></a><div class="content"><a class="title" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针">ue智能指针</a><time datetime="2026-04-08T16:00:00.000Z" title="发表于 2026-04-09 00:00:00">2026-04-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

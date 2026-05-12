@@ -1,0 +1,673 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>无题 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="可以，我直接按一线UE客户端面试（偏底层&#x2F;架构）强度来问你。不会问表面API，而是看你是否理解引擎运行机制。 你同样可以一题一题答，我会逐步追问。  第一组：UE核心架构（必问）1️⃣ Actor 生命周期（高频必杀题）你讲清楚一个 Actor 从创建到销毁的完整流程：  构造函数什么时候调用？（和Spawn的关系） PostInitProperties &#x2F; PostInitializeCompo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无题">
+<meta property="og:url" content="http://example.com/2021/01/01/QA/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="可以，我直接按一线UE客户端面试（偏底层&#x2F;架构）强度来问你。不会问表面API，而是看你是否理解引擎运行机制。 你同样可以一题一题答，我会逐步追问。  第一组：UE核心架构（必问）1️⃣ Actor 生命周期（高频必杀题）你讲清楚一个 Actor 从创建到销毁的完整流程：  构造函数什么时候调用？（和Spawn的关系） PostInitProperties &#x2F; PostInitializeCompo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2020-12-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-12T06:57:52.359Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="待填坑">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2021/01/01/QA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '无题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-12 14:57:52'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-31T16:00:00.000Z" title="发表于 2021-01-01 00:00:00">2021-01-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-12T06:57:52.359Z" title="更新于 2026-05-12 14:57:52">2026-05-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%85%E5%A1%AB%E5%9D%91/">待填坑</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="无题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>可以，我直接按<strong>一线UE客户端面试（偏底层/架构）强度</strong>来问你。不会问表面API，而是看你是否理解引擎运行机制。</p>
+<p>你同样可以一题一题答，我会逐步追问。</p>
+<hr>
+<h1 id="第一组：UE核心架构（必问）"><a href="#第一组：UE核心架构（必问）" class="headerlink" title="第一组：UE核心架构（必问）"></a>第一组：UE核心架构（必问）</h1><h2 id="1️⃣-Actor-生命周期（高频必杀题）"><a href="#1️⃣-Actor-生命周期（高频必杀题）" class="headerlink" title="1️⃣ Actor 生命周期（高频必杀题）"></a>1️⃣ Actor 生命周期（高频必杀题）</h2><p>你讲清楚一个 Actor 从创建到销毁的完整流程：</p>
+<ul>
+<li>构造函数什么时候调用？（和Spawn的关系）</li>
+<li><code>PostInitProperties</code> / <code>PostInitializeComponents</code> / <code>BeginPlay</code> 区别？</li>
+<li><code>Tick</code> 是怎么被调度的？</li>
+<li><code>Destroy</code> 之后会立刻销毁吗？</li>
+</ul>
+<p>👉 面试官想听的是：<strong>调用顺序 + 引擎机制，不是函数名罗列</strong></p>
+<hr>
+<h2 id="2️⃣-UObject-vs-Actor（本质区别）"><a href="#2️⃣-UObject-vs-Actor（本质区别）" class="headerlink" title="2️⃣ UObject vs Actor（本质区别）"></a>2️⃣ UObject vs Actor（本质区别）</h2><ul>
+<li>UObject 为什么不能直接放到世界里？</li>
+<li>Actor 比 UObject 多了什么能力？</li>
+<li>Component 为什么必须挂在 Actor 上？</li>
+</ul>
+<p>👉 如果你答成“一个是基础类一个是实体类”，基本不过</p>
+<hr>
+<h2 id="3️⃣-反射系统（UE最核心之一）"><a href="#3️⃣-反射系统（UE最核心之一）" class="headerlink" title="3️⃣ 反射系统（UE最核心之一）"></a>3️⃣ 反射系统（UE最核心之一）</h2><p>讲一下 UE 反射系统：</p>
+<ul>
+<li><code>UCLASS / UPROPERTY / UFUNCTION</code> 本质做了什么？</li>
+<li><code>.generated.h</code> 是怎么来的？</li>
+<li>反射数据在运行时存在哪里？</li>
+</ul>
+<p>👉 这一题直接区分“会用UE”和“懂UE”</p>
+<hr>
+<h1 id="第二组：组件与模块化（中级）"><a href="#第二组：组件与模块化（中级）" class="headerlink" title="第二组：组件与模块化（中级）"></a>第二组：组件与模块化（中级）</h1><h2 id="4️⃣-ActorComponent-机制"><a href="#4️⃣-ActorComponent-机制" class="headerlink" title="4️⃣ ActorComponent 机制"></a>4️⃣ ActorComponent 机制</h2><ul>
+<li>Component 是怎么被注册的？</li>
+<li><code>RegisterComponent()</code> 做了什么？</li>
+<li>TickComponent 是怎么进入调度的？</li>
+</ul>
+<hr>
+<h2 id="5️⃣-Subsystem（UE5常问）"><a href="#5️⃣-Subsystem（UE5常问）" class="headerlink" title="5️⃣ Subsystem（UE5常问）"></a>5️⃣ Subsystem（UE5常问）</h2><ul>
+<li>GameInstanceSubsystem / WorldSubsystem 区别？</li>
+<li>生命周期分别是什么？</li>
+<li>为什么不用单例而用 Subsystem？</li>
+</ul>
+<hr>
+<h1 id="第三组：内存与GC（高频深水区）"><a href="#第三组：内存与GC（高频深水区）" class="headerlink" title="第三组：内存与GC（高频深水区）"></a>第三组：内存与GC（高频深水区）</h1><h2 id="6️⃣-UE-的-GC-机制"><a href="#6️⃣-UE-的-GC-机制" class="headerlink" title="6️⃣ UE 的 GC 机制"></a>6️⃣ UE 的 GC 机制</h2><ul>
+<li>UE 是怎么做垃圾回收的？（引用计数吗？）</li>
+<li><code>UPROPERTY</code> 为什么重要？</li>
+<li>什么情况下对象会被回收？</li>
+</ul>
+<p>👉 这一题很多人会死在“说成引用计数”</p>
+<hr>
+<h2 id="7️⃣-智能指针-vs-UObject"><a href="#7️⃣-智能指针-vs-UObject" class="headerlink" title="7️⃣ 智能指针 vs UObject"></a>7️⃣ 智能指针 vs UObject</h2><ul>
+<li><code>TSharedPtr</code> 和 UObject 能一起用吗？</li>
+<li>为什么 UObject 不用 shared_ptr？</li>
+</ul>
+<hr>
+<h1 id="第四组：Tick与性能（实战向）"><a href="#第四组：Tick与性能（实战向）" class="headerlink" title="第四组：Tick与性能（实战向）"></a>第四组：Tick与性能（实战向）</h1><h2 id="8️⃣-Tick-系统"><a href="#8️⃣-Tick-系统" class="headerlink" title="8️⃣ Tick 系统"></a>8️⃣ Tick 系统</h2><ul>
+<li>Tick 是怎么调度的？</li>
+<li>Tick Group 是干嘛的？</li>
+<li>怎么减少 Tick 开销？</li>
+</ul>
+<hr>
+<h2 id="9️⃣-多线程（加分题）"><a href="#9️⃣-多线程（加分题）" class="headerlink" title="9️⃣ 多线程（加分题）"></a>9️⃣ 多线程（加分题）</h2><ul>
+<li>UE 主线程做什么？</li>
+<li>渲染线程是什么？</li>
+<li>Gameplay 能不能多线程？</li>
+</ul>
+<hr>
+<h1 id="第五组：进阶（拉开差距）"><a href="#第五组：进阶（拉开差距）" class="headerlink" title="第五组：进阶（拉开差距）"></a>第五组：进阶（拉开差距）</h1><h2 id="🔟-模块系统（Module）"><a href="#🔟-模块系统（Module）" class="headerlink" title="🔟 模块系统（Module）"></a>🔟 模块系统（Module）</h2><ul>
+<li>UE 模块是怎么加载的？</li>
+<li><code>IMPLEMENT_MODULE</code> 做了什么？</li>
+<li>游戏启动流程大致是什么？</li>
+</ul>
+<hr>
+<h1 id="回答建议"><a href="#回答建议" class="headerlink" title="回答建议"></a>回答建议</h1><p>你可以这样来：</p>
+<p>👉 直接说：<strong>“我答第1题”</strong><br>我会根据你回答继续往深里追（比如直接问源码级细节）</p>
+<hr>
+<h1 id="提醒你一个现实情况"><a href="#提醒你一个现实情况" class="headerlink" title="提醒你一个现实情况"></a>提醒你一个现实情况</h1><p>如果你目标是“一线游戏公司”：</p>
+<ul>
+<li>能答到 <strong>第3组（GC）</strong> → 中级稳</li>
+<li>能答到 <strong>第4组（Tick + 性能）</strong> → 中高级</li>
+<li>能答第5组 → 面试官会认真考虑你</li>
+</ul>
+<hr>
+<p>开始吧：<br>👉 <strong>先答第1题：Actor 生命周期</strong></p>
+<p>好，这块我会按<strong>“UE客户端 + 脚本层架构”面试强度</strong>来问，重点不是Lua语法，而是：</p>
+<p>👉 <strong>UnLua 如何嵌入 UE、如何做工程化、以及你是否真的在项目中用过</strong></p>
+<p>你可以一题一题答，我会继续深挖。</p>
+<hr>
+<h1 id="第一组：UnLua-基础原理（必问）"><a href="#第一组：UnLua-基础原理（必问）" class="headerlink" title="第一组：UnLua 基础原理（必问）"></a>第一组：UnLua 基础原理（必问）</h1><h2 id="1️⃣-UnLua-是怎么工作的？"><a href="#1️⃣-UnLua-是怎么工作的？" class="headerlink" title="1️⃣ UnLua 是怎么工作的？"></a>1️⃣ UnLua 是怎么工作的？</h2><p>你讲清楚：</p>
+<ul>
+<li>UnLua 是怎么把 Lua 绑定到 UE 的？</li>
+<li>C++ 类是怎么暴露给 Lua 的？</li>
+<li>Lua 是怎么调用 UObject / Actor 方法的？</li>
+</ul>
+<p>👉 至少要提到：反射 / 绑定 / 虚拟机交互</p>
+<hr>
+<h2 id="2️⃣-Lua-文件是怎么驱动-Actor-的？"><a href="#2️⃣-Lua-文件是怎么驱动-Actor-的？" class="headerlink" title="2️⃣ Lua 文件是怎么驱动 Actor 的？"></a>2️⃣ Lua 文件是怎么驱动 Actor 的？</h2><p>比如你有一个 Actor：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UCLASS</span>()</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AMyActor</span> : <span class="keyword">public</span> AActor</span><br></pre></td></tr></table></figure>
+
+<p>你用 UnLua：</p>
+<ul>
+<li>Lua 是怎么“接管”这个 Actor 的？</li>
+<li>生命周期函数（BeginPlay / Tick）是怎么映射的？</li>
+</ul>
+<p>👉 不要只说“写同名函数”，要说机制</p>
+<hr>
+<h1 id="第二组：架构设计（中级分水岭）"><a href="#第二组：架构设计（中级分水岭）" class="headerlink" title="第二组：架构设计（中级分水岭）"></a>第二组：架构设计（中级分水岭）</h1><h2 id="3️⃣-为什么用-UnLua，而不是全-C-？"><a href="#3️⃣-为什么用-UnLua，而不是全-C-？" class="headerlink" title="3️⃣ 为什么用 UnLua，而不是全 C++？"></a>3️⃣ 为什么用 UnLua，而不是全 C++？</h2><p>你需要讲清楚：</p>
+<ul>
+<li>优点（至少3点）</li>
+<li>缺点（至少2点）</li>
+<li>适合放 Lua 的模块有哪些？</li>
+</ul>
+<p>👉 这一题考的是“工程判断力”</p>
+<hr>
+<h2 id="4️⃣-C-和-Lua-怎么分层？"><a href="#4️⃣-C-和-Lua-怎么分层？" class="headerlink" title="4️⃣ C++ 和 Lua 怎么分层？"></a>4️⃣ C++ 和 Lua 怎么分层？</h2><p>假设一个项目：</p>
+<ul>
+<li>战斗系统</li>
+<li>UI系统</li>
+<li>技能逻辑</li>
+</ul>
+<p>你会怎么拆？</p>
+<p>👉 如果你回答“UI用Lua，底层用C++”，这是初级答案<br>👉 我要听的是：<strong>边界 + 原则</strong></p>
+<hr>
+<h1 id="第三组：性能与坑（高频）"><a href="#第三组：性能与坑（高频）" class="headerlink" title="第三组：性能与坑（高频）"></a>第三组：性能与坑（高频）</h1><h2 id="5️⃣-UnLua-性能问题"><a href="#5️⃣-UnLua-性能问题" class="headerlink" title="5️⃣ UnLua 性能问题"></a>5️⃣ UnLua 性能问题</h2><ul>
+<li>Lua 调用 C++ 开销大吗？</li>
+<li>哪些地方会成为瓶颈？</li>
+<li>如何优化？</li>
+</ul>
+<p>👉 能说到“减少跨语言调用”才算入门</p>
+<hr>
+<h2 id="6️⃣-GC-与内存管理"><a href="#6️⃣-GC-与内存管理" class="headerlink" title="6️⃣ GC 与内存管理"></a>6️⃣ GC 与内存管理</h2><ul>
+<li>Lua 有 GC，UE 也有 GC → 会冲突吗？</li>
+<li>UObject 在 Lua 里怎么保证不被回收？</li>
+<li>有没有遇到野指针 / dangling 的问题？</li>
+</ul>
+<p>👉 这题非常关键（很多人不会）</p>
+<hr>
+<h1 id="第四组：进阶（拉开差距）"><a href="#第四组：进阶（拉开差距）" class="headerlink" title="第四组：进阶（拉开差距）"></a>第四组：进阶（拉开差距）</h1><h2 id="7️⃣-热更新（Hotfix）"><a href="#7️⃣-热更新（Hotfix）" class="headerlink" title="7️⃣ 热更新（Hotfix）"></a>7️⃣ 热更新（Hotfix）</h2><ul>
+<li>UnLua 能不能热更新？</li>
+<li>怎么做？</li>
+<li>有什么限制？</li>
+</ul>
+<hr>
+<h2 id="8️⃣-生命周期问题（真实项目坑）"><a href="#8️⃣-生命周期问题（真实项目坑）" class="headerlink" title="8️⃣ 生命周期问题（真实项目坑）"></a>8️⃣ 生命周期问题（真实项目坑）</h2><p>比如：</p>
+<ul>
+<li>Actor 被销毁了，但 Lua 还持有引用怎么办？</li>
+<li>World 切换时 Lua 状态怎么处理？</li>
+</ul>
+<p>👉 能答这题，基本就是“用过项目”的人</p>
+<hr>
+<h1 id="第五组：深水区（高阶）"><a href="#第五组：深水区（高阶）" class="headerlink" title="第五组：深水区（高阶）"></a>第五组：深水区（高阶）</h1><h2 id="9️⃣-你了解-UnLua-的绑定方式吗？"><a href="#9️⃣-你了解-UnLua-的绑定方式吗？" class="headerlink" title="9️⃣ 你了解 UnLua 的绑定方式吗？"></a>9️⃣ 你了解 UnLua 的绑定方式吗？</h2><ul>
+<li>是静态绑定还是动态绑定？</li>
+<li>有没有用到模板 / 宏生成？</li>
+<li>和 tolua++ / slua 的区别？</li>
+</ul>
+<hr>
+<h1 id="回答建议-1"><a href="#回答建议-1" class="headerlink" title="回答建议"></a>回答建议</h1><p>👉 从第1题开始答（UnLua原理）<br>我会像面试官一样：</p>
+<ul>
+<li>追问你源码层细节</li>
+<li>帮你补成“中高级答案”</li>
+<li>告诉你这题能不能过一线</li>
+</ul>
+<hr>
+<h1 id="提醒你一个关键点"><a href="#提醒你一个关键点" class="headerlink" title="提醒你一个关键点"></a>提醒你一个关键点</h1><p>很多人写了：</p>
+<blockquote>
+<p>“熟悉UnLua”</p>
+</blockquote>
+<p>但实际上只能回答：</p>
+<ul>
+<li>写Lua脚本</li>
+<li>调UE接口</li>
+</ul>
+<p>👉 这种在一线面试里是<strong>直接挂的</strong></p>
+<hr>
+<p>开始吧：<br>👉 <strong>先答第1题：UnLua 是怎么工作的？</strong></p>
+<p>很好，这一块是<strong>UE面试里最容易拉开差距的部分（DS + 网络）</strong>。我会按<strong>“能否做多人项目核心逻辑”</strong>的标准来问。</p>
+<p>你可以逐题回答，我会继续深挖你的薄弱点。</p>
+<hr>
+<h1 id="第一组：UE网络基础（必杀）"><a href="#第一组：UE网络基础（必杀）" class="headerlink" title="第一组：UE网络基础（必杀）"></a>第一组：UE网络基础（必杀）</h1><h2 id="1️⃣-UE-网络模型（必须讲清）"><a href="#1️⃣-UE-网络模型（必须讲清）" class="headerlink" title="1️⃣ UE 网络模型（必须讲清）"></a>1️⃣ UE 网络模型（必须讲清）</h2><p>你说一下 UE 是什么网络模型：</p>
+<ul>
+<li>是 Client-Server 还是 P2P？</li>
+<li>Server 是权威的吗？</li>
+<li>Client 能不能修改状态？</li>
+</ul>
+<p>👉 如果你没提到 <strong>Authority / AutonomousProxy / SimulatedProxy</strong>，这一题算没答好</p>
+<hr>
+<h2 id="2️⃣-Actor-同步机制"><a href="#2️⃣-Actor-同步机制" class="headerlink" title="2️⃣ Actor 同步机制"></a>2️⃣ Actor 同步机制</h2><p>一个 Actor 在网络中是怎么同步的：</p>
+<ul>
+<li>什么是 Replication？</li>
+<li><code>bReplicates</code> 开了之后发生了什么？</li>
+<li>属性同步（UPROPERTY Replicated）是怎么走的？</li>
+</ul>
+<p>👉 面试官要听：<strong>引擎在背后做了什么</strong></p>
+<hr>
+<h2 id="3️⃣-RPC-机制"><a href="#3️⃣-RPC-机制" class="headerlink" title="3️⃣ RPC 机制"></a>3️⃣ RPC 机制</h2><ul>
+<li>Server / Client / NetMulticast 区别？</li>
+<li>RPC 是立即执行的吗？</li>
+<li>Reliable vs Unreliable 怎么选？</li>
+</ul>
+<p>👉 很多人会答成“Server就是服务器调用”，这是不够的</p>
+<hr>
+<h1 id="第二组：移动同步（中级分水岭）"><a href="#第二组：移动同步（中级分水岭）" class="headerlink" title="第二组：移动同步（中级分水岭）"></a>第二组：移动同步（中级分水岭）</h1><h2 id="4️⃣-角色移动同步（CharacterMovement）"><a href="#4️⃣-角色移动同步（CharacterMovement）" class="headerlink" title="4️⃣ 角色移动同步（CharacterMovement）"></a>4️⃣ 角色移动同步（CharacterMovement）</h2><p>这是超高频题：</p>
+<ul>
+<li>为什么 Character 移动看起来很流畅？</li>
+<li>Client Prediction 是怎么做的？</li>
+<li>Server Correction 怎么处理？</li>
+</ul>
+<p>👉 至少要讲：</p>
+<ul>
+<li>输入上报</li>
+<li>服务端重算</li>
+<li>回滚 / 修正</li>
+</ul>
+<hr>
+<h2 id="5️⃣-延迟与抖动处理"><a href="#5️⃣-延迟与抖动处理" class="headerlink" title="5️⃣ 延迟与抖动处理"></a>5️⃣ 延迟与抖动处理</h2><ul>
+<li>网络延迟会带来什么问题？</li>
+<li>怎么减少“卡顿感”？</li>
+<li>插值（Interpolation）和预测的区别？</li>
+</ul>
+<hr>
+<h1 id="第三组：技能同步（GAS-战斗系统核心）"><a href="#第三组：技能同步（GAS-战斗系统核心）" class="headerlink" title="第三组：技能同步（GAS/战斗系统核心）"></a>第三组：技能同步（GAS/战斗系统核心）</h1><h2 id="6️⃣-技能同步怎么做？"><a href="#6️⃣-技能同步怎么做？" class="headerlink" title="6️⃣ 技能同步怎么做？"></a>6️⃣ 技能同步怎么做？</h2><p>假设你用 GAS 或自己实现：</p>
+<ul>
+<li>技能是在 Client 触发还是 Server？</li>
+<li>如何防作弊？</li>
+<li>如何保证表现流畅？</li>
+</ul>
+<p>👉 这是你简历里的重点（GAS + 网络）</p>
+<hr>
+<h2 id="7️⃣-命中判定（Hit-Detection）"><a href="#7️⃣-命中判定（Hit-Detection）" class="headerlink" title="7️⃣ 命中判定（Hit Detection）"></a>7️⃣ 命中判定（Hit Detection）</h2><ul>
+<li>是客户端判定还是服务端判定？</li>
+<li>延迟情况下怎么保证公平？</li>
+</ul>
+<p>👉 能说到：</p>
+<ul>
+<li>Server Rewind / Lag Compensation → 加分</li>
+</ul>
+<hr>
+<h1 id="第四组：带宽与优化（中高级）"><a href="#第四组：带宽与优化（中高级）" class="headerlink" title="第四组：带宽与优化（中高级）"></a>第四组：带宽与优化（中高级）</h1><h2 id="8️⃣-网络性能优化"><a href="#8️⃣-网络性能优化" class="headerlink" title="8️⃣ 网络性能优化"></a>8️⃣ 网络性能优化</h2><p>如果有 100 个玩家：</p>
+<ul>
+<li>会有哪些瓶颈？</li>
+<li>怎么减少带宽？</li>
+</ul>
+<p>👉 至少要提到：</p>
+<ul>
+<li>NetCullDistance</li>
+<li>relevancy</li>
+<li>dormancy</li>
+</ul>
+<hr>
+<h2 id="9️⃣-属性同步优化"><a href="#9️⃣-属性同步优化" class="headerlink" title="9️⃣ 属性同步优化"></a>9️⃣ 属性同步优化</h2><ul>
+<li>所有变量都 Replicate 吗？</li>
+<li>如何减少同步频率？</li>
+</ul>
+<hr>
+<h1 id="第五组：DS（Dedicated-Server）"><a href="#第五组：DS（Dedicated-Server）" class="headerlink" title="第五组：DS（Dedicated Server）"></a>第五组：DS（Dedicated Server）</h1><h2 id="🔟-DS-架构理解"><a href="#🔟-DS-架构理解" class="headerlink" title="🔟 DS 架构理解"></a>🔟 DS 架构理解</h2><ul>
+<li>DS 和 Listen Server 区别？</li>
+<li>为什么生产环境用 DS？</li>
+<li>DS 不需要哪些东西？（很关键）</li>
+</ul>
+<hr>
+<h2 id="11️⃣-无头服务器优化"><a href="#11️⃣-无头服务器优化" class="headerlink" title="11️⃣ 无头服务器优化"></a>11️⃣ 无头服务器优化</h2><ul>
+<li>DS 上怎么做性能优化？</li>
+<li>是否需要动画 / 渲染？</li>
+</ul>
+<hr>
+<h1 id="第六组：进阶（拉开差距）"><a href="#第六组：进阶（拉开差距）" class="headerlink" title="第六组：进阶（拉开差距）"></a>第六组：进阶（拉开差距）</h1><h2 id="12️⃣-网络架构设计题"><a href="#12️⃣-网络架构设计题" class="headerlink" title="12️⃣ 网络架构设计题"></a>12️⃣ 网络架构设计题</h2><p>给你一个需求：</p>
+<p>👉 设计一个“多人技能战斗系统”</p>
+<p>你要考虑：</p>
+<ul>
+<li>技能释放流程</li>
+<li>同步策略</li>
+<li>延迟处理</li>
+<li>防作弊</li>
+</ul>
+<hr>
+<h1 id="回答方式建议"><a href="#回答方式建议" class="headerlink" title="回答方式建议"></a>回答方式建议</h1><p>👉 从第1题开始（UE网络模型）<br>我会：</p>
+<ul>
+<li>按一线面试强度追问</li>
+<li>指出你答案的问题</li>
+<li>帮你修成“能过面试”的版本</li>
+</ul>
+<hr>
+<h1 id="提醒你一个现实情况-1"><a href="#提醒你一个现实情况-1" class="headerlink" title="提醒你一个现实情况"></a>提醒你一个现实情况</h1><p>如果你目标是一线厂：</p>
+<ul>
+<li>只会 RPC + Replication → ❌ 不够</li>
+<li>能讲移动预测 → ✔ 中级</li>
+<li>能讲技能同步 + 延迟处理 → ✔✔ 中高级</li>
+<li>能讲 Lag Compensation → ⭐ 强候选</li>
+</ul>
+<hr>
+<p>开始吧：<br>👉 <strong>先答第1题：UE网络模型</strong></p>
+<p>好，这一轮我会按<strong>“GAS真实项目使用 + 一线面试深度”</strong>来问你。重点不在API，而在：</p>
+<p>👉 <strong>你是否理解GAS设计、同步机制，以及是否真的做过战斗系统</strong></p>
+<p>我们直接进入高质量面试模式，你逐题回答，我会继续追问。</p>
+<hr>
+<h1 id="第一组：核心机制（必须扎实）"><a href="#第一组：核心机制（必须扎实）" class="headerlink" title="第一组：核心机制（必须扎实）"></a>第一组：核心机制（必须扎实）</h1><h2 id="1️⃣-GAS整体架构"><a href="#1️⃣-GAS整体架构" class="headerlink" title="1️⃣ GAS整体架构"></a>1️⃣ GAS整体架构</h2><p>你完整讲一下 GAS 的核心组成：</p>
+<ul>
+<li>Ability 是干嘛的？</li>
+<li>GameplayEffect 是干嘛的？</li>
+<li>AttributeSet 的职责？</li>
+<li>GameplayTag 在系统中起什么作用？</li>
+</ul>
+<p>👉 不要分开解释，要讲<strong>它们之间是怎么协作的</strong></p>
+<hr>
+<h2 id="2️⃣-Ability-激活流程（高频）"><a href="#2️⃣-Ability-激活流程（高频）" class="headerlink" title="2️⃣ Ability 激活流程（高频）"></a>2️⃣ Ability 激活流程（高频）</h2><p>一个技能从按键到生效：</p>
+<ul>
+<li>输入是怎么触发 Ability 的？</li>
+<li><code>TryActivateAbility</code> 之后发生了什么？</li>
+<li><code>ActivateAbility</code> 做了什么？</li>
+<li>GE 是什么时候应用的？</li>
+</ul>
+<p>👉 这一题要讲“流程链路”，不是函数说明</p>
+<hr>
+<h1 id="第二组：同步机制（分水岭）"><a href="#第二组：同步机制（分水岭）" class="headerlink" title="第二组：同步机制（分水岭）"></a>第二组：同步机制（分水岭）</h1><h2 id="3️⃣-GAS-网络同步"><a href="#3️⃣-GAS-网络同步" class="headerlink" title="3️⃣ GAS 网络同步"></a>3️⃣ GAS 网络同步</h2><ul>
+<li>Ability 是在哪执行？（Client / Server）</li>
+<li>Attribute 是怎么同步的？</li>
+<li>GameplayEffect 是怎么同步的？</li>
+</ul>
+<p>👉 很关键：<br>👉 很多人会误以为“GE在同步”，这里容易挂</p>
+<hr>
+<h2 id="4️⃣-Prediction（高频难点）"><a href="#4️⃣-Prediction（高频难点）" class="headerlink" title="4️⃣ Prediction（高频难点）"></a>4️⃣ Prediction（高频难点）</h2><ul>
+<li>什么是 Prediction？</li>
+<li>GAS 为什么要 Prediction？</li>
+<li>Prediction Key 是干嘛的？</li>
+</ul>
+<p>👉 能讲到：</p>
+<ul>
+<li>本地执行</li>
+<li>服务端确认</li>
+<li>rollback / correction → 才算过关</li>
+</ul>
+<hr>
+<h1 id="第三组：实战设计（你简历重点）"><a href="#第三组：实战设计（你简历重点）" class="headerlink" title="第三组：实战设计（你简历重点）"></a>第三组：实战设计（你简历重点）</h1><h2 id="5️⃣-技能系统设计"><a href="#5️⃣-技能系统设计" class="headerlink" title="5️⃣ 技能系统设计"></a>5️⃣ 技能系统设计</h2><p>你设计一个技能：</p>
+<ul>
+<li>冷却怎么做？</li>
+<li>消耗怎么做？</li>
+<li>Buff / Debuff 怎么做？</li>
+<li>持续效果（DoT）怎么实现？</li>
+</ul>
+<p>👉 要用 GAS 思维回答，不是传统逻辑</p>
+<hr>
+<h2 id="6️⃣-技能打断（Interrupt）"><a href="#6️⃣-技能打断（Interrupt）" class="headerlink" title="6️⃣ 技能打断（Interrupt）"></a>6️⃣ 技能打断（Interrupt）</h2><ul>
+<li>用什么机制实现？（Tag / CancelAbility）</li>
+<li>如何避免冲突？</li>
+<li>如何控制优先级？</li>
+</ul>
+<hr>
+<h2 id="7️⃣-动画结合（你简历写了）"><a href="#7️⃣-动画结合（你简历写了）" class="headerlink" title="7️⃣ 动画结合（你简历写了）"></a>7️⃣ 动画结合（你简历写了）</h2><p>重点问你：</p>
+<ul>
+<li>Ability 怎么驱动 Montage？</li>
+<li>动画结束怎么通知 Ability？</li>
+<li>如果动画被打断怎么办？</li>
+</ul>
+<p>👉 这是你简历里的“风险点”，我会重点看</p>
+<hr>
+<h1 id="第四组：进阶（拉开差距）-1"><a href="#第四组：进阶（拉开差距）-1" class="headerlink" title="第四组：进阶（拉开差距）"></a>第四组：进阶（拉开差距）</h1><h2 id="8️⃣-AttributeSet-设计"><a href="#8️⃣-AttributeSet-设计" class="headerlink" title="8️⃣ AttributeSet 设计"></a>8️⃣ AttributeSet 设计</h2><ul>
+<li>多个 AttributeSet vs 一个？</li>
+<li>属性依赖怎么处理？</li>
+<li>怎么做伤害计算？</li>
+</ul>
+<hr>
+<h2 id="9️⃣-GameplayTag-使用策略"><a href="#9️⃣-GameplayTag-使用策略" class="headerlink" title="9️⃣ GameplayTag 使用策略"></a>9️⃣ GameplayTag 使用策略</h2><ul>
+<li>Tag 是怎么组织的？</li>
+<li>怎么避免冲突？</li>
+<li>在技能系统中怎么用？</li>
+</ul>
+<hr>
+<h1 id="第五组：高阶（强候选）"><a href="#第五组：高阶（强候选）" class="headerlink" title="第五组：高阶（强候选）"></a>第五组：高阶（强候选）</h1><h2 id="🔟-GAS-性能问题"><a href="#🔟-GAS-性能问题" class="headerlink" title="🔟 GAS 性能问题"></a>🔟 GAS 性能问题</h2><ul>
+<li>GAS 开销大吗？</li>
+<li>哪些地方最耗？</li>
+<li>怎么优化？</li>
+</ul>
+<hr>
+<h2 id="11️⃣-自定义扩展"><a href="#11️⃣-自定义扩展" class="headerlink" title="11️⃣ 自定义扩展"></a>11️⃣ 自定义扩展</h2><ul>
+<li>有没有改过 GAS？</li>
+<li>有没有封装过自己的 Ability 系统？</li>
+</ul>
+<hr>
+<h1 id="回答方式"><a href="#回答方式" class="headerlink" title="回答方式"></a>回答方式</h1><p>👉 从第1题开始答：<strong>GAS整体架构</strong></p>
+<p>我会像真实面试一样：</p>
+<ul>
+<li>追问细节</li>
+<li>指出问题</li>
+<li>帮你优化成“面试能过的答案”</li>
+</ul>
+<hr>
+<h1 id="提醒你一个关键点-1"><a href="#提醒你一个关键点-1" class="headerlink" title="提醒你一个关键点"></a>提醒你一个关键点</h1><p>你简历已经写了：</p>
+<ul>
+<li>GAS</li>
+<li>网络同步</li>
+<li>动画结合</li>
+</ul>
+<p>👉 所以面试官一定会<strong>重点打你GAS</strong></p>
+<p>如果你：</p>
+<ul>
+<li>只能讲概念 → ❌</li>
+<li>能讲流程 → ✔</li>
+<li>能讲同步 + 设计 → ✔✔</li>
+<li>能讲预测 + 架构 → ⭐</li>
+</ul>
+<hr>
+<p>开始：<br>👉 <strong>答第1题：GAS整体架构（一定要讲“协作关系”）</strong></p>
+<p>好，这一轮我按<strong>“UE客户端 + C++工程能力面试”</strong>来问。不会问八股文，而是：</p>
+<p>👉 <strong>结合UE使用场景的C++能力（内存 / 设计 / 性能 / 实战）</strong></p>
+<p>你逐题回答，我会像面试官一样追问和纠正。</p>
+<hr>
+<h1 id="第一组：基础但必须扎实"><a href="#第一组：基础但必须扎实" class="headerlink" title="第一组：基础但必须扎实"></a>第一组：基础但必须扎实</h1><h2 id="1️⃣-指针-vs-引用（UE语境）"><a href="#1️⃣-指针-vs-引用（UE语境）" class="headerlink" title="1️⃣ 指针 vs 引用（UE语境）"></a>1️⃣ 指针 vs 引用（UE语境）</h2><ul>
+<li>指针和引用本质区别是什么？</li>
+<li>为什么 UE 代码里大量用指针（UObject*）而不是引用？</li>
+<li>什么时候你会用引用？</li>
+</ul>
+<p>👉 如果你答不出“可空 / 重新绑定 / 语义表达”，这一题不过</p>
+<hr>
+<h2 id="2️⃣-虚函数与多态（UE核心）"><a href="#2️⃣-虚函数与多态（UE核心）" class="headerlink" title="2️⃣ 虚函数与多态（UE核心）"></a>2️⃣ 虚函数与多态（UE核心）</h2><ul>
+<li>虚函数是怎么实现的？（vtable）</li>
+<li>override 在UE中常见在哪？</li>
+<li>为什么 UE 里很多函数是 virtual？</li>
+</ul>
+<p>👉 要结合：Actor / Component / Ability 等场景</p>
+<hr>
+<h2 id="3️⃣-new-delete-vs-UE对象"><a href="#3️⃣-new-delete-vs-UE对象" class="headerlink" title="3️⃣ new / delete vs UE对象"></a>3️⃣ new / delete vs UE对象</h2><ul>
+<li>UObject 能不能用 new 创建？</li>
+<li>为什么必须用 <code>NewObject</code> / <code>SpawnActor</code>？</li>
+<li>如果你用 new 创建 UObject 会发生什么？</li>
+</ul>
+<p>👉 这一题直接考你 UE 内存模型</p>
+<hr>
+<h1 id="第二组：内存与对象管理（高频）"><a href="#第二组：内存与对象管理（高频）" class="headerlink" title="第二组：内存与对象管理（高频）"></a>第二组：内存与对象管理（高频）</h1><h2 id="4️⃣-RAII（资源管理）"><a href="#4️⃣-RAII（资源管理）" class="headerlink" title="4️⃣ RAII（资源管理）"></a>4️⃣ RAII（资源管理）</h2><ul>
+<li>什么是 RAII？</li>
+<li>UE 中哪些地方体现了 RAII 思想？</li>
+<li>和 GC 有什么区别？</li>
+</ul>
+<hr>
+<h2 id="5️⃣-智能指针（UE-标准库）"><a href="#5️⃣-智能指针（UE-标准库）" class="headerlink" title="5️⃣ 智能指针（UE + 标准库）"></a>5️⃣ 智能指针（UE + 标准库）</h2><ul>
+<li><code>unique_ptr / shared_ptr / weak_ptr</code> 区别？</li>
+<li>UE 的 <code>TSharedPtr / TWeakObjectPtr / TSoftObjectPtr</code> 区别？</li>
+<li>UObject 为什么不用 shared_ptr？</li>
+</ul>
+<p>👉 很容易被问炸</p>
+<hr>
+<h2 id="6️⃣-内存问题（实战）"><a href="#6️⃣-内存问题（实战）" class="headerlink" title="6️⃣ 内存问题（实战）"></a>6️⃣ 内存问题（实战）</h2><ul>
+<li>什么是野指针？</li>
+<li>什么是悬空引用（dangling）？</li>
+<li>UE 中怎么避免？</li>
+</ul>
+<hr>
+<h1 id="第三组：性能与底层（中级分水岭）"><a href="#第三组：性能与底层（中级分水岭）" class="headerlink" title="第三组：性能与底层（中级分水岭）"></a>第三组：性能与底层（中级分水岭）</h1><h2 id="7️⃣-内存布局"><a href="#7️⃣-内存布局" class="headerlink" title="7️⃣ 内存布局"></a>7️⃣ 内存布局</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">Foo</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">float</span> b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个类在内存中大概是什么样？</li>
+<li>vptr 在哪里？</li>
+</ul>
+<hr>
+<h2 id="8️⃣-inline-constexpr"><a href="#8️⃣-inline-constexpr" class="headerlink" title="8️⃣ inline / constexpr"></a>8️⃣ inline / constexpr</h2><ul>
+<li>inline 是什么？真的会内联吗？</li>
+<li>constexpr 和 const 区别？</li>
+</ul>
+<hr>
+<h2 id="9️⃣-拷贝与移动（现代C-）"><a href="#9️⃣-拷贝与移动（现代C-）" class="headerlink" title="9️⃣ 拷贝与移动（现代C++）"></a>9️⃣ 拷贝与移动（现代C++）</h2><ul>
+<li>什么是移动语义？</li>
+<li><code>std::move</code> 做了什么？</li>
+<li>UE 中什么时候需要避免拷贝？</li>
+</ul>
+<hr>
+<h1 id="第四组：多线程（加分项）"><a href="#第四组：多线程（加分项）" class="headerlink" title="第四组：多线程（加分项）"></a>第四组：多线程（加分项）</h1><h2 id="🔟-线程基础"><a href="#🔟-线程基础" class="headerlink" title="🔟 线程基础"></a>🔟 线程基础</h2><ul>
+<li>什么是竞态条件（race condition）？</li>
+<li>mutex 是怎么解决的？</li>
+</ul>
+<hr>
+<h2 id="11️⃣-UE-多线程"><a href="#11️⃣-UE-多线程" class="headerlink" title="11️⃣ UE 多线程"></a>11️⃣ UE 多线程</h2><ul>
+<li>UE 中能不能随便开线程？</li>
+<li>GameThread 是什么？</li>
+<li>子线程能不能操作 UObject？</li>
+</ul>
+<p>👉 这题很关键</p>
+<hr>
+<h1 id="第五组：设计能力（高级）"><a href="#第五组：设计能力（高级）" class="headerlink" title="第五组：设计能力（高级）"></a>第五组：设计能力（高级）</h1><h2 id="12️⃣-设计一个系统（重点）"><a href="#12️⃣-设计一个系统（重点）" class="headerlink" title="12️⃣ 设计一个系统（重点）"></a>12️⃣ 设计一个系统（重点）</h2><p>设计一个简单系统：</p>
+<p>👉 “技能系统（不依赖GAS）”</p>
+<p>你需要考虑：</p>
+<ul>
+<li>类结构怎么设计？</li>
+<li>如何扩展？</li>
+<li>如何避免耦合？</li>
+</ul>
+<p>👉 这里看的是你“工程能力”，不是语法</p>
+<hr>
+<h1 id="第六组：进阶（拉开差距）-1"><a href="#第六组：进阶（拉开差距）-1" class="headerlink" title="第六组：进阶（拉开差距）"></a>第六组：进阶（拉开差距）</h1><h2 id="13️⃣-模板（Template）"><a href="#13️⃣-模板（Template）" class="headerlink" title="13️⃣ 模板（Template）"></a>13️⃣ 模板（Template）</h2><ul>
+<li>模板是怎么工作的？</li>
+<li>编译期 vs 运行期区别？</li>
+</ul>
+<hr>
+<h2 id="14️⃣-UE-宏-vs-C-模板"><a href="#14️⃣-UE-宏-vs-C-模板" class="headerlink" title="14️⃣ UE 宏 vs C++ 模板"></a>14️⃣ UE 宏 vs C++ 模板</h2><ul>
+<li>UE 为什么大量用宏？</li>
+<li>宏和模板的本质区别？</li>
+</ul>
+<hr>
+<h1 id="回答方式建议-1"><a href="#回答方式建议-1" class="headerlink" title="回答方式建议"></a>回答方式建议</h1><p>👉 从第1题开始：<strong>指针 vs 引用（结合UE）</strong></p>
+<p>我会：</p>
+<ul>
+<li>判断你是 初级 / 中级 / 高级</li>
+<li>追问你薄弱点</li>
+<li>帮你把答案修成“面试能过”的版本</li>
+</ul>
+<hr>
+<h1 id="给你一个现实建议"><a href="#给你一个现实建议" class="headerlink" title="给你一个现实建议"></a>给你一个现实建议</h1><p>如果你目标是一线厂：</p>
+<ul>
+<li>只会语法 → ❌</li>
+<li>能结合UE讲 → ✔</li>
+<li>能讲内存 + GC + 智能指针 → ✔✔</li>
+<li>能讲设计 + 多线程 → ⭐</li>
+</ul>
+<hr>
+<p>开始吧：<br>👉 <strong>先答第1题：指针 vs 引用（一定要结合UE讲）</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/01/01/QA/">http://example.com/2021/01/01/QA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%85%E5%A1%AB%E5%9D%91/">待填坑</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2021/01/01/0000-UeLoadAsset/" title="ue 加载资源与Flush(占坑)"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ue 加载资源与Flush(占坑)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/01/01/0000-UeBTT/" title="ue AI与行为树(占坑)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-01</div><div class="title">ue AI与行为树(占坑)</div></div></a></div><div><a href="/2021/01/01/0000-UeAvatar/" title="ue Avatar (占坑)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-01</div><div class="title">ue Avatar (占坑)</div></div></a></div><div><a href="/2021/01/01/0000-UeLs/" title="ue Level sequence (占坑)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-01</div><div class="title">ue Level sequence (占坑)</div></div></a></div><div><a href="/2021/01/01/0000-UeLoadAsset/" title="ue 加载资源与Flush(占坑)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-01</div><div class="title">ue 加载资源与Flush(占坑)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9AUE%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%88%E5%BF%85%E9%97%AE%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">第一组：UE核心架构（必问）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-Actor-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E9%AB%98%E9%A2%91%E5%BF%85%E6%9D%80%E9%A2%98%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1️⃣ Actor 生命周期（高频必杀题）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-UObject-vs-Actor%EF%BC%88%E6%9C%AC%E8%B4%A8%E5%8C%BA%E5%88%AB%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2️⃣ UObject vs Actor（本质区别）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%8F%8D%E5%B0%84%E7%B3%BB%E7%BB%9F%EF%BC%88UE%E6%9C%80%E6%A0%B8%E5%BF%83%E4%B9%8B%E4%B8%80%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3️⃣ 反射系统（UE最核心之一）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E7%BB%84%E4%BB%B6%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%8C%96%EF%BC%88%E4%B8%AD%E7%BA%A7%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">第二组：组件与模块化（中级）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-ActorComponent-%E6%9C%BA%E5%88%B6"><span class="toc-number">2.1.</span> <span class="toc-text">4️⃣ ActorComponent 机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-Subsystem%EF%BC%88UE5%E5%B8%B8%E9%97%AE%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">5️⃣ Subsystem（UE5常问）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E5%86%85%E5%AD%98%E4%B8%8EGC%EF%BC%88%E9%AB%98%E9%A2%91%E6%B7%B1%E6%B0%B4%E5%8C%BA%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">第三组：内存与GC（高频深水区）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-UE-%E7%9A%84-GC-%E6%9C%BA%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">6️⃣ UE 的 GC 机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88-vs-UObject"><span class="toc-number">3.2.</span> <span class="toc-text">7️⃣ 智能指针 vs UObject</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9ATick%E4%B8%8E%E6%80%A7%E8%83%BD%EF%BC%88%E5%AE%9E%E6%88%98%E5%90%91%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">第四组：Tick与性能（实战向）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-Tick-%E7%B3%BB%E7%BB%9F"><span class="toc-number">4.1.</span> <span class="toc-text">8️⃣ Tick 系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%8A%A0%E5%88%86%E9%A2%98%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">9️⃣ 多线程（加分题）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9A%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8B%89%E5%BC%80%E5%B7%AE%E8%B7%9D%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">第五组：进阶（拉开差距）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%9F-%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F%EF%BC%88Module%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">🔟 模块系统（Module）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E7%AD%94%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.</span> <span class="toc-text">回答建议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E9%86%92%E4%BD%A0%E4%B8%80%E4%B8%AA%E7%8E%B0%E5%AE%9E%E6%83%85%E5%86%B5"><span class="toc-number">7.</span> <span class="toc-text">提醒你一个现实情况</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9AUnLua-%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%EF%BC%88%E5%BF%85%E9%97%AE%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">第一组：UnLua 基础原理（必问）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-UnLua-%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F"><span class="toc-number">8.1.</span> <span class="toc-text">1️⃣ UnLua 是怎么工作的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-Lua-%E6%96%87%E4%BB%B6%E6%98%AF%E6%80%8E%E4%B9%88%E9%A9%B1%E5%8A%A8-Actor-%E7%9A%84%EF%BC%9F"><span class="toc-number">8.2.</span> <span class="toc-text">2️⃣ Lua 文件是怎么驱动 Actor 的？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%EF%BC%88%E4%B8%AD%E7%BA%A7%E5%88%86%E6%B0%B4%E5%B2%AD%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">第二组：架构设计（中级分水岭）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-UnLua%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%85%A8-C-%EF%BC%9F"><span class="toc-number">9.1.</span> <span class="toc-text">3️⃣ 为什么用 UnLua，而不是全 C++？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-C-%E5%92%8C-Lua-%E6%80%8E%E4%B9%88%E5%88%86%E5%B1%82%EF%BC%9F"><span class="toc-number">9.2.</span> <span class="toc-text">4️⃣ C++ 和 Lua 怎么分层？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E6%80%A7%E8%83%BD%E4%B8%8E%E5%9D%91%EF%BC%88%E9%AB%98%E9%A2%91%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">第三组：性能与坑（高频）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-UnLua-%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="toc-number">10.1.</span> <span class="toc-text">5️⃣ UnLua 性能问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-GC-%E4%B8%8E%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">10.2.</span> <span class="toc-text">6️⃣ GC 与内存管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9A%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8B%89%E5%BC%80%E5%B7%AE%E8%B7%9D%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">第四组：进阶（拉开差距）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E7%83%AD%E6%9B%B4%E6%96%B0%EF%BC%88Hotfix%EF%BC%89"><span class="toc-number">11.1.</span> <span class="toc-text">7️⃣ 热更新（Hotfix）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%97%AE%E9%A2%98%EF%BC%88%E7%9C%9F%E5%AE%9E%E9%A1%B9%E7%9B%AE%E5%9D%91%EF%BC%89"><span class="toc-number">11.2.</span> <span class="toc-text">8️⃣ 生命周期问题（真实项目坑）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9A%E6%B7%B1%E6%B0%B4%E5%8C%BA%EF%BC%88%E9%AB%98%E9%98%B6%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">第五组：深水区（高阶）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E4%BD%A0%E4%BA%86%E8%A7%A3-UnLua-%E7%9A%84%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F%E5%90%97%EF%BC%9F"><span class="toc-number">12.1.</span> <span class="toc-text">9️⃣ 你了解 UnLua 的绑定方式吗？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E7%AD%94%E5%BB%BA%E8%AE%AE-1"><span class="toc-number">13.</span> <span class="toc-text">回答建议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E9%86%92%E4%BD%A0%E4%B8%80%E4%B8%AA%E5%85%B3%E9%94%AE%E7%82%B9"><span class="toc-number">14.</span> <span class="toc-text">提醒你一个关键点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9AUE%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%EF%BC%88%E5%BF%85%E6%9D%80%EF%BC%89"><span class="toc-number">15.</span> <span class="toc-text">第一组：UE网络基础（必杀）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-UE-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%EF%BC%88%E5%BF%85%E9%A1%BB%E8%AE%B2%E6%B8%85%EF%BC%89"><span class="toc-number">15.1.</span> <span class="toc-text">1️⃣ UE 网络模型（必须讲清）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-Actor-%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6"><span class="toc-number">15.2.</span> <span class="toc-text">2️⃣ Actor 同步机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-RPC-%E6%9C%BA%E5%88%B6"><span class="toc-number">15.3.</span> <span class="toc-text">3️⃣ RPC 机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E7%A7%BB%E5%8A%A8%E5%90%8C%E6%AD%A5%EF%BC%88%E4%B8%AD%E7%BA%A7%E5%88%86%E6%B0%B4%E5%B2%AD%EF%BC%89"><span class="toc-number">16.</span> <span class="toc-text">第二组：移动同步（中级分水岭）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E8%A7%92%E8%89%B2%E7%A7%BB%E5%8A%A8%E5%90%8C%E6%AD%A5%EF%BC%88CharacterMovement%EF%BC%89"><span class="toc-number">16.1.</span> <span class="toc-text">4️⃣ 角色移动同步（CharacterMovement）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E5%BB%B6%E8%BF%9F%E4%B8%8E%E6%8A%96%E5%8A%A8%E5%A4%84%E7%90%86"><span class="toc-number">16.2.</span> <span class="toc-text">5️⃣ 延迟与抖动处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E6%8A%80%E8%83%BD%E5%90%8C%E6%AD%A5%EF%BC%88GAS-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">17.</span> <span class="toc-text">第三组：技能同步（GAS&#x2F;战斗系统核心）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E6%8A%80%E8%83%BD%E5%90%8C%E6%AD%A5%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F"><span class="toc-number">17.1.</span> <span class="toc-text">6️⃣ 技能同步怎么做？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E5%91%BD%E4%B8%AD%E5%88%A4%E5%AE%9A%EF%BC%88Hit-Detection%EF%BC%89"><span class="toc-number">17.2.</span> <span class="toc-text">7️⃣ 命中判定（Hit Detection）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9A%E5%B8%A6%E5%AE%BD%E4%B8%8E%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%AD%E9%AB%98%E7%BA%A7%EF%BC%89"><span class="toc-number">18.</span> <span class="toc-text">第四组：带宽与优化（中高级）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">18.1.</span> <span class="toc-text">8️⃣ 网络性能优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E5%B1%9E%E6%80%A7%E5%90%8C%E6%AD%A5%E4%BC%98%E5%8C%96"><span class="toc-number">18.2.</span> <span class="toc-text">9️⃣ 属性同步优化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9ADS%EF%BC%88Dedicated-Server%EF%BC%89"><span class="toc-number">19.</span> <span class="toc-text">第五组：DS（Dedicated Server）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%9F-DS-%E6%9E%B6%E6%9E%84%E7%90%86%E8%A7%A3"><span class="toc-number">19.1.</span> <span class="toc-text">🔟 DS 架构理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%EF%B8%8F%E2%83%A3-%E6%97%A0%E5%A4%B4%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BC%98%E5%8C%96"><span class="toc-number">19.2.</span> <span class="toc-text">11️⃣ 无头服务器优化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%BB%84%EF%BC%9A%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8B%89%E5%BC%80%E5%B7%AE%E8%B7%9D%EF%BC%89"><span class="toc-number">20.</span> <span class="toc-text">第六组：进阶（拉开差距）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#12%EF%B8%8F%E2%83%A3-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%A2%98"><span class="toc-number">20.1.</span> <span class="toc-text">12️⃣ 网络架构设计题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E7%AD%94%E6%96%B9%E5%BC%8F%E5%BB%BA%E8%AE%AE"><span class="toc-number">21.</span> <span class="toc-text">回答方式建议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E9%86%92%E4%BD%A0%E4%B8%80%E4%B8%AA%E7%8E%B0%E5%AE%9E%E6%83%85%E5%86%B5-1"><span class="toc-number">22.</span> <span class="toc-text">提醒你一个现实情况</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9A%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6%EF%BC%88%E5%BF%85%E9%A1%BB%E6%89%8E%E5%AE%9E%EF%BC%89"><span class="toc-number">23.</span> <span class="toc-text">第一组：核心机制（必须扎实）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-GAS%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">23.1.</span> <span class="toc-text">1️⃣ GAS整体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-Ability-%E6%BF%80%E6%B4%BB%E6%B5%81%E7%A8%8B%EF%BC%88%E9%AB%98%E9%A2%91%EF%BC%89"><span class="toc-number">23.2.</span> <span class="toc-text">2️⃣ Ability 激活流程（高频）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6%EF%BC%88%E5%88%86%E6%B0%B4%E5%B2%AD%EF%BC%89"><span class="toc-number">24.</span> <span class="toc-text">第二组：同步机制（分水岭）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-GAS-%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5"><span class="toc-number">24.1.</span> <span class="toc-text">3️⃣ GAS 网络同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-Prediction%EF%BC%88%E9%AB%98%E9%A2%91%E9%9A%BE%E7%82%B9%EF%BC%89"><span class="toc-number">24.2.</span> <span class="toc-text">4️⃣ Prediction（高频难点）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E5%AE%9E%E6%88%98%E8%AE%BE%E8%AE%A1%EF%BC%88%E4%BD%A0%E7%AE%80%E5%8E%86%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">25.</span> <span class="toc-text">第三组：实战设计（你简历重点）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E6%8A%80%E8%83%BD%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="toc-number">25.1.</span> <span class="toc-text">5️⃣ 技能系统设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E6%8A%80%E8%83%BD%E6%89%93%E6%96%AD%EF%BC%88Interrupt%EF%BC%89"><span class="toc-number">25.2.</span> <span class="toc-text">6️⃣ 技能打断（Interrupt）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E5%8A%A8%E7%94%BB%E7%BB%93%E5%90%88%EF%BC%88%E4%BD%A0%E7%AE%80%E5%8E%86%E5%86%99%E4%BA%86%EF%BC%89"><span class="toc-number">25.3.</span> <span class="toc-text">7️⃣ 动画结合（你简历写了）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9A%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8B%89%E5%BC%80%E5%B7%AE%E8%B7%9D%EF%BC%89-1"><span class="toc-number">26.</span> <span class="toc-text">第四组：进阶（拉开差距）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-AttributeSet-%E8%AE%BE%E8%AE%A1"><span class="toc-number">26.1.</span> <span class="toc-text">8️⃣ AttributeSet 设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-GameplayTag-%E4%BD%BF%E7%94%A8%E7%AD%96%E7%95%A5"><span class="toc-number">26.2.</span> <span class="toc-text">9️⃣ GameplayTag 使用策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9A%E9%AB%98%E9%98%B6%EF%BC%88%E5%BC%BA%E5%80%99%E9%80%89%EF%BC%89"><span class="toc-number">27.</span> <span class="toc-text">第五组：高阶（强候选）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%9F-GAS-%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="toc-number">27.1.</span> <span class="toc-text">🔟 GAS 性能问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%EF%B8%8F%E2%83%A3-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95"><span class="toc-number">27.2.</span> <span class="toc-text">11️⃣ 自定义扩展</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E7%AD%94%E6%96%B9%E5%BC%8F"><span class="toc-number">28.</span> <span class="toc-text">回答方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E9%86%92%E4%BD%A0%E4%B8%80%E4%B8%AA%E5%85%B3%E9%94%AE%E7%82%B9-1"><span class="toc-number">29.</span> <span class="toc-text">提醒你一个关键点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9A%E5%9F%BA%E7%A1%80%E4%BD%86%E5%BF%85%E9%A1%BB%E6%89%8E%E5%AE%9E"><span class="toc-number">30.</span> <span class="toc-text">第一组：基础但必须扎实</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E6%8C%87%E9%92%88-vs-%E5%BC%95%E7%94%A8%EF%BC%88UE%E8%AF%AD%E5%A2%83%EF%BC%89"><span class="toc-number">30.1.</span> <span class="toc-text">1️⃣ 指针 vs 引用（UE语境）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E5%A4%9A%E6%80%81%EF%BC%88UE%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">30.2.</span> <span class="toc-text">2️⃣ 虚函数与多态（UE核心）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-new-delete-vs-UE%E5%AF%B9%E8%B1%A1"><span class="toc-number">30.3.</span> <span class="toc-text">3️⃣ new &#x2F; delete vs UE对象</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E5%86%85%E5%AD%98%E4%B8%8E%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%EF%BC%88%E9%AB%98%E9%A2%91%EF%BC%89"><span class="toc-number">31.</span> <span class="toc-text">第二组：内存与对象管理（高频）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-RAII%EF%BC%88%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%EF%BC%89"><span class="toc-number">31.1.</span> <span class="toc-text">4️⃣ RAII（资源管理）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%EF%BC%88UE-%E6%A0%87%E5%87%86%E5%BA%93%EF%BC%89"><span class="toc-number">31.2.</span> <span class="toc-text">5️⃣ 智能指针（UE + 标准库）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98%EF%BC%88%E5%AE%9E%E6%88%98%EF%BC%89"><span class="toc-number">31.3.</span> <span class="toc-text">6️⃣ 内存问题（实战）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E6%80%A7%E8%83%BD%E4%B8%8E%E5%BA%95%E5%B1%82%EF%BC%88%E4%B8%AD%E7%BA%A7%E5%88%86%E6%B0%B4%E5%B2%AD%EF%BC%89"><span class="toc-number">32.</span> <span class="toc-text">第三组：性能与底层（中级分水岭）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-number">32.1.</span> <span class="toc-text">7️⃣ 内存布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-inline-constexpr"><span class="toc-number">32.2.</span> <span class="toc-text">8️⃣ inline &#x2F; constexpr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E6%8B%B7%E8%B4%9D%E4%B8%8E%E7%A7%BB%E5%8A%A8%EF%BC%88%E7%8E%B0%E4%BB%A3C-%EF%BC%89"><span class="toc-number">32.3.</span> <span class="toc-text">9️⃣ 拷贝与移动（现代C++）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9A%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%8A%A0%E5%88%86%E9%A1%B9%EF%BC%89"><span class="toc-number">33.</span> <span class="toc-text">第四组：多线程（加分项）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%9F-%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="toc-number">33.1.</span> <span class="toc-text">🔟 线程基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%EF%B8%8F%E2%83%A3-UE-%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="toc-number">33.2.</span> <span class="toc-text">11️⃣ UE 多线程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9A%E8%AE%BE%E8%AE%A1%E8%83%BD%E5%8A%9B%EF%BC%88%E9%AB%98%E7%BA%A7%EF%BC%89"><span class="toc-number">34.</span> <span class="toc-text">第五组：设计能力（高级）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#12%EF%B8%8F%E2%83%A3-%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">34.1.</span> <span class="toc-text">12️⃣ 设计一个系统（重点）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%BB%84%EF%BC%9A%E8%BF%9B%E9%98%B6%EF%BC%88%E6%8B%89%E5%BC%80%E5%B7%AE%E8%B7%9D%EF%BC%89-1"><span class="toc-number">35.</span> <span class="toc-text">第六组：进阶（拉开差距）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#13%EF%B8%8F%E2%83%A3-%E6%A8%A1%E6%9D%BF%EF%BC%88Template%EF%BC%89"><span class="toc-number">35.1.</span> <span class="toc-text">13️⃣ 模板（Template）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14%EF%B8%8F%E2%83%A3-UE-%E5%AE%8F-vs-C-%E6%A8%A1%E6%9D%BF"><span class="toc-number">35.2.</span> <span class="toc-text">14️⃣ UE 宏 vs C++ 模板</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E7%AD%94%E6%96%B9%E5%BC%8F%E5%BB%BA%E8%AE%AE-1"><span class="toc-number">36.</span> <span class="toc-text">回答方式建议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E7%8E%B0%E5%AE%9E%E5%BB%BA%E8%AE%AE"><span class="toc-number">37.</span> <span class="toc-text">给你一个现实建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unlua 绑定"/></a><div class="content"><a class="title" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定">Unlua 绑定</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 浅谈网络容器"/></a><div class="content"><a class="title" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器">ue 浅谈网络容器</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue DS的思考"/></a><div class="content"><a class="title" href="/2026/04/14/0091-UeDS/" title="ue DS的思考">ue DS的思考</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Q&amp;A"/></a><div class="content"><a class="title" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A">ue Q&amp;A</a><time datetime="2026-04-09T16:00:00.000Z" title="发表于 2026-04-10 00:00:00">2026-04-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue智能指针"/></a><div class="content"><a class="title" href="/2026/04/09/0089-SharedPtr/" title="ue智能指针">ue智能指针</a><time datetime="2026-04-08T16:00:00.000Z" title="发表于 2026-04-09 00:00:00">2026-04-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
