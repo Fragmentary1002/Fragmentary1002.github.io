@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>UMG生成路径 | 零の領域</title><meta name="author" content="Fragmentary"><meta name="copyright" content="Fragmentary"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言探索从UMG到Slate后加载的全过程 简述UMG流程： CreateWidget    ↓生成 UWidget &#x2F; WidgetTree    ↓AddToViewport &#x2F; AddChild    ↓TakeWidget    ↓RebuildWidget    ↓生成真实 SWidget    ↓触发首次创建后的逻辑，也就是 NewlyCreated 相关流程 GPT回答从源码角度看，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UMG生成路径">
+<meta property="og:url" content="http://example.com/2026/05/01/0094-UMGPath/index.html">
+<meta property="og:site_name" content="零の領域">
+<meta property="og:description" content="前言探索从UMG到Slate后加载的全过程 简述UMG流程： CreateWidget    ↓生成 UWidget &#x2F; WidgetTree    ↓AddToViewport &#x2F; AddChild    ↓TakeWidget    ↓RebuildWidget    ↓生成真实 SWidget    ↓触发首次创建后的逻辑，也就是 NewlyCreated 相关流程 GPT回答从源码角度看，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg/default_cover.png">
+<meta property="article:published_time" content="2026-04-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-24T17:54:38.958Z">
+<meta property="article:author" content="Fragmentary">
+<meta property="article:tag" content="ue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg/default_cover.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/05/01/0094-UMGPath/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UMG生成路径',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-25 01:54:38'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/bg/pixiv_cat.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg/default_cover.png')"><nav id="nav"><span id="blog-info"><a href="/" title="零の領域"><span class="site-name">零の領域</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">UMG生成路径</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-30T16:00:00.000Z" title="发表于 2026-05-01 00:00:00">2026-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-24T17:54:38.958Z" title="更新于 2026-05-25 01:54:38">2026-05-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ue/">ue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="UMG生成路径"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>探索从UMG到<strong>Slate</strong>后加载的全过程</p>
+<h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>UMG流程：</p>
+<p>CreateWidget<br>    ↓<br>生成 UWidget / WidgetTree<br>    ↓<br>AddToViewport / AddChild<br>    ↓<br>TakeWidget<br>    ↓<br>RebuildWidget<br>    ↓<br>生成真实 SWidget<br>    ↓<br>触发首次创建后的逻辑，也就是 NewlyCreated 相关流程</p>
+<h1 id="GPT回答"><a href="#GPT回答" class="headerlink" title="GPT回答"></a>GPT回答</h1><p>从源码角度看，UE 里 UMG 从“蓝图/类”生成到屏幕上的过程，大致是这条链路：</p>
+<p><code>UWidgetBlueprint</code> → 编译生成 <code>UWidgetBlueprintGeneratedClass</code> → 运行时 <code>CreateWidget</code> 创建 <code>UUserWidget</code> → <code>Initialize</code> / <code>RebuildWidget</code> 构建 Slate 树 → <code>AddToViewport</code> 加入 viewport → Slate 每帧布局、绘制、输入分发。</p>
+<p><strong>1. 编辑器里创建 UMG 蓝图</strong><br>UMG 蓝图资源类型通常是 <code>UWidgetBlueprint</code>。</p>
+<p>源码里相关模块大概在：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Engine/Source/Editor/UMGEditor</span><br><span class="line">Engine/Source/Runtime/UMG</span><br></pre></td></tr></table></figure>
+
+<p>一个 Widget Blueprint 里主要包含：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UWidgetTree* WidgetTree;</span><br></pre></td></tr></table></figure>
+
+<p><code>WidgetTree</code> 保存你在设计器里拖出来的控件层级，比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CanvasPanel</span><br><span class="line"> ├─ Button</span><br><span class="line"> │   └─ TextBlock</span><br><span class="line"> └─ Image</span><br></pre></td></tr></table></figure>
+
+<p>这些不是 Slate 控件，而是 UObject 体系里的 UMG 控件对象，例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UCanvasPanel</span><br><span class="line">UButton</span><br><span class="line">UTextBlock</span><br><span class="line">UImage</span><br></pre></td></tr></table></figure>
+
+<p>它们都继承自 <code>UWidget</code>。</p>
+<p><strong>2. 编译 Widget Blueprint</strong><br>UMG 蓝图编译后会生成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UWidgetBlueprintGeneratedClass</span><br></pre></td></tr></table></figure>
+
+<p>它继承自：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UBlueprintGeneratedClass</span><br></pre></td></tr></table></figure>
+
+<p>比较关键的是它会保存编译后的 WidgetTree 模板、绑定信息、动画信息等。</p>
+<p>运行时创建 Widget 时，不是直接使用编辑器里的 <code>UWidgetBlueprint</code>，而是使用它编译出来的 generated class。</p>
+<p>概念上类似：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">UWidgetBlueprint</span><br><span class="line">        |</span><br><span class="line">        | Compile</span><br><span class="line">        v</span><br><span class="line">UWidgetBlueprintGeneratedClass</span><br><span class="line">        |</span><br><span class="line">        | Runtime instance</span><br><span class="line">        v</span><br><span class="line">UUserWidget</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 运行时 CreateWidget</strong><br>常见代码是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUserWidget* Widget = <span class="built_in">CreateWidget</span>&lt;UUserWidget&gt;(PlayerController, WidgetClass);</span><br></pre></td></tr></table></figure>
+
+<p>源码入口通常会走到 UMG 的创建逻辑，核心目标是创建一个 <code>UUserWidget</code> 实例。</p>
+<p>流程可以理解为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CreateWidget</span><br><span class="line">  -&gt; CreateWidgetInstance</span><br><span class="line">    -&gt; NewObject&lt;UUserWidget&gt;</span><br><span class="line">    -&gt; UUserWidget::<span class="built_in">Initialize</span>()</span><br></pre></td></tr></table></figure>
+
+<p><code>Initialize()</code> 是很关键的一步。</p>
+<p>它会根据 <code>UWidgetBlueprintGeneratedClass</code> 中保存的模板数据，初始化当前实例的 WidgetTree，并处理：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">控件实例化</span><br><span class="line">变量绑定</span><br><span class="line">NamedSlot</span><br><span class="line">动画</span><br><span class="line">Blueprint 初始化事件</span><br></pre></td></tr></table></figure>
+
+<p>如果蓝图里某个控件勾选了 <code>Is Variable</code>，生成类中会让对应的 C++/蓝图成员变量指向运行时创建出来的那个控件实例。</p>
+<p>例如蓝图里有一个按钮 <code>StartButton</code>，运行时就会绑定到：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UButton* StartButton;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. UWidgetTree 生成 UObject 控件树</strong><br>此时得到的是 UMG 层的控件树，也就是 UObject 控件树。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UUserWidget</span><br><span class="line"> └─ WidgetTree</span><br><span class="line">     └─ UCanvasPanel</span><br><span class="line">         ├─ UButton</span><br><span class="line">         │   └─ UTextBlock</span><br><span class="line">         └─ UImage</span><br></pre></td></tr></table></figure>
+
+<p>这些对象本身还不是最终渲染用的 Slate widget。</p>
+<p>UMG 的核心思想是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UMG = UObject 封装层</span><br><span class="line">Slate = 真正的底层 UI 系统</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，<code>UButton</code>、<code>UTextBlock</code> 等 UMG 控件最终会构建出对应的 Slate 控件：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UButton    -&gt; SButton</span><br><span class="line">UTextBlock -&gt; STextBlock</span><br><span class="line">UImage     -&gt; SImage</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. RebuildWidget 构建 Slate 树</strong><br>当 Widget 需要真正显示时，会调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUserWidget::<span class="built_in">RebuildWidget</span>()</span><br></pre></td></tr></table></figure>
+
+<p>以及各个子控件自己的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UWidget::<span class="built_in">RebuildWidget</span>()</span><br></pre></td></tr></table></figure>
+
+<p>比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UButton::<span class="built_in">RebuildWidget</span>()</span><br><span class="line">&#123;</span><br><span class="line">    MyButton = <span class="built_in">SNew</span>(SButton);</span><br><span class="line">    <span class="keyword">return</span> MyButton.<span class="built_in">ToSharedRef</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>UTextBlock</code> 会创建 <code>STextBlock</code>，<code>UImage</code> 会创建 <code>SImage</code>。</p>
+<p>所以 UMG 树会被转换成 Slate 树：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UCanvasPanel       -&gt; SConstraintCanvas</span><br><span class="line">UButton            -&gt; SButton</span><br><span class="line">UTextBlock         -&gt; STextBlock</span><br><span class="line">UImage             -&gt; SImage</span><br></pre></td></tr></table></figure>
+
+<p>最终类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SObjectWidget</span><br><span class="line"> └─ SConstraintCanvas</span><br><span class="line">     ├─ SButton</span><br><span class="line">     │   └─ STextBlock</span><br><span class="line">     └─ SImage</span><br></pre></td></tr></table></figure>
+
+<p><code>SObjectWidget</code> 是 UMG 和 Slate 之间的重要桥接层，它把 <code>UUserWidget</code> 包成 Slate 可以管理的 <code>SWidget</code>。</p>
+<p><strong>6. AddToViewport</strong><br>当你调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Widget-&gt;<span class="built_in">AddToViewport</span>();</span><br></pre></td></tr></table></figure>
+
+<p>通常会进入：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UUserWidget::<span class="built_in">AddToViewport</span>()</span><br><span class="line">UUserWidget::<span class="built_in">AddToScreen</span>()</span><br></pre></td></tr></table></figure>
+
+<p>最后通过 <code>UGameViewportClient</code> 把它加到 viewport 的 widget 层中。</p>
+<p>概念上是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UUserWidget::<span class="built_in">AddToViewport</span>()</span><br><span class="line">  -&gt; <span class="built_in">AddToScreen</span>()</span><br><span class="line">    -&gt; ULocalPlayer / UGameViewportClient</span><br><span class="line">      -&gt; <span class="built_in">AddViewportWidgetContent</span>()</span><br></pre></td></tr></table></figure>
+
+<p>Slate 层最终会把这个 Widget 加到游戏 viewport 对应的 Slate 容器中。</p>
+<p><strong>7. Slate 负责布局、绘制和输入</strong><br>一旦进入 Slate 树，后续每帧主要由 Slate 系统处理：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Prepass</span><br><span class="line">Arrange</span><br><span class="line">Paint</span><br><span class="line">Hit Test</span><br><span class="line">Input Routing</span><br></pre></td></tr></table></figure>
+
+<p>也就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">计算 DesiredSize</span><br><span class="line">布局子控件位置</span><br><span class="line">绘制元素</span><br><span class="line">处理鼠标/键盘/手柄输入</span><br></pre></td></tr></table></figure>
+
+<p>UMG 的属性变更，例如修改 TextBlock 的文字：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TextBlock-&gt;<span class="built_in">SetText</span>(FText::<span class="built_in">FromString</span>(<span class="string">&quot;Hello&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>最终会同步到对应的 Slate 控件：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STextBlock::<span class="built_in">SetText</span>(...)</span><br></pre></td></tr></table></figure>
+
+<p><strong>整体流程图</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">编辑器设计 UMG</span><br><span class="line">    |</span><br><span class="line">    v</span><br><span class="line">UWidgetBlueprint</span><br><span class="line">    |</span><br><span class="line">    | 编译</span><br><span class="line">    v</span><br><span class="line">UWidgetBlueprintGeneratedClass</span><br><span class="line">    |</span><br><span class="line">    | CreateWidget</span><br><span class="line">    v</span><br><span class="line">UUserWidget 实例</span><br><span class="line">    |</span><br><span class="line">    | Initialize</span><br><span class="line">    v</span><br><span class="line">运行时 UWidgetTree</span><br><span class="line">    |</span><br><span class="line">    | RebuildWidget</span><br><span class="line">    v</span><br><span class="line">Slate 控件树 SWidget</span><br><span class="line">    |</span><br><span class="line">    | AddToViewport</span><br><span class="line">    v</span><br><span class="line">加入 GameViewport</span><br><span class="line">    |</span><br><span class="line">    v</span><br><span class="line">Slate Tick / Layout / Paint / Input</span><br></pre></td></tr></table></figure>
+
+<p>一句话总结：</p>
+<p>UMG 蓝图本质上先被编译成 <code>UWidgetBlueprintGeneratedClass</code>，运行时 <code>CreateWidget</code> 创建 <code>UUserWidget</code> 和它的 <code>UWidgetTree</code>，然后每个 <code>UWidget</code> 通过 <code>RebuildWidget()</code> 生成对应的 Slate <code>SWidget</code>，最后 <code>AddToViewport()</code> 把 Slate 树挂到游戏 viewport 上，由 Slate 系统完成布局、绘制和输入。</p>
+<h1 id="分析图"><a href="#分析图" class="headerlink" title="分析图"></a>分析图</h1><p><img src="/2026/05/01/0094-UMGPath/v2-e2789c674f926187f55812f8fba47cb2_1440w.jpg" alt="img"></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1930739938271426480">(99+ 封私信 / 12 条消息) 【UE】通过源码了解Slate Widget和UMG Widget - 知乎</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Fragmentary</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/05/01/0094-UMGPath/">http://example.com/2026/05/01/0094-UMGPath/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">零の領域</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ue/">ue</a></div><div class="post_share"><div class="social-share" data-image="/img/bg/default_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img class="cover" src="/img/bg/default_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Unlua 绑定</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="title">Unlua 绑定</div></div></a></div><div><a href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-14</div><div class="title">ue DS的思考</div></div></a></div><div><a href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-14</div><div class="title">ue 浅谈网络容器</div></div></a></div><div><a href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-10</div><div class="title">ue Q&amp;A</div></div></a></div><div><a href="/2026/04/09/0089-SharedPtr/" title="ue智能指针"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-09</div><div class="title">ue智能指针</div></div></a></div><div><a href="/2025/11/21/0087-UeAnim/" title="ue Lyra 动画系统(持续更新)"><img class="cover" src="/img/bg/default_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-21</div><div class="title">ue Lyra 动画系统(持续更新)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/bg/pixiv_cat.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Fragmentary</div><div class="author-info__description">一个摸鱼人的日常博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Fragmentary1002"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Fragmentary1002" target="_blank" title="Github"><i class="fa-brands fa-github-alt"></i></a><a class="social-icon" href="https://space.bilibili.com/165064718?spm_id_from=333.1007.0.0" target="_blank" title="bilibili"><i class="fa-solid fa-tv"></i></a><a class="social-icon" href="https://www.youtube.com/@mentaryFrag" target="_blank" title="youtube"><i class="fa-brands fa-youtube"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个博客~ 好吧这是我的学习笔记 一个Unity客户端开发者的日常</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">简述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GPT%E5%9B%9E%E7%AD%94"><span class="toc-number">3.</span> <span class="toc-text">GPT回答</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%9B%BE"><span class="toc-number">4.</span> <span class="toc-text">分析图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/01/0094-UMGPath/" title="UMG生成路径"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UMG生成路径"/></a><div class="content"><a class="title" href="/2026/05/01/0094-UMGPath/" title="UMG生成路径">UMG生成路径</a><time datetime="2026-04-30T16:00:00.000Z" title="发表于 2026-05-01 00:00:00">2026-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Unlua 绑定"/></a><div class="content"><a class="title" href="/2026/04/28/0093-Unlua/" title="Unlua 绑定">Unlua 绑定</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0091-UeDS/" title="ue DS的思考"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue DS的思考"/></a><div class="content"><a class="title" href="/2026/04/14/0091-UeDS/" title="ue DS的思考">ue DS的思考</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue 浅谈网络容器"/></a><div class="content"><a class="title" href="/2026/04/14/0092-UeFastArray/" title="ue 浅谈网络容器">ue 浅谈网络容器</a><time datetime="2026-04-13T16:00:00.000Z" title="发表于 2026-04-14 00:00:00">2026-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A"><img src="/img/bg/default_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ue Q&amp;A"/></a><div class="content"><a class="title" href="/2026/04/10/0090-UeQA/" title="ue Q&amp;A">ue Q&amp;A</a><time datetime="2026-04-09T16:00:00.000Z" title="发表于 2026-04-10 00:00:00">2026-04-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By Fragmentary</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
